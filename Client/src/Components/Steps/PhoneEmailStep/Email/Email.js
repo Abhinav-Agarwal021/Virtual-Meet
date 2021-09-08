@@ -5,7 +5,7 @@ import { Card } from "../../../../Shared Components/Card/Card"
 import { Button } from "../../../../Shared Components/Button/Button"
 import { TextInput } from '../../../../Shared Components/TextInput/TextInput'
 
-export const Email = () => {
+export const Email = (props) => {
 
     const [email, setEmail] = useState('');
 
@@ -17,7 +17,7 @@ export const Email = () => {
             />
             <div>
                 <div className={styles.actionButtonWrap}>
-                    <Button text="Next" />
+                    <Button text="Next" onClick={props.onClick} />
                 </div>
             </div>
         </Card>

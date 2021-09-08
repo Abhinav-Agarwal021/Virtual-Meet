@@ -5,7 +5,7 @@ import { Card } from "../../../../Shared Components/Card/Card"
 import { Button } from "../../../../Shared Components/Button/Button"
 import { TextInput } from '../../../../Shared Components/TextInput/TextInput'
 
-export const Phone = () => {
+export const Phone = (props) => {
 
     const [phoneNumber, setPhoneNumber] = useState('')
 
@@ -17,7 +17,7 @@ export const Phone = () => {
             />
             <div>
                 <div className={styles.actionButtonWrap}>
-                    <Button text="Next" />
+                    <Button text="Next" onClick={props.onClick} />
                 </div>
             </div>
         </Card>

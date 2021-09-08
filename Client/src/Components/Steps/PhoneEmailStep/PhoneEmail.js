@@ -33,7 +33,7 @@ export const PhoneEmail = (props) => {
                         <img src="/images/email.png" alt="email" />
                     </button>
                 </div>
-                <Component />
+                <Component onClick={props.onClick} />
             </div>
         </div>
     )
