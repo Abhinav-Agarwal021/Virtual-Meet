@@ -17,8 +17,8 @@ export const Home = () => {
 
     const history = useHistory();
 
-    function startRegister() {
-        history.push('/register');
+    const startRegister = () => {
+        history.push('/authenticate');
     }
 
     return (
@@ -28,13 +28,13 @@ export const Home = () => {
                     Want to Connect with your Friend or want to attend an official virtual meeting. Go Ahead!!
                 </p>
                 <div>
-                    <Button onClick={startRegister} text="Get your username" />
+                    <Button onClick={startRegister} text="Let's get started" />
                 </div>
                 <div className={styles.signinWrapper}>
                     <span className={styles.hasInvite}>
                         Have an invite text?
                     </span>
-                    <Link style={signInLinkStyle} to="/login">
+                    <Link style={signInLinkStyle} to="/activate">
                         Sign in
                     </Link>
                 </div>
