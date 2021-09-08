@@ -1,3 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Allison&display=swap");
+
 .navbar {
   padding: 20px 0;
+}
+
+.logoText {
+  font-family: "Allison", cursive !important;
+  margin-left: "10px";
+  font-size: 40px;
 }

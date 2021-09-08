@@ -12,14 +12,10 @@ export const Navbar = () => {
         alignItems: 'center',
     };
 
-    const logoText = {
-        marginLeft: '10px',
-    };
-
     return (
         <nav className={`${styles.navbar} container`}>
             <Link style={brandStyle} to="/">
-                <span style={logoText}>Virtual Meet</span>
+                <span className={styles.logoText}>Virtual Meet</span>
             </Link>
         </nav>
     )
