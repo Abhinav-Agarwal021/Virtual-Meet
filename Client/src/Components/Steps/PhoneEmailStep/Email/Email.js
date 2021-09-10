@@ -10,7 +10,7 @@ export const Email = (props) => {
     const [email, setEmail] = useState('');
 
     return (
-        <Card title="Enter your email id" icon="email-emoji">
+        <Card title="Enter your email id">
             <TextInput
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
