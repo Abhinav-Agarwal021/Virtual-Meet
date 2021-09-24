@@ -1,4 +1,5 @@
-const crypto = require('crypto')
+const crypto = require('crypto');
+const HashService = require('./HashService');
 
 const smsSid = process.env.SMS_SID;
 const smsAuthToken = process.env.SMS_AUTH_TOKEN;
@@ -21,7 +22,9 @@ class OtpService {
         })
     }
 
-    verifyOtp() { }
+    verifyOtp(data, hash) {
+        return (hash === HashService.hashOtp(data))
+    }
 
 }
 

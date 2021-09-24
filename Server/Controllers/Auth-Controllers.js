@@ -31,6 +31,32 @@ class AuthController {
             })
         }
     }
+
+    verifyOtp(req, res) {
+        const { phone, otp, hash } = req.body;
+
+        if (!phone || !otp || !hash) {
+            res.status(400).json({ message: "Fields cannot be empty" })
+        }
+
+        const [hashOtp, exptime] = hash.split('.')
+
+        if (Date.now() > exptime) {
+            res.status(400).json({
+                message: "OTP expired!"
+            })
+        }
+
+        const verifyData = `${phone}.${Otp}.${expiryTime}`
+
+        const isValid = otpService.verifyOtp(verifyData, hashOtp)
+
+        if (!isValid) {
+            res.status(400).json({
+                message: "Invalid OTP!"
+            })
+        }
+    }
 }
 
 module.exports = new AuthController();
