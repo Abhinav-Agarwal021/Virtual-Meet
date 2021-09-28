@@ -9,14 +9,12 @@ const app = express();
 dbConnect()
 
 const corsOption = {
-    origin: 'http://localhost:3000',
-    credentials: true,
-    optionSuccessStatus: 200
+    origin: '*',
 };
 
+app.use(cors(corsOption));
 app.use(express.json());
 app.use('/api', routes);
-app.use(cors(corsOption));
 
 const PORT = process.env.PORT || 5000;
 

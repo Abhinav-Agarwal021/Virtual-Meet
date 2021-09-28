@@ -4,15 +4,19 @@ import styles from "../PhoneEmail.module.css"
 import { Card } from "../../../../Shared Components/Card/Card"
 import { Button } from "../../../../Shared Components/Button/Button"
 import { TextInput } from '../../../../Shared Components/TextInput/TextInput'
-import { sendOtp } from '../../../http/Http'
+import { sendOtp } from '../../../../http/Http'
+import { useDispatch } from "react-redux"
+import { SendOtp } from '../../../../Store/AuthSlice'
 
 export const Phone = (props) => {
 
     const [phoneNumber, setPhoneNumber] = useState('')
+    const dispatch = useDispatch();
 
     const send = async () => {
-        const res = await sendOtp({ phone: phoneNumber })
-        console.log(res)
+        const { data } = await sendOtp({ phone: phoneNumber })
+        dispatch(SendOtp({ phone: data.phone, hash: data.hash }))
+        props.onClick()
     }
 
     return (

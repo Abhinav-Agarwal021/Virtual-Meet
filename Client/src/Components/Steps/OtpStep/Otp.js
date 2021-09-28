@@ -9,6 +9,10 @@ export const Otp = (props) => {
 
     const [otp, setOtp] = useState('');
 
+    const Submit = () => {
+        
+    }
+
     return (
         <div className={styles.cardWrapper}>
             <Card
@@ -20,7 +24,7 @@ export const Otp = (props) => {
                     onChange={(e) => setOtp(e.target.value)}
                 />
                 <div className={styles.actionButtonWrap}>
-                    <Button text="Next" />
+                    <Button text="Next" onClick={Submit} />
                 </div>
             </Card>
         </div>
