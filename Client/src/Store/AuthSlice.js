@@ -10,11 +10,14 @@ const initialState = {
 }
 
 export const AuthSlice = createSlice({
-    name: 'User',
+    name: 'user',
     initialState,
     reducers: {
 
         setAuth: (state, action) => {
+            const { user } = action.payload;
+            state.user = user;
+            state.isAuth = true;
         },
 
         SendOtp: (state, action) => {

@@ -6,11 +6,7 @@ import { Home } from "./Components/Home/Home"
 import { Authenticate } from "./Components/AuthenticateUser/Authenticate"
 import { Activate } from "./Components/ActivateUser/Activate"
 import { Rooms } from "./Components/Rooms/Rooms"
-
-const isAuth = false;
-const user = {
-  activate: false
-}
+import { useSelector } from "react-redux"
 
 function App() {
   return (
@@ -35,6 +31,7 @@ function App() {
 }
 
 const Guest = (props) => {
+  const { isAuth } = useSelector((state) => state.user)
   return (
     <Route
       {...props.rest}
@@ -55,6 +52,7 @@ const Guest = (props) => {
 };
 
 const SemiProtected = (props) => {
+  const { user, isAuth } = useSelector((state) => state.user)
   return (
     <Route
       {...props.rest}
@@ -82,6 +80,7 @@ const SemiProtected = (props) => {
 };
 
 const Protected = (props) => {
+  const { user, isAuth } = useSelector((state) => state.user)
   return (
     <Route
       {...props.rest}

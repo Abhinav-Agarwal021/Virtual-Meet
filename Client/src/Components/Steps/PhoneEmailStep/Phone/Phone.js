@@ -16,6 +16,7 @@ export const Phone = (props) => {
     const send = async () => {
         const { data } = await sendOtp({ phone: phoneNumber })
         dispatch(SendOtp({ phone: data.phone, hash: data.hash }))
+        console.log(data)
         props.onClick()
     }
 
