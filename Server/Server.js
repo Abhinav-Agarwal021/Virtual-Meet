@@ -9,7 +9,8 @@ const app = express();
 dbConnect()
 
 const corsOption = {
-    origin: '*',
+    credentials: true,
+    origin: 'http://localhost:3000',
 };
 
 app.use(cors(corsOption));
