@@ -19,10 +19,18 @@ class TokenService {
     }
 
     async storeToken(userId, token) {
-        await refresh.create({
-            token,
-            userId,
-        })
+        try {
+            await refresh.create({
+                token,
+                userId,
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async verifyAccessToken(token) {
+        return jwt.verify(token, accessTokenSecret)
     }
 
 }

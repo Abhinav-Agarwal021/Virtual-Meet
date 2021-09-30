@@ -3,8 +3,11 @@ const otpService = require('../Services/otpService');
 const TokenService = require('../Services/TokenService');
 const UserService = require('../Services/UserService');
 const userDto = require("../dtos/userDto")
+const Jimp = require('jimp')
+const path = require('path');
 
 class AuthController {
+
     async sendOtp(req, res) {
         const { phone } = req.body;
 
@@ -89,6 +92,47 @@ class AuthController {
 
         const UserDto = new userDto(user)
         res.json({ user: UserDto })
+    }
+
+    async activateUser(req, res) {
+
+        const { fullName, avatar } = req.body;
+
+        if (!fullName || !avatar) {
+            res.status(400).json({ message: "All fields are required" })
+        }
+
+        const buffer = Buffer.from(avatar.replace(/^data:image\/jpeg;base64,/, ''), 'base64')
+
+        const imagePath = `${Date.now()}-${Math.round(
+            Math.random() * 1e9
+        )}.png`;
+
+        try {
+            const jimResp = await Jimp.read(buffer);
+            jimResp
+                .resize(150, Jimp.AUTO)
+                .write(path.resolve(__dirname, `../userImages/${imagePath}`));
+        } catch (err) {
+            res.status(500).json({ message: 'Could not process the image' });
+        }
+
+        const userId = req.user._id;
+
+        try {
+
+            const user = await UserService.findUser({ _id: userId });
+            if (!user) {
+                res.status(404).json({ message: 'User not found!' });
+            }
+            user.activated = true;
+            user.name = fullName;
+            user.avatar = `/userImages/${imagePath}`;
+            user.save();
+            res.json({ user: new userDto(user), auth: true });
+        } catch (err) {
+            res.status(500).json({ message: 'Something went wrong!' });
+        }
     }
 }
 

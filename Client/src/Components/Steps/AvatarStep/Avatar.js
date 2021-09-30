@@ -6,6 +6,8 @@ import { Card } from '../../../Shared Components/Card/Card'
 
 import { useDispatch, useSelector } from "react-redux"
 import { setAvatar } from '../../../Store/userDetails'
+import { activateUser } from '../../../http/Http'
+import { setAuth } from '../../../Store/AuthSlice'
 
 export const Avatar = (props) => {
 
@@ -24,8 +26,15 @@ export const Avatar = (props) => {
         }
     }
 
-    const submit = () => {
-
+    const submit = async () => {
+        try {
+            const { data } = await activateUser({ fullName, avatar });
+            if (data.auth) {
+                dispatch(setAuth(data))
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
