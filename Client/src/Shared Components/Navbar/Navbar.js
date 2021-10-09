@@ -28,16 +28,34 @@ export const Navbar = () => {
         }
     }
 
-    const { isAuth } = useSelector((state) => state.user)
+    const { isAuth, user } = useSelector((state) => state.user)
 
     return (
         <nav className={`${styles.navbar} container`}>
             <Link style={brandStyle} to="/">
                 <span className={styles.logoText}>Virtual Meet</span>
             </Link>
-            {isAuth ? <button onClick={logoutUser}>
-                Logout
-            </button> : null}
+            <div className={styles.navRight}>
+                {user?.activated && (<><h3>{user?.name}</h3>
+                    <Link to="/">
+                        <img
+                            className={styles.avatar}
+                            src={
+                                user.avatar
+                            }
+                            width="50"
+                            height="50"
+                            alt="avatar"
+                        />
+                    </Link></>)}
+
+                {isAuth && (<button
+                    className={styles.logoutButton}
+                    onClick={logoutUser}
+                >
+                    logout
+                </button>)}
+            </div>
         </nav>
     )
 }

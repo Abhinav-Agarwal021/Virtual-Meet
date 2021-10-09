@@ -12,7 +12,7 @@ class TokenService {
         })
 
         const refreshToken = jwt.sign(id, refreshTokenSecret, {
-            expiresIn: "7d"
+            expiresIn: "604800s"
         })
 
         return { accessToken, refreshToken }
