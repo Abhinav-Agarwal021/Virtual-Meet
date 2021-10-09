@@ -102,7 +102,7 @@ class AuthController {
             res.status(400).json({ message: "All fields are required" })
         }
 
-        const buffer = Buffer.from(avatar.replace(/^data:image\/jpeg;base64,/, ''), 'base64')
+        const buffer = Buffer.from(avatar.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64')
 
         const imagePath = `${Date.now()}-${Math.round(
             Math.random() * 1e9
@@ -133,6 +133,67 @@ class AuthController {
         } catch (err) {
             res.status(500).json({ message: 'Something went wrong!' });
         }
+    }
+
+    async refresh(req, res) {
+
+        // get refresh token from cookie
+        const { refreshToken: refreshTokenFromCookie } = req.cookies;
+
+        // check if token is valid
+        let userData;
+        try {
+            userData = await TokenService.verifyRefreshToken(
+                refreshTokenFromCookie
+            );
+        } catch (err) {
+            return res.status(401).json({ message: 'Invalid Token' });
+        }
+
+        // Check if token is in db
+        try {
+            const token = await TokenService.findRefreshToken(
+                userData._id,
+                refreshTokenFromCookie
+            );
+            if (!token) {
+                return res.status(401).json({ message: 'Invalid token' });
+            }
+        } catch (err) {
+            return res.status(500).json({ message: 'Internal error' });
+        }
+
+        // check if valid user
+        const user = await UserService.findUser({ _id: userData._id });
+        if (!user) {
+            return res.status(404).json({ message: 'No user' });
+        }
+
+        // Generate new tokens
+        const { refreshToken, accessToken } = TokenService.generateToken({
+            _id: userData._id,
+        });
+
+        // Update refresh token
+        try {
+            await TokenService.updateRefreshToken(userData._id, refreshToken);
+        } catch (err) {
+            return res.status(500).json({ message: 'Internal error' });
+        }
+
+        // put in cookie
+        res.cookie('refreshToken', refreshToken, {
+            maxAge: 1000 * 60 * 60 * 24 * 30,
+            httpOnly: true,
+        });
+
+        res.cookie('accessToken', accessToken, {
+            maxAge: 1000 * 60 * 60 * 24 * 30,
+            httpOnly: true,
+        });
+
+        // response
+        res.json({ user: new userDto(user), auth: true });
     }
 }
 

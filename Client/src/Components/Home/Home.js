@@ -32,9 +32,9 @@ export const Home = () => {
                 </div>
                 <div className={styles.signinWrapper}>
                     <span className={styles.hasInvite}>
-                        Have an invite text?
+                        Already had an account?
                     </span>
-                    <Link style={signInLinkStyle} to="/activate">
+                    <Link style={signInLinkStyle} to="/authenticate">
                         Sign in
                     </Link>
                 </div>

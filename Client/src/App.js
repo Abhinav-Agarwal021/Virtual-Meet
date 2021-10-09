@@ -7,9 +7,15 @@ import { Authenticate } from "./Components/AuthenticateUser/Authenticate"
 import { Activate } from "./Components/ActivateUser/Activate"
 import { Rooms } from "./Components/Rooms/Rooms"
 import { useSelector } from "react-redux"
+import { useLoading } from "./hooks/useLoading"
 
 function App() {
-  return (
+
+  const { loading } = useLoading();
+
+  return loading ? (
+    <div>Loading..............</div>
+  ) : (
     <BrowserRouter>
       <Navbar />
       <Switch>
