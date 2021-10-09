@@ -8,7 +8,7 @@ class TokenService {
 
     generateToken(id) {
         const accessToken = jwt.sign(id, accessTokenSecret, {
-            expiresIn: "1s"
+            expiresIn: "300s"
         })
 
         const refreshToken = jwt.sign(id, refreshTokenSecret, {
@@ -49,6 +49,10 @@ class TokenService {
             { userId: userId },
             { token: refreshToken },
         );
+    }
+
+    async removeToken(refreshToken) {
+        return await refresh.deleteOne({ token: refreshToken })
     }
 
 }
