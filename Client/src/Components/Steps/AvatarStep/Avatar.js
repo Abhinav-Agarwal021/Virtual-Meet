@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { setAvatar } from '../../../Store/userDetails'
 import { activateUser } from '../../../http/Http'
 import { setAuth } from '../../../Store/AuthSlice'
+import { Loader } from "../../../Shared Components/Loader/Loader"
 
 export const Avatar = (props) => {
 
@@ -15,6 +16,8 @@ export const Avatar = (props) => {
     const { fullName, avatar } = useSelector((state) => state.details)
 
     const [pic, setPic] = useState(avatar !== "" ? avatar : "images/default_bg.png")
+
+    const [loading, setLoading] = useState(false)
 
     const changeImage = (e) => {
         const image = e.target.files[0];
@@ -27,6 +30,8 @@ export const Avatar = (props) => {
     }
 
     const submit = async () => {
+        if (!fullName || !avatar) return;
+        setLoading(true)
         try {
             const { data } = await activateUser({ fullName, avatar });
             if (data.auth) {
@@ -34,9 +39,12 @@ export const Avatar = (props) => {
             }
         } catch (error) {
             console.log(error)
+        } finally {
+            setLoading(false)
         }
     }
 
+    if (loading) return <Loader message="Activation in progress....." />
     return (
         <div className={styles.cardWrapper}>
             <Card title={`Hey! ${fullName}`}>

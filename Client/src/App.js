@@ -8,13 +8,14 @@ import { Activate } from "./Components/ActivateUser/Activate"
 import { Rooms } from "./Components/Rooms/Rooms"
 import { useSelector } from "react-redux"
 import { useLoading } from "./hooks/useLoading"
+import { Loader } from './Shared Components/Loader/Loader';
 
 function App() {
 
   const { loading } = useLoading();
 
   return loading ? (
-    <div>Loading..............</div>
+    <Loader message="Loading! please wait...." />
   ) : (
     <BrowserRouter>
       <Navbar />

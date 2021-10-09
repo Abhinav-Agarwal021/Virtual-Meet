@@ -17,6 +17,7 @@ export const Otp = () => {
     const { phone, hash } = useSelector((state) => state.user.otp)
 
     const Submit = async () => {
+        if (!otp || !phone || !hash) return;
         try {
             const { data } = await verifyOtp({ phone, otp, hash })
             console.log(data)
