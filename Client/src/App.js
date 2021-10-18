@@ -9,6 +9,7 @@ import { Rooms } from "./Components/Rooms/Rooms"
 import { useSelector } from "react-redux"
 import { useLoading } from "./hooks/useLoading"
 import { Loader } from './Shared Components/Loader/Loader';
+import { Chat } from './Components/Chat/Chat';
 
 function App() {
 
@@ -31,6 +32,9 @@ function App() {
         </SemiProtected>
         <Protected path="/rooms">
           <Rooms />
+        </Protected>
+        <Protected path="/chat">
+          <Chat />
         </Protected>
       </Switch>
     </BrowserRouter>
