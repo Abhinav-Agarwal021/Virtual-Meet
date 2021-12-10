@@ -15,6 +15,9 @@ export const verifyOtp = (data) => api.post('/api/verify-otp', data);
 export const activateUser = (data) => api.post('/api/activate-user', data);
 export const logout = () => api.post('/api/logout')
 
+export const getCs = (data) => api.get(`/api/chat/${data}`)
+export const getMs = (id) => api.get(`/api/chats/${id}`);
+
 api.interceptors.response.use(
     (config) => {
         return config;
