@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { getCs, getMs, getUs, sendMssgs } from '../../http/Http'
+import { getCs, getMs, sendMssgs } from '../../http/Http'
 import { Message } from '../../Shared Components/Messages/Message'
+import { io } from "socket.io-client"
 import styles from "./Chat.module.css"
 
 export const Chat = () => {
@@ -9,11 +10,34 @@ export const Chat = () => {
     const [conversations, setConversations] = useState([])
     const [currentChat, setCurrentChat] = useState()
     const [messages, setMessages] = useState([])
+    const socket = useRef();
+    const [arrivalMessage, setArrivalMessage] = useState(null)
     const scrollRef = useRef()
 
     const [newMssg, setNewMssg] = useState("")
 
     const { user } = useSelector((state) => state.user);
+
+    useEffect(() => {
+        socket.current = io("ws://localhost:8900");
+        socket.current.on("getMessage", (data) => {
+            setArrivalMessage({
+                sender: data.senderId,
+                message: data.message,
+                createdAt: Date.now(),
+            });
+        });
+    }, []);
+
+    useEffect(() => {
+        arrivalMessage &&
+            currentChat?.members.includes(arrivalMessage.sender) &&
+            setMessages((prev) => [...prev, arrivalMessage]);
+    }, [arrivalMessage, currentChat]);
+
+    useEffect(() => {
+        socket.current.emit("addUser", user.id);
+    }, [user]);
 
     useEffect(() => {
         const getConversation = async () => {
@@ -47,6 +71,16 @@ export const Chat = () => {
             message: newMssg,
             conversationId: currentChat?._id
         }
+
+        const receiverId = currentChat?.members.find(
+            (member) => member !== user.id
+        );
+
+        socket.current.emit("sendMessage", {
+            senderId: user.id,
+            receiverId,
+            message: newMssg,
+        });
 
         try {
             const res = await sendMssgs(userCs);
@@ -83,7 +117,7 @@ export const Chat = () => {
                             ))}
                         </div>
                         <div className={styles.send__chat}>
-                            <input value={newMssg} className={styles.write__mssg} type="text" placeholder="Message #Welcome" onChange={(e) => setNewMssg(e.target.value)} />
+                            <input value={newMssg} className={styles.write__mssg} type="message" placeholder="Message #Welcome" onChange={(e) => setNewMssg(e.target.value)} />
                             <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" onClick={sendMssg} />
                         </div>
                     </div>
