@@ -12,6 +12,11 @@ class UserService {
         return user
     }
 
+    async findUserId(data) {
+        const user = await UserModel.findById(data)
+        return user
+    }
+
 }
 
 module.exports = new UserService();

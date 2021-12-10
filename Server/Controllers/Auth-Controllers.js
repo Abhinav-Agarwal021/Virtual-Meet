@@ -206,6 +206,17 @@ class AuthController {
         res.json({ user: null, auth: false });
     }
 
+    async getUser(req, res) {
+
+        try {
+            const user = await UserService.findUserId(req.params.userId)
+            res.json(user)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ message: "db error" })
+        }
+    }
+
 }
 
 module.exports = new AuthController();

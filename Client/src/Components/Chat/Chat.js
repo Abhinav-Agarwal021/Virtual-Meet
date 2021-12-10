@@ -1,7 +1,6 @@
-import axios from 'axios'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { getCs, getMs } from '../../http/Http'
+import { getCs, getMs, getUs, sendMssgs } from '../../http/Http'
 import { Message } from '../../Shared Components/Messages/Message'
 import styles from "./Chat.module.css"
 
@@ -10,6 +9,9 @@ export const Chat = () => {
     const [conversations, setConversations] = useState([])
     const [currentChat, setCurrentChat] = useState()
     const [messages, setMessages] = useState([])
+    const scrollRef = useRef()
+
+    const [newMssg, setNewMssg] = useState("")
 
     const { user } = useSelector((state) => state.user);
 
@@ -38,7 +40,26 @@ export const Chat = () => {
         getMessages()
     }, [currentChat])
 
-    console.log(messages)
+    const sendMssg = async (e) => {
+        e.preventDefault();
+        const userCs = {
+            sender: user.id,
+            message: newMssg,
+            conversationId: currentChat?._id
+        }
+
+        try {
+            const res = await sendMssgs(userCs);
+            setNewMssg("")
+            setMessages([...messages, res.data])
+        } catch (error) {
+            console.log("message not sent")
+        }
+    }
+
+    useEffect(() => {
+        scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages])
 
     return (
         <div className={styles.messenger}>
@@ -56,12 +77,14 @@ export const Chat = () => {
                     <div className={styles.chat__wrapper}>
                         <div className={styles.chatBox__top}>
                             {messages.map((msg) => (
-                                <Message mssg={msg} own={msg.sender === user.id} />
+                                <div ref={scrollRef}>
+                                    <Message mssg={msg} own={msg.sender === user.id} />
+                                </div>
                             ))}
                         </div>
                         <div className={styles.send__chat}>
-                            <input className={styles.write__mssg} type="text" placeholder="Message #Welcome" />
-                            <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" />
+                            <input value={newMssg} className={styles.write__mssg} type="text" placeholder="Message #Welcome" onChange={(e) => setNewMssg(e.target.value)} />
+                            <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" onClick={sendMssg} />
                         </div>
                     </div>
                     :
