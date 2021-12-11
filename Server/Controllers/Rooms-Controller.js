@@ -18,6 +18,19 @@ class RoomsController {
         res.json(new roomDto(room))
     }
 
+    async getRooms(req, res) {
+
+        try {
+
+            const rooms = await RoomService.getRooms({ ownerId: req.params.userId })
+            res.json(rooms)
+
+        } catch (error) {
+            res.status(400).json({ message: "db error" })
+        }
+
+    }
+
 }
 
 module.exports = new RoomsController();

@@ -212,7 +212,22 @@ class AuthController {
             const user = await UserService.findUserId(req.params.userId)
             res.json(user)
         } catch (error) {
-            console.log(error)
+            res.status(500).json({ message: "db error" })
+        }
+    }
+
+    async getUserByData(req, res) {
+
+        const phone = req.query.phone;
+
+        if (!phone) {
+            res.status(400).json({ message: "Please enter a phone number" })
+        }
+
+        try {
+            const user = await UserService.findUser({ phone })
+            res.json(user)
+        } catch (error) {
             res.status(500).json({ message: "db error" })
         }
     }

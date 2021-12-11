@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import styles from "./Rooms.module.css"
 import { RoomCard } from '../../Shared Components/RoomCard/RoomCard';
 import { AddRooms } from '../Add_rooms/AddRooms';
+import { getRs, getUsBD, sendCList } from '../../http/Http';
+import { useSelector } from 'react-redux';
+import { createRoom as create } from '../../http/Http'
 
 const rooms = [
     {
@@ -76,10 +79,37 @@ const rooms = [
 
 export const Rooms = () => {
 
+    const { user } = useSelector((state) => state.user);
+
     const [showModal, setShowModal] = useState(false)
+    const [searchno, setSearchno] = useState('')
 
     const openModal = () => {
         setShowModal(true);
+    }
+
+    const handleSearch = async (e) => {
+        e.preventDefault();
+
+        if (!searchno) return;
+
+        if (searchno !== user.phone) {
+            try {
+                const friend = await getUsBD(searchno);
+                setSearchno('')
+                const res = await sendCList({ senderId: user.id, receiverId: friend.data._id })
+                console.log(res)
+                const { data } = await create({ server: friend.data.name });
+                console.log(data)
+                const rooms = await getRs(data.ownerId)
+                console.log(rooms)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        else {
+            console.log("please enter another number")
+        }
     }
 
     return (
@@ -89,8 +119,8 @@ export const Rooms = () => {
                     <div className={styles.left}>
                         <span className={styles.heading}>Rooms</span>
                         <div className={styles.searchBox}>
-                            <img src="/images/search-icon.png" alt="search" />
-                            <input type="text" className={styles.searchInput} />
+                            <input type="text" value={searchno} className={styles.searchInput} onChange={(e) => setSearchno(e.target.value)} />
+                            <img src="/images/search-icon.png" alt="search" onClick={handleSearch} />
                         </div>
                     </div>
                     <div className={styles.right}>

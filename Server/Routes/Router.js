@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const { sendOtp, verifyOtp, activateUser, refresh, logout, getUser } = require('../Controllers/Auth-Controllers')
+const { sendOtp, verifyOtp, activateUser, refresh, logout, getUser, getUserByData } = require('../Controllers/Auth-Controllers')
 const { chatApp, getIds, sendChats, getChats } = require('../Controllers/Conversation-Controller');
-const { create } = require('../Controllers/Rooms-Controller');
+const { create, getRooms } = require('../Controllers/Rooms-Controller');
 const authMiddlewares = require('../middlewares/authMiddlewares')
 
 router.post('/send-otp', sendOtp);
@@ -15,5 +15,7 @@ router.get('/chat/:userId', getIds);
 router.post('/chats', sendChats);
 router.get('/chats/:conversationId', getChats);
 router.post('/rooms', authMiddlewares, create);
+router.get('/userData', getUserByData)
+router.get('/rooms/:userId',getRooms)
 
 module.exports = router;

@@ -12,6 +12,13 @@ class RoomService {
         return room;
     }
 
+    async getRooms(payload) {
+        const { ownerId } = payload;
+
+        const {rooms} = await RoomModel.findById(ownerId)
+        return rooms;
+    }
+
 }
 
 module.exports = new RoomService();

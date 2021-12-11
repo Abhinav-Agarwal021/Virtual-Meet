@@ -5,8 +5,10 @@ class ConversationController {
 
     async chatApp(req, res) {
 
+        const { senderId, receiverId } = req.body;
+
         const newConversation = new conversation({
-            members: [req.body.senderId, req.body.receiverId],
+            members: [senderId, receiverId],
         })
 
         try {

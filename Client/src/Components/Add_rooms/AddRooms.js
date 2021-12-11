@@ -1,16 +1,12 @@
 import React, { useState } from 'react'
 import styles from "./AddRooms.module.css"
 import { useSelector } from 'react-redux';
-
-import { useHistory } from 'react-router-dom';
 import { TextInput } from '../../Shared Components/TextInput/TextInput'
 import { createRoom as create } from '../../http/Http'
 
 export const AddRooms = ({ onClose }) => {
 
     const { user } = useSelector((state) => state.user);
-
-    const history = useHistory();
     const [server, setServer] = useState(`${user.name}'s Server`);
 
     async function createRoom() {
