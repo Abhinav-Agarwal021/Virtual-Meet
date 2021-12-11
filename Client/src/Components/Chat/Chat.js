@@ -66,6 +66,8 @@ export const Chat = () => {
 
     const sendMssg = async (e) => {
         e.preventDefault();
+
+        if (!newMssg) return;
         const userCs = {
             sender: user.id,
             message: newMssg,

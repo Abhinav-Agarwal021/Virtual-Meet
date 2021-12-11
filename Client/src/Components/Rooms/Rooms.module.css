@@ -58,6 +58,7 @@
   transition: all 0.3s ease-in-out;
   border: none;
   outline: none;
+  cursor: pointer;
 }
 
 .startRoomButton span {
