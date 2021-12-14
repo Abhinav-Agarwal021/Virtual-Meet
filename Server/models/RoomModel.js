@@ -4,7 +4,9 @@ const Schema = mongoose.Schema;
 const roomSchema = new Schema(
     {
         server: { type: String, required: true, unique: true },
-        ownerId: { type: Schema.Types.ObjectId },
+        /*ownerId: { type: Schema.Types.ObjectId, required: true },
+        participant: { type: Schema.Types.ObjectId },*/
+        members: { type: Array }
     },
     {
         timestamps: true,

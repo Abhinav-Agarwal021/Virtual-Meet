@@ -33,7 +33,7 @@ function App() {
         <Protected path="/rooms">
           <Rooms />
         </Protected>
-        <Protected path="/chat">
+        <Protected path="/chat/:id">
           <Chat />
         </Protected>
       </Switch>

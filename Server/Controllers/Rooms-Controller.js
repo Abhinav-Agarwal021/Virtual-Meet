@@ -4,15 +4,16 @@ const RoomService = require("../Services/RoomService");
 class RoomsController {
 
     async create(req, res) {
-        const { server } = req.body;
+        const { server, ownerId, participant } = req.body;
 
-        if (!server) {
+        if (!server || !ownerId) {
             return res.status(400).json({ message: "server name is required" });
         }
 
         const room = await RoomService.create({
             server,
-            ownerId: req.user._id
+            ownerId,
+            participant
         })
 
         res.json(new roomDto(room))
@@ -22,13 +23,23 @@ class RoomsController {
 
         try {
 
-            const rooms = await RoomService.getRooms({ ownerId: req.params.userId })
-            res.json(rooms)
+            const rooms = await RoomService.getAllRooms(req.params.userId)
+            const allRooms = rooms.map((room) => new roomDto(room))
+            return res.json(allRooms)
 
         } catch (error) {
-            res.status(400).json({ message: "db error" })
+            res.status(400).json(error)
         }
 
+    }
+
+    async getRoomId(req, res) {
+        try {
+            const room = await RoomService.getRoomUId(req.params.roomId)
+            return res.json(room)
+        } catch (error) {
+
+        }
     }
 
 }

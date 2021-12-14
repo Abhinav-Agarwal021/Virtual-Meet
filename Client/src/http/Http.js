@@ -25,6 +25,7 @@ export const sendMssgs = (data) => api.post('/api/chats', data)
 export const sendCList = (data) => api.post('/api/chat', data);
 
 export const getRs = (id) => api.get(`/api/rooms/${id}`)
+export const getRId = (id) => api.get(`/api/room/${id}`)
 
 api.interceptors.response.use(
     (config) => {

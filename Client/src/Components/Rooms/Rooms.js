@@ -1,88 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from "./Rooms.module.css"
 import { RoomCard } from '../../Shared Components/RoomCard/RoomCard';
 import { AddRooms } from '../Add_rooms/AddRooms';
-import { getRs, getUsBD, sendCList } from '../../http/Http';
+import { getRs, getUsBD } from '../../http/Http';
 import { useSelector } from 'react-redux';
 import { createRoom as create } from '../../http/Http'
 
-const rooms = [
-    {
-        id: 1,
-        topic: 'Which framework best for frontend ?',
-        speakers: [
-            {
-                id: 1,
-                name: 'John Doe',
-                avatar: '/images/monkey-avatar.png',
-            },
-            {
-                id: 2,
-                name: 'Jane Doe',
-                avatar: '/images/monkey-avatar.png',
-            },
-        ],
-        totalPeople: 40,
-    },
-    {
-        id: 3,
-        topic: 'What’s new in machine learning?',
-        speakers: [
-            {
-                id: 1,
-                name: 'John Doe',
-                avatar: '/images/monkey-avatar.png',
-            },
-            {
-                id: 2,
-                name: 'Jane Doe',
-                avatar: '/images/monkey-avatar.png',
-            },
-        ],
-        totalPeople: 40,
-    },
-    {
-        id: 4,
-        topic: 'Why people use stack overflow?',
-        speakers: [
-            {
-                id: 1,
-                name: 'John Doe',
-                avatar: '/images/monkey-avatar.png',
-            },
-            {
-                id: 2,
-                name: 'Jane Doe',
-                avatar: '/images/monkey-avatar.png',
-            },
-        ],
-        totalPeople: 40,
-    },
-    {
-        id: 5,
-        topic: 'Artificial inteligence is the future?',
-        speakers: [
-            {
-                id: 1,
-                name: 'John Doe',
-                avatar: '/images/monkey-avatar.png',
-            },
-            {
-                id: 2,
-                name: 'Jane Doe',
-                avatar: '/images/monkey-avatar.png',
-            },
-        ],
-        totalPeople: 40,
-    },
-];
+import { useHistory } from 'react-router-dom';
 
 export const Rooms = () => {
+
+    const history = useHistory();
 
     const { user } = useSelector((state) => state.user);
 
     const [showModal, setShowModal] = useState(false)
     const [searchno, setSearchno] = useState('')
+    const [room, setRoom] = useState([])
 
     const openModal = () => {
         setShowModal(true);
@@ -97,12 +31,9 @@ export const Rooms = () => {
             try {
                 const friend = await getUsBD(searchno);
                 setSearchno('')
-                const res = await sendCList({ senderId: user.id, receiverId: friend.data._id })
-                console.log(res)
-                const { data } = await create({ server: friend.data.name });
-                console.log(data)
+                const { data } = await create({ server: friend.data.name, ownerId: user.id, participant: friend.data._id });
                 const rooms = await getRs(data.ownerId)
-                console.log(rooms)
+                setRoom([...room, rooms.data])
             } catch (error) {
                 console.log(error)
             }
@@ -111,6 +42,20 @@ export const Rooms = () => {
             console.log("please enter another number")
         }
     }
+
+    const handleOpenChat = (id) => {
+        history.push(`/chat/${id}`)
+    }
+
+    useEffect(() => {
+
+        const fetchRooms = async () => {
+            const rooms = await getRs(user.id)
+            setRoom(rooms.data)
+        }
+        fetchRooms();
+
+    }, [user])
 
     return (
         <>
@@ -135,8 +80,8 @@ export const Rooms = () => {
                 </div>
 
                 <div className={styles.roomList}>
-                    {rooms.map((room) => (
-                        <RoomCard key={room.id} room={room} />
+                    {room.map((room) => (
+                        <RoomCard key={room.id} room={room} onClick={() => handleOpenChat(room.id)} />
                     ))}
                 </div>
             </div>

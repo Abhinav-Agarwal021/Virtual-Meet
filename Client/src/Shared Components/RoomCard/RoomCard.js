@@ -1,18 +1,11 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from "./RoomCard.module.css"
-import {useHistory} from "react-router-dom"
 
-export const RoomCard = ({ room }) => {
-
-    const history = useHistory();
-
-    const OpenRoom = () => {
-        history.push("/chat")
-    }
+export const RoomCard = ({ room, onClick }) => {
     return (
-        <div className={styles.card} onClick={OpenRoom}>
-            <h3 className={styles.topic}>{room.topic}</h3>
-            <div className={styles.speakers}>
+        <div className={styles.card} onClick={onClick}>
+            <h3 className={styles.topic}>{room.server}</h3>
+            {/*<div className={styles.speakers}>
                 <div className={styles.avatars}>
                     {room.speakers.map((speaker) => (
                         <img src={speaker.avatar} alt="speaker-avatar" />
@@ -25,9 +18,9 @@ export const RoomCard = ({ room }) => {
                         </div>
                     ))}
                 </div>
-            </div>
+                    </div>*/}
             <div className={styles.peopleCount}>
-                <span>{room.totalPeople}</span>
+                {/*<span>{room.totalPeople}</span>*/}
                 <img src="/images/user-icon.png" alt="user-icon" />
             </div>
         </div>

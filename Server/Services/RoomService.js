@@ -3,20 +3,28 @@ const RoomModel = require("../models/RoomModel");
 class RoomService {
 
     async create(payload) {
-        const { server, ownerId } = payload;
+        const { server, ownerId, participant } = payload;
 
         const room = await RoomModel.create({
             server,
-            ownerId
+            members: [ownerId, participant]
         })
         return room;
     }
 
-    async getRooms(payload) {
-        const { ownerId } = payload;
+    async getAllRooms(data) {
 
-        const {rooms} = await RoomModel.findById(ownerId)
+        const rooms = await RoomModel.find({
+            members: {
+                $in: [data]
+            }
+        })
         return rooms;
+    }
+
+    async getRoomUId(data) {
+        const room = await RoomModel.findById(data)
+        return room;
     }
 
 }

@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { getCs, getMs, sendMssgs } from '../../http/Http'
+import { getMs, getRId, sendMssgs } from '../../http/Http'
 import { Message } from '../../Shared Components/Messages/Message'
 import { io } from "socket.io-client"
 import styles from "./Chat.module.css"
 
 export const Chat = () => {
 
-    const [conversations, setConversations] = useState([])
+    var url = window.location.pathname;
+    var id = url.substring(url.lastIndexOf('/') + 1);
+
     const [currentChat, setCurrentChat] = useState()
     const [messages, setMessages] = useState([])
     const socket = useRef();
@@ -42,15 +44,15 @@ export const Chat = () => {
     useEffect(() => {
         const getConversation = async () => {
             try {
-                const res = await getCs(user.id)
-                setConversations(res.data)
+                const res = await getRId(id)
+                setCurrentChat(res.data)
             } catch (error) {
                 console.log(error)
             }
         }
 
         getConversation()
-    }, [user.id])
+    }, [id])
 
     useEffect(() => {
         const getMessages = async () => {
@@ -99,7 +101,7 @@ export const Chat = () => {
 
     return (
         <div className={styles.messenger}>
-            <div className={styles.server__menu}>
+            {/*<div className={styles.server__menu}>
                 <div className={styles.serverName__wrapper}>
                     {conversations.map((c) => (
                         <div onClick={() => setCurrentChat(c)}>
@@ -107,24 +109,21 @@ export const Chat = () => {
                         </div>
                     ))}
                 </div>
-            </div>
+                    </div>*/}
             <div className={styles.chat__Box}>
-                {currentChat ?
-                    <div className={styles.chat__wrapper}>
-                        <div className={styles.chatBox__top}>
-                            {messages.map((msg) => (
-                                <div ref={scrollRef}>
-                                    <Message mssg={msg} own={msg.sender === user.id} />
-                                </div>
-                            ))}
-                        </div>
-                        <div className={styles.send__chat}>
-                            <input value={newMssg} className={styles.write__mssg} type="message" placeholder="Message #Welcome" onChange={(e) => setNewMssg(e.target.value)} />
-                            <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" onClick={sendMssg} />
-                        </div>
+                <div className={styles.chat__wrapper}>
+                    <div className={styles.chatBox__top}>
+                        {messages.map((msg) => (
+                            <div ref={scrollRef}>
+                                <Message mssg={msg} own={msg.sender === user.id} />
+                            </div>
+                        ))}
                     </div>
-                    :
-                    null}
+                    <div className={styles.send__chat}>
+                        <input value={newMssg} className={styles.write__mssg} type="message" placeholder="Message #Welcome" onChange={(e) => setNewMssg(e.target.value)} />
+                        <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" onClick={sendMssg} />
+                    </div>
+                </div>
             </div>
         </div>
     )
