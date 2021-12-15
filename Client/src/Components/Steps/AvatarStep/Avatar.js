@@ -30,7 +30,7 @@ export const Avatar = (props) => {
     }
 
     const submit = async () => {
-        if (!fullName || !avatar) return;
+        if (!fullName) return;
         setLoading(true)
         try {
             const { data } = await activateUser({ fullName, avatar });

@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 
-import { PhoneEmail } from '../Steps/PhoneEmailStep/PhoneEmail';
 import { Otp } from '../Steps/OtpStep/Otp';
+import { Phone } from '../Steps/PhoneEmailStep/Phone/Phone';
 
 const steps = {
-    1: PhoneEmail,
+    1: Phone,
     2: Otp,
 };
 

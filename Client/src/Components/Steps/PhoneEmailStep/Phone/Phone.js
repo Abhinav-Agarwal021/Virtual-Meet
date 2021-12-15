@@ -22,16 +22,18 @@ export const Phone = (props) => {
     }
 
     return (
-        <Card title="Enter you phone number">
-            <TextInput
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-            />
-            <div>
-                <div className={styles.actionButtonWrap}>
-                    <Button text="Next" onClick={send} />
+        <div className={styles.cardWrapper}>
+            <Card title="Enter you phone number" icon="phone">
+                <TextInput
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+                <div>
+                    <div className={styles.actionButtonWrap}>
+                        <Button text="Next" onClick={send} />
+                    </div>
                 </div>
-            </div>
-        </Card>
+            </Card>
+        </div>
     )
 }

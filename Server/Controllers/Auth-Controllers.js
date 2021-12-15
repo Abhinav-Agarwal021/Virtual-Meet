@@ -98,23 +98,20 @@ class AuthController {
 
         const { fullName, avatar } = req.body;
 
-        if (!fullName || !avatar) {
+        if (!fullName) {
             res.status(400).json({ message: "All fields are required" })
         }
+        if (avatar) {
+            const buffer = Buffer.from(avatar?.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64')
 
-        const buffer = Buffer.from(avatar.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64')
+            const imagePath = `${Date.now()}-${Math.round(
+                Math.random() * 1e9
+            )}.png`;
 
-        const imagePath = `${Date.now()}-${Math.round(
-            Math.random() * 1e9
-        )}.png`;
-
-        try {
             const jimResp = await Jimp.read(buffer);
             jimResp
                 .resize(150, Jimp.AUTO)
                 .write(path.resolve(__dirname, `../userImages/${imagePath}`));
-        } catch (err) {
-            res.status(500).json({ message: 'Could not process the image' });
         }
 
         const userId = req.user._id;
@@ -127,7 +124,7 @@ class AuthController {
             }
             user.activated = true;
             user.name = fullName;
-            user.avatar = `/userImages/${imagePath}`;
+            user.avatar ? user.avatar = `/userImages/${imagePath}` : "";
             user.save();
             res.json({ user: new userDto(user), auth: true });
         } catch (err) {

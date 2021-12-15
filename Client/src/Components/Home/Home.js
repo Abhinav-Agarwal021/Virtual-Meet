@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useHistory } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 
 import { Card } from "../../Shared Components/Card/Card"
 import { Button } from "../../Shared Components/Button/Button"
@@ -7,13 +7,6 @@ import { Button } from "../../Shared Components/Button/Button"
 import styles from "./Home.module.css"
 
 export const Home = () => {
-
-    const signInLinkStyle = {
-        color: '#0077ff',
-        fontWeight: 'bold',
-        textDecoration: 'none',
-        marginLeft: '10px',
-    };
 
     const history = useHistory();
 
@@ -29,14 +22,6 @@ export const Home = () => {
                 </p>
                 <div>
                     <Button onClick={startRegister} text="Let's get started" />
-                </div>
-                <div className={styles.signinWrapper}>
-                    <span className={styles.hasInvite}>
-                        Already had an account?
-                    </span>
-                    <Link style={signInLinkStyle} to="/authenticate">
-                        Sign in
-                    </Link>
                 </div>
             </Card>
         </div>
