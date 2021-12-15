@@ -6,8 +6,8 @@ class RoomsController {
     async create(req, res) {
         const { server, ownerId, participant } = req.body;
 
-        if (!server || !ownerId) {
-            return res.status(400).json({ message: "server name is required" });
+        if (!ownerId||!participant) {
+            return res.status(400).json({ message: "server people are required" });
         }
 
         const room = await RoomService.create({

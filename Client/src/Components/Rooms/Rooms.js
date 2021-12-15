@@ -31,7 +31,8 @@ export const Rooms = () => {
             try {
                 const friend = await getUsBD(searchno);
                 setSearchno('')
-                const { data } = await create({ server: friend.data.name, ownerId: user.id, participant: friend.data._id });
+                const { data } = await create({ ownerId: user.id, participant: friend.data._id });
+                history.push(`/chat/${data.id}`)
                 const rooms = await getRs(data.ownerId)
                 setRoom([...room, rooms.data])
             } catch (error) {
