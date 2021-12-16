@@ -1,16 +1,18 @@
 class roomDto{
     id;
     server;
-    ownerId;
-    participant;
+    dm;
+    members;
+    admin;
     createdAt;
 
     constructor(room) {
         this.id = room.id;
         this.server = room.server;
-        this.ownerId = room.ownerId;
+        this.dm = room.dm;
+        this.members = room.members;
+        this.admin = room.admin;
         this.createdAt = room.createdAt;
-        this.participant = room.participant;
     }
 }
 

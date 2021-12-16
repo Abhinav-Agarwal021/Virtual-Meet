@@ -3,10 +3,10 @@ const Schema = mongoose.Schema;
 
 const roomSchema = new Schema(
     {
-        server: { type: String, required: false, unique: false },
-        /*ownerId: { type: Schema.Types.ObjectId, required: true },
-        participant: { type: Schema.Types.ObjectId },*/
-        members: { type: Array }
+        server: { type: String, required: true, unique: true },
+        dm: { type: Boolean },
+        members: { type: Array },
+        admin: { type: Array }
     },
     {
         timestamps: true,

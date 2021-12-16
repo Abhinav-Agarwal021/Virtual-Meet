@@ -3,13 +3,22 @@ const RoomModel = require("../models/RoomModel");
 class RoomService {
 
     async create(payload) {
-        const { server, ownerId, participant } = payload;
+        const { server, dm, members, admin } = payload;
 
         const room = await RoomModel.create({
             server,
-            members: [ownerId, participant]
+            dm,
+            members,
+            admin
         })
         return room;
+    }
+
+    async update(data) {
+        const { dm, members } = data;
+
+        const update = await RoomModel.updateOne({ dm }, { $push: { members } })
+        return update;
     }
 
     async getAllRooms(data) {

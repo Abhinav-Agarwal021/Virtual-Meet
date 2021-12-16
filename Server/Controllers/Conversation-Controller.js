@@ -1,3 +1,4 @@
+const conversationDto = require('../dtos/conversationDto');
 const conversation = require('../models/ConversationModel')
 const Message = require('../models/MessageModel')
 
@@ -7,13 +8,12 @@ class ConversationController {
 
         const { senderId, receiverId } = req.body;
 
-        const newConversation = new conversation({
-            members: [senderId, receiverId],
-        })
 
         try {
-            const savedConversation = newConversation.save();
-            res.status(200).json(savedConversation)
+            const newConversation = await conversation.create({
+                members: [senderId, receiverId],
+            })
+            return res.status(200).json(new conversationDto(newConversation))
         } catch (error) {
             res.status(500).json({ message: "Conversation error" })
         }
@@ -24,7 +24,7 @@ class ConversationController {
             const Conversation = await conversation.find({
                 members: { $in: [req.params.userId] }
             })
-            res.status(200).json(Conversation)
+            return res.status(200).json(Conversation)
         } catch (error) {
             res.status(500).json({ message: "cannot fetch your chats" })
         }
@@ -35,7 +35,7 @@ class ConversationController {
 
         try {
             const savedmessage = await newMessage.save()
-            res.status(200).json(savedmessage)
+            return res.status(200).json(savedmessage)
         } catch (error) {
             res.status(500).json({ message: "message can't be sent" })
         }
@@ -46,7 +46,7 @@ class ConversationController {
             const messages = await Message.find({
                 conversationId: req.params.conversationId
             })
-            res.status(200).json(messages)
+            return res.status(200).json(messages)
         } catch (error) {
             res.status(500).json({ message: "chats cannot be synced" })
         }

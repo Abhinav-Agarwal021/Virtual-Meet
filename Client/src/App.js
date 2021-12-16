@@ -31,7 +31,10 @@ function App() {
           <Activate />
         </SemiProtected>
         <Protected path="/rooms">
-          <Rooms />
+          <Rooms dm={false} />
+        </Protected>
+        <Protected path="/dms">
+          <Rooms dm={true} />
         </Protected>
         <Protected path="/chat/:id">
           <Chat />

@@ -4,19 +4,31 @@ const RoomService = require("../Services/RoomService");
 class RoomsController {
 
     async create(req, res) {
-        const { server, ownerId, participant } = req.body;
+        const { server, dm, members, admin } = req.body;
 
-        if (!ownerId||!participant) {
-            return res.status(400).json({ message: "server people are required" });
+        if (!server || !dm || !members || !admin) {
+            return res.status(400).json({ message: "server details are required" });
         }
 
         const room = await RoomService.create({
             server,
-            ownerId,
-            participant
+            dm,
+            members,
+            admin
         })
 
         res.json(new roomDto(room))
+    }
+
+    async updateRoom(req, res) {
+        const { dm, members } = req.body;
+
+        const update = await RoomService.update({
+            dm,
+            members
+        })
+
+        return res.json(update)
     }
 
     async getRooms(req, res) {

@@ -9,10 +9,12 @@ import { setAvatar } from '../../../Store/userDetails'
 import { activateUser } from '../../../http/Http'
 import { setAuth } from '../../../Store/AuthSlice'
 import { Loader } from "../../../Shared Components/Loader/Loader"
+import { updateRoom } from '../../../http/Http'
 
 export const Avatar = (props) => {
 
     const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.user);
     const { fullName, avatar } = useSelector((state) => state.details)
 
     const [pic, setPic] = useState(avatar !== "" ? avatar : "images/default_bg.png")
@@ -37,6 +39,7 @@ export const Avatar = (props) => {
             if (data.auth) {
                 dispatch(setAuth(data))
             }
+            await updateRoom({ dm: true, members: user.id });
         } catch (error) {
             console.log(error)
         } finally {
