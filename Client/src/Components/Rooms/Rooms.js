@@ -31,8 +31,8 @@ export const Rooms = (props) => {
             try {
                 const friend = await getUsBD(searchno);
                 setSearchno('')
-                const data = await sendCList({ senderId: user.id, receiverId: friend.data._id });
-                console.log(data)
+                const conv = await sendCList({ senderId: user.id, receiverId: friend.data._id });
+                history.push(`/chat/${conv.data.id}`)
             } catch (error) {
                 console.log(error)
             }
