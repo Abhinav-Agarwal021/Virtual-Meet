@@ -23,7 +23,7 @@ export const useLoading = () => {
                 setLoading(false);
             }
         })();
-    }, []);
+    });
 
     return { loading };
 

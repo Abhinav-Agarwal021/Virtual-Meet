@@ -12,8 +12,9 @@ export const AddRooms = ({ onClose }) => {
     async function createRoom() {
         try {
             if (!server) return;
-            const { data } = await create({ server, dm: false, members: user.id, admin: user.id });
+            const data = await create({ server, dm: false, members: user.id, admin: user.id });
             console.log(data)
+            onClose();
         } catch (err) {
             console.log(err.message);
         }

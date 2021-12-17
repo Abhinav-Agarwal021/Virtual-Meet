@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styles from "./Rooms.module.css"
 import { RoomCard } from '../../Shared Components/RoomCard/RoomCard';
 import { AddRooms } from '../Add_rooms/AddRooms';
-import { getRId, getRs, getUsBD, sendCList } from '../../http/Http';
+import { getCs, getRId, getRs, getUsBD, sendCList } from '../../http/Http';
 import { useSelector } from 'react-redux';
 
 import { useHistory } from 'react-router-dom';
@@ -16,6 +16,7 @@ export const Rooms = (props) => {
     const [showModal, setShowModal] = useState(false)
     const [searchno, setSearchno] = useState('')
     const [room, setRoom] = useState([])
+    const [conversation, setConversation] = useState([])
 
     const openModal = () => {
         setShowModal(true);
@@ -41,12 +42,13 @@ export const Rooms = (props) => {
         }
     }
 
-    {/*const handleOpenChat = (id) => {
+    const handleOpenChat = (id) => {
         history.push(`/chat/${id}`)
-    }*/}
-    const handleOpenChat = async (id) => {
+    }
+
+    const handleOpenRoom = async (id) => {
         const res = await getRId(id);
-        if (res.data.own) {
+        if (res.data.dm) {
             history.push(`/dms`)
         }
     }
@@ -58,6 +60,16 @@ export const Rooms = (props) => {
             setRoom(rooms.data)
         }
         fetchRooms();
+
+    }, [user])
+
+    useEffect(() => {
+
+        const fetchConversations = async () => {
+            const conversations = await getCs(user.id)
+            setConversation(conversations.data)
+        }
+        fetchConversations();
 
     }, [user])
 
@@ -90,8 +102,11 @@ export const Rooms = (props) => {
                 </div>
 
                 <div className={styles.roomList}>
-                    {room.map((room) => (
-                        <RoomCard key={room.id} room={room} onClick={() => handleOpenChat(room.id)} />
+                    {!props.dm && room.map((room) => (
+                        <RoomCard key={room.id} room={room} onClick={() => handleOpenRoom(room.id)} />
+                    ))}
+                    {props.dm && conversation.map((conv) => (
+                        <RoomCard key={conv.id} conv={conv} onClick={() => handleOpenChat(conv._id)} />
                     ))}
                 </div>
             </div>

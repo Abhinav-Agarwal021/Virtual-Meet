@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { getMs, getRId, sendMssgs } from '../../http/Http'
+import { getCsBId, getMs, sendMssgs } from '../../http/Http'
 import { Message } from '../../Shared Components/Messages/Message'
 import { io } from "socket.io-client"
 import styles from "./Chat.module.css"
@@ -44,7 +44,7 @@ export const Chat = () => {
     useEffect(() => {
         const getConversation = async () => {
             try {
-                const res = await getRId(id)
+                const res = await getCsBId(id)
                 setCurrentChat(res.data)
             } catch (error) {
                 console.log(error)

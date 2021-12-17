@@ -30,6 +30,15 @@ class ConversationController {
         }
     }
 
+    async getConversation(req, res) {
+        try {
+            const data = await conversation.findById(req.params.convId);
+            return res.json(data);
+        } catch (error) {
+            res.json({message:error})
+        }
+    }
+
     async sendChats(req, res) {
         const newMessage = new Message(req.body)
 

@@ -6,7 +6,7 @@ class RoomsController {
     async create(req, res) {
         const { server, dm, members, admin } = req.body;
 
-        if (!server || !dm || !members || !admin) {
+        if (!server || !members || !admin) {
             return res.status(400).json({ message: "server details are required" });
         }
 

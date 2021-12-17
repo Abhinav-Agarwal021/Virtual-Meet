@@ -36,13 +36,23 @@ export const getRs = (id) => api.get(`/api/rooms/${id}`)
 //rooms fetched using room id
 export const getRId = (id) => api.get(`/api/room/${id}`)
 
+//sends conversation list
+export const sendCList = (data) => api.post('/api/chat', data);
+
+//fetching conversations using user id
+export const getCs = (data) => api.get(`/api/chat/${data}`)
+
+//fetching conversations using conversation id
+export const getCsBId = (data) => api.get(`/api/conv/${data}`);
+
+//fetch users using user id
 export const getUs = (id) => api.get(`/api/user/${id}`)
 
-export const getCs = (data) => api.get(`/api/chat/${data}`)
+//get all messages using conv id
 export const getMs = (id) => api.get(`/api/chats/${id}`);
 
+//send messages
 export const sendMssgs = (data) => api.post('/api/chats', data)
-export const sendCList = (data) => api.post('/api/chat', data);
 
 
 api.interceptors.response.use(
