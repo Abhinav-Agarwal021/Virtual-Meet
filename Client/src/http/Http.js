@@ -54,6 +54,9 @@ export const getMs = (id) => api.get(`/api/chats/${id}`);
 //send messages
 export const sendMssgs = (data) => api.post('/api/chats', data)
 
+//creates category
+export const sendCat=(data)=>api.post('/api/grps/cat',data)
+
 
 api.interceptors.response.use(
     (config) => {

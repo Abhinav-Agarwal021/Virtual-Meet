@@ -2,24 +2,32 @@ import React, { useState } from 'react'
 import styles from "./AddRooms.module.css"
 import { useSelector } from 'react-redux';
 import { TextInput } from '../../Shared Components/TextInput/TextInput'
-import { createRoom as create } from '../../http/Http'
+import { createRoom as create, sendCat } from '../../http/Http'
+import {Loader} from '../../Shared Components/Loader/Loader'
 
 export const AddRooms = ({ onClose }) => {
 
     const { user } = useSelector((state) => state.user);
     const [server, setServer] = useState(`${user.name}'s Server`);
+    const [loading, setLoading] = useState(false)
 
     async function createRoom() {
+        setLoading(true);
         try {
             if (!server) return;
             const data = await create({ server, dm: false, members: user.id, admin: user.id });
             console.log(data)
+            //const res=await sendCat({data._id,})
             onClose();
         } catch (err) {
             console.log(err.message);
         }
+        finally {
+            setLoading(false);
+        }
     }
 
+    if (loading) return <Loader message="Loading! please wait....." />
     return (
         <div className={styles.modalMask}>
             <div className={styles.modalBody}>

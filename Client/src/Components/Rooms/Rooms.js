@@ -3,6 +3,7 @@ import styles from "./Rooms.module.css"
 import { RoomCard } from '../../Shared Components/RoomCard/RoomCard';
 import { AddRooms } from '../Add_rooms/AddRooms';
 import { getCs, getRId, getRs, getUsBD, sendCList } from '../../http/Http';
+import { Loader } from "../../Shared Components/Loader/Loader"
 import { useSelector } from 'react-redux';
 
 import { useHistory } from 'react-router-dom';
@@ -17,6 +18,7 @@ export const Rooms = (props) => {
     const [searchno, setSearchno] = useState('')
     const [room, setRoom] = useState([])
     const [conversation, setConversation] = useState([])
+    const [loading, setLoading] = useState(false)
 
     const openModal = () => {
         setShowModal(true);
@@ -43,13 +45,27 @@ export const Rooms = (props) => {
     }
 
     const handleOpenChat = (id) => {
-        history.push(`/chat/${id}`)
+        setLoading(true);
+        try {
+            history.push(`/chat/${id}`)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleOpenRoom = async (id) => {
-        const res = await getRId(id);
-        if (res.data.dm) {
-            history.push(`/dms`)
+        setLoading(true);
+        try {
+            const res = await getRId(id);
+            if (res.data.dm) {
+                history.push(`/dms`)
+            }
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -73,6 +89,7 @@ export const Rooms = (props) => {
 
     }, [user])
 
+    if (loading) return <Loader message="Loading! please wait....." />
     return (
         <>
             <div className="container">
@@ -83,7 +100,7 @@ export const Rooms = (props) => {
                         </span>
                         {!props.dm &&
                             <div className={styles.searchBox}>
-                                <input type="text" value={searchno} className={styles.searchInput} onChange={(e) => setSearchno(e.target.value)} />
+                                <input type="text" value={searchno} placeholder='Find or start a conversation' className={styles.searchInput} onChange={(e) => setSearchno(e.target.value)} />
                                 <img src="/images/search-icon.png" alt="search" onClick={handleSearch} />
                             </div>
                         }
