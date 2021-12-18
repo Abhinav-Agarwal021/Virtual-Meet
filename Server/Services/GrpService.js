@@ -1,17 +1,41 @@
 const CategoryModel = require("../models/CategoryModel");
+const UserRolesModel = require("../models/UserRolesModel");
+const ChannelModel = require("../models/ChannelModel")
 
 class GrpService{
     async CreateCat(data) {
-        const { roomId, name, role, members } = data;
+        const { roomId, name, role } = data;
 
-        const res = await CategoryModel.create({
+        const cat = await CategoryModel.create({
             roomId,
             name,
-            role,
-            members
+            role
         })
 
-        return res;
+        return cat;
+    }
+
+    async createRole(data) {
+        const { roomId, userId, role } = data;
+
+        const user = await UserRolesModel.create({
+            roomId,
+            userId,
+            role
+        })
+
+        return user;
+    }
+
+    async createChannel(data) {
+        const { categoryId, name } = data;
+
+        const channel = await ChannelModel.create({
+            categoryId,
+            name
+        })
+
+        return channel;
     }
 }
 

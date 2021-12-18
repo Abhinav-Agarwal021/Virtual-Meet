@@ -3,10 +3,9 @@ const schema = mongoose.Schema;
 
 const CategorySchema = new schema(
     {
-        roomId: { type: schema.Types.ObjectId },
-        name: { type: String },
-        role: { type: String },
-        members: { type: Array }
+        roomId: { type: schema.Types.ObjectId, required: true },
+        name: { type: String, required: true },
+        role: { type: String }
     },
     {
         timestamps: true

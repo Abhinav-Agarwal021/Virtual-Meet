@@ -6,7 +6,7 @@ const roomSchema = new Schema(
         server: { type: String, required: true, unique: true },
         dm: { type: Boolean },
         members: { type: Array },
-        admin: { type: Array }
+        roles: { type: Array }
     },
     {
         timestamps: true,

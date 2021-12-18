@@ -55,7 +55,13 @@ export const getMs = (id) => api.get(`/api/chats/${id}`);
 export const sendMssgs = (data) => api.post('/api/chats', data)
 
 //creates category
-export const sendCat=(data)=>api.post('/api/grps/cat',data)
+export const sendCat = (data) => api.post('/api/grp/cat', data)
+
+//create roles for user
+export const sendRoles = (data) => api.post('/api/grp/role', data);
+
+//create send channels
+export const sendChannels = (data) => api.post('/api/grp/channels', data)
 
 
 api.interceptors.response.use(

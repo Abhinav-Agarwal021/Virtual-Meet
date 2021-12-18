@@ -3,13 +3,13 @@ const RoomModel = require("../models/RoomModel");
 class RoomService {
 
     async create(payload) {
-        const { server, dm, members, admin } = payload;
+        const { server, dm, members, roles } = payload;
 
         const room = await RoomModel.create({
             server,
             dm,
             members,
-            admin
+            roles
         })
         return room;
     }

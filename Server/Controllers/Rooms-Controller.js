@@ -4,9 +4,9 @@ const RoomService = require("../Services/RoomService");
 class RoomsController {
 
     async create(req, res) {
-        const { server, dm, members, admin } = req.body;
+        const { server, dm, members,roles } = req.body;
 
-        if (!server || !members || !admin) {
+        if (!server || !members) {
             return res.status(400).json({ message: "server details are required" });
         }
 
@@ -14,7 +14,7 @@ class RoomsController {
             server,
             dm,
             members,
-            admin
+            roles
         })
 
         res.json(new roomDto(room))

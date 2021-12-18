@@ -72,8 +72,15 @@ export const Rooms = (props) => {
     useEffect(() => {
 
         const fetchRooms = async () => {
-            const rooms = await getRs(user.id)
-            setRoom(rooms.data)
+            setLoading(true);
+            try {
+                const rooms = await getRs(user.id)
+                setRoom(rooms.data)
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setLoading(false)
+            }
         }
         fetchRooms();
 
@@ -82,8 +89,15 @@ export const Rooms = (props) => {
     useEffect(() => {
 
         const fetchConversations = async () => {
-            const conversations = await getCs(user.id)
-            setConversation(conversations.data)
+            setLoading(true);
+            try {
+                const conversations = await getCs(user.id)
+                setConversation(conversations.data)
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setLoading(false)
+            }
         }
         fetchConversations();
 

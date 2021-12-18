@@ -2,32 +2,31 @@ import React, { useState } from 'react'
 import styles from "./AddRooms.module.css"
 import { useSelector } from 'react-redux';
 import { TextInput } from '../../Shared Components/TextInput/TextInput'
-import { createRoom as create, sendCat } from '../../http/Http'
-import {Loader} from '../../Shared Components/Loader/Loader'
+import { createRoom as create, sendCat, sendChannels, sendRoles } from '../../http/Http'
 
 export const AddRooms = ({ onClose }) => {
 
     const { user } = useSelector((state) => state.user);
     const [server, setServer] = useState(`${user.name}'s Server`);
-    const [loading, setLoading] = useState(false)
 
     async function createRoom() {
-        setLoading(true);
         try {
             if (!server) return;
-            const data = await create({ server, dm: false, members: user.id, admin: user.id });
+            const data = await create({ server, dm: false, members: user.id, roles: ["public", "admin"] });
             console.log(data)
-            //const res=await sendCat({data._id,})
+            const res = await sendCat({ roomId: data.data.id, name: "text channels", role: "public" })
+            console.log(res)
+            const userRole = await sendRoles({ roomId: data.data.id, userId: user.id, role: ["admin", "public"] })
+            console.log(userRole)
+            const channels = await sendChannels({ categoryId: res.data.id, name: "general" })
+            console.log(channels)
             onClose();
         } catch (err) {
             console.log(err.message);
-        }
-        finally {
-            setLoading(false);
+            onClose();
         }
     }
 
-    if (loading) return <Loader message="Loading! please wait....." />
     return (
         <div className={styles.modalMask}>
             <div className={styles.modalBody}>
