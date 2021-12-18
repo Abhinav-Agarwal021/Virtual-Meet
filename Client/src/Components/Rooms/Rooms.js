@@ -62,6 +62,9 @@ export const Rooms = (props) => {
             if (res.data.dm) {
                 history.push(`/dms`)
             }
+            else {
+                history.push('/grp')
+            }
         } catch (error) {
             console.log(error)
         } finally {
@@ -72,36 +75,40 @@ export const Rooms = (props) => {
     useEffect(() => {
 
         const fetchRooms = async () => {
-            setLoading(true);
-            try {
-                const rooms = await getRs(user.id)
-                setRoom(rooms.data)
-            } catch (error) {
-                console.log(error)
-            } finally {
-                setLoading(false)
+            if (!props.dm) {
+                setLoading(true);
+                try {
+                    const rooms = await getRs(user.id)
+                    setRoom(rooms.data)
+                } catch (error) {
+                    console.log(error)
+                } finally {
+                    setLoading(false)
+                }
             }
         }
         fetchRooms();
 
-    }, [user])
+    }, [user,props])
 
     useEffect(() => {
 
         const fetchConversations = async () => {
-            setLoading(true);
-            try {
-                const conversations = await getCs(user.id)
-                setConversation(conversations.data)
-            } catch (error) {
-                console.log(error)
-            } finally {
-                setLoading(false)
+            if (props.dm) {
+                setLoading(true);
+                try {
+                    const conversations = await getCs(user.id)
+                    setConversation(conversations.data)
+                } catch (error) {
+                    console.log(error)
+                } finally {
+                    setLoading(false)
+                }
             }
         }
         fetchConversations();
 
-    }, [user])
+    }, [user,props])
 
     if (loading) return <Loader message="Loading! please wait....." />
     return (
