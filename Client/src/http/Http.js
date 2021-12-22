@@ -63,6 +63,12 @@ export const sendRoles = (data) => api.post('/api/grp/role', data);
 //create send channels
 export const sendChannels = (data) => api.post('/api/grp/channels', data)
 
+//get server data using room id
+export const getRoom = (data) => api.get(`/api/grp/${data}`)
+
+//getChannels dec using room id
+export const getChannels=(data)=>api.get(`/api/grp/channels/${data}`)
+
 
 api.interceptors.response.use(
     (config) => {

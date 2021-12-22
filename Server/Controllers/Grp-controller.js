@@ -37,18 +37,34 @@ class GrpController {
     }
 
     async createChannel(req, res) {
-        const { categoryId, name } = req.body;
+        const { categoryId, name, type, roomId } = req.body;
 
-        if (!categoryId || !name) {
+        if (!categoryId || !name || !type) {
             res.status(400).json({ message: "Category id and channel name is req for a channel" })
         }
 
         const channel = await GrpService.createChannel({
             categoryId,
-            name
+            name,
+            roomId,
+            type
         })
 
         return res.json(new ChannelDto(channel))
+    }
+
+    async getRoom(req, res) {
+        const room = await GrpService.getRoom(req.params.roomId)
+        const allCat = room.map((rooms) => new CategoryDto(rooms))
+
+        return res.json(allCat)
+    }
+
+    async getChannels(req, res) {
+        const channels = await GrpService.getChannels(req.params.roomId)
+        const allChannels = channels.map((channel) => new ChannelDto(channel))
+
+        return res.json(allChannels)
     }
 }
 

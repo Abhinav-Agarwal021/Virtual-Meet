@@ -2,7 +2,7 @@ const CategoryModel = require("../models/CategoryModel");
 const UserRolesModel = require("../models/UserRolesModel");
 const ChannelModel = require("../models/ChannelModel")
 
-class GrpService{
+class GrpService {
     async CreateCat(data) {
         const { roomId, name, role } = data;
 
@@ -28,13 +28,31 @@ class GrpService{
     }
 
     async createChannel(data) {
-        const { categoryId, name } = data;
+        const { categoryId, name, type, roomId } = data;
 
         const channel = await ChannelModel.create({
             categoryId,
-            name
+            name,
+            roomId,
+            type
         })
 
+        return channel;
+    }
+
+    async getRoom(data) {
+        const { roomId } = data;
+
+        const room = await CategoryModel.find(roomId)
+
+        return room;
+    }
+
+    async getChannels(data) {
+        const { roomId } = data;
+
+        const channel = await ChannelModel.find(roomId)
+        
         return channel;
     }
 }

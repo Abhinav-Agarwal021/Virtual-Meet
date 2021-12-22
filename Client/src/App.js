@@ -40,7 +40,7 @@ function App() {
         <Protected path="/chat/:id">
           <Chat />
         </Protected>
-        <Protected path="/grp">
+        <Protected path="/grp/:id">
           <GrpChat />
         </Protected>
       </Switch>

@@ -41,7 +41,7 @@ export const Navbar = () => {
                         <img
                             className={styles.avatar}
                             src={
-                                user.avatar ? user.avatar : `images/default_bg.png`
+                                user.avatar ? user.avatar : `/Images/default_bg.png`
                             }
                             width="50"
                             height="50"

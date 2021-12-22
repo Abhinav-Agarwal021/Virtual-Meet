@@ -15,7 +15,7 @@ export const AddRooms = ({ onClose }) => {
             const data = await create({ server, dm: false, members: user.id, roles: ["public", "admin"] });
             const res = await sendCat({ roomId: data.data.id, name: "text channels", role: "public" })
             await sendRoles({ roomId: data.data.id, userId: user.id, role: ["admin", "public"] })
-            await sendChannels({ categoryId: res.data.id, name: "general" })
+            await sendChannels({ categoryId: res.data.id, name: "general", type: "text", roomId: data.data.id })
             onClose();
         } catch (err) {
             console.log(err.message);

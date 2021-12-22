@@ -63,7 +63,7 @@ export const Rooms = (props) => {
                 history.push(`/dms`)
             }
             else {
-                history.push('/grp')
+                history.push(`/grp/${id}`)
             }
         } catch (error) {
             console.log(error)

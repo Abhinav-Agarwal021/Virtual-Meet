@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { sendOtp, verifyOtp, activateUser, refresh, logout, getUser, getUserByData } = require('../Controllers/Auth-Controllers')
 const { chatApp, getIds, sendChats, getChats, getConversation } = require('../Controllers/Conversation-Controller');
-const { createCat, createRole, createChannel } = require('../Controllers/Grp-controller');
+const { createCat, createRole, createChannel, getRoom, getChannels } = require('../Controllers/Grp-controller');
 const { create, getRooms, getRoomId, updateRoom } = require('../Controllers/Rooms-Controller');
 const authMiddlewares = require('../middlewares/authMiddlewares')
 
@@ -24,6 +24,9 @@ router.get('/room/:roomId', getRoomId)
 
 router.post('/grp/cat', createCat);
 router.post('/grp/role', createRole)
-router.post('/grp/channels',createChannel)
+router.post('/grp/channels', createChannel)
+
+router.get('/grp/:roomId', getRoom)
+router.get('/grp/channels/:roomId',getChannels)
 
 module.exports = router;
