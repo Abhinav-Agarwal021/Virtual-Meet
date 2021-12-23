@@ -3,6 +3,8 @@ import { getChannels, getRoom } from '../../http/Http';
 import styles from './GrpChat.module.css'
 
 import { FaChevronDown } from "react-icons/fa";
+import { RiVoiceprintFill } from "react-icons/ri";
+import { BsChatText } from "react-icons/bs";
 
 export const GrpChat = () => {
 
@@ -12,7 +14,7 @@ export const GrpChat = () => {
     const [categories, setCategories] = useState([])
     const [channels, setChannels] = useState([])
 
-    const [catOpen, setCatOpen] = useState([true])
+    const [catOpen, setCatOpen] = useState({})
 
     useEffect(() => {
         const getRoomData = async () => {
@@ -33,7 +35,8 @@ export const GrpChat = () => {
     }, [id])
 
     const handleCat = (idx) => {
-        setCatOpen[idx](!catOpen)
+        const currentState = Object.assign({}, catOpen);
+        setCatOpen({ ...currentState, [idx]: !catOpen[idx] });
     }
 
     return (
@@ -41,15 +44,17 @@ export const GrpChat = () => {
             <div className={styles.server__menu}>
                 {categories.map((cat, idx) =>
                     <div className={styles.serverName__wrapper}>
-                        <div className={styles.category} key={idx} onClick={handleCat}>
-                            <FaChevronDown className={catOpen ? styles.drop__icon : styles.right__icon} />
+                        <div className={styles.category} key={idx} onClick={() => handleCat(idx)}>
+                            <FaChevronDown className={catOpen[idx] ? styles.drop__icon : styles.right__icon} />
                             {cat.name}
                         </div>
-                        {catOpen &&
+                        {catOpen[idx] &&
                             <div className={styles.channels}>
                                 {channels.map((channel, idx) =>
+                                    channel.categoryId === cat.id &&
                                     <div key={idx} className={styles.channelName}>
-                                        {channel.categoryId === cat.id && channel.name}
+                                        {channel.type === 'voice' ? <RiVoiceprintFill className={styles.channel__type} /> : <BsChatText className={styles.channel__type} />}
+                                        {channel.name}
                                     </div>
                                 )}
                             </div>

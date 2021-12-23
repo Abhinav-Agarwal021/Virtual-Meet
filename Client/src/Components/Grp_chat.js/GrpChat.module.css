@@ -29,20 +29,26 @@
 }
 
 .channelName {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .drop__icon {
   width: 10px;
   margin-right: 10px;
   transform: rotate(0deg);
-  transition: all ease 500ms;
+  transition: all ease 100ms;
 }
 .right__icon {
   width: 10px;
   margin-right: 10px;
   transform: rotate(-90deg);
-  transition: all ease 500ms;
+  transition: all ease 100ms;
+}
+
+.channel__type {
+  margin-right: 10px;
 }
 
 .chat__wrapper {
