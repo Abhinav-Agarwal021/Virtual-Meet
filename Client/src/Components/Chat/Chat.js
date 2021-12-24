@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { getCsBId, getMs, sendMssgs } from '../../http/Http'
+import { getCsBId, getMs, getUs, sendMssgs } from '../../http/Http'
 import { Message } from '../../Shared Components/Messages/Message'
 import { io } from "socket.io-client"
 import styles from "./Chat.module.css"
@@ -11,6 +11,7 @@ export const Chat = () => {
     var id = url.substring(url.lastIndexOf('/') + 1);
 
     const [currentChat, setCurrentChat] = useState()
+    const [friend, setfriend] = useState(null)
     const [messages, setMessages] = useState([])
     const socket = useRef();
     const [arrivalMessage, setArrivalMessage] = useState(null)
@@ -36,6 +37,17 @@ export const Chat = () => {
             currentChat?.members.includes(arrivalMessage.sender) &&
             setMessages((prev) => [...prev, arrivalMessage]);
     }, [arrivalMessage, currentChat]);
+
+    useEffect(() => {
+        const chat = currentChat?.members.find((m) => m !== user.id)
+
+        const getFrined = async() => {
+            const Friend = await getUs(chat);
+            setfriend(Friend.data);
+        }
+
+        getFrined();
+    }, [user,currentChat])
 
     useEffect(() => {
         socket.current.emit("addUser", user.id);
@@ -120,7 +132,7 @@ export const Chat = () => {
                         ))}
                     </div>
                     <div className={styles.send__chat}>
-                        <input value={newMssg} className={styles.write__mssg} type="message" placeholder="Message #Welcome" onChange={(e) => setNewMssg(e.target.value)} />
+                        <input value={newMssg} className={styles.write__mssg} type="message" placeholder={`Message @${friend?.name}`} onChange={(e) => setNewMssg(e.target.value)} />
                         <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" onClick={sendMssg} />
                     </div>
                 </div>
