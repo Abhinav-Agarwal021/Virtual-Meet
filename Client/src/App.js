@@ -20,24 +20,29 @@ function App() {
     <Loader message="Loading! please wait...." />
   ) : (
     <BrowserRouter>
-      <Navbar />
       <Switch>
         <Guest path="/" exact>
+          <Navbar />
           <Home />
         </Guest>
         <Guest path="/authenticate">
+          <Navbar />
           <Authenticate />
         </Guest>
         <SemiProtected path="/activate">
+          <Navbar />
           <Activate />
         </SemiProtected>
         <Protected path="/rooms">
+          <Navbar />
           <Rooms dm={false} />
         </Protected>
         <Protected path="/dms">
+          <Navbar />
           <Rooms dm={true} />
         </Protected>
         <Protected path="/chat/:id">
+          <Navbar />
           <Chat />
         </Protected>
         <Protected path="/grp/:id">

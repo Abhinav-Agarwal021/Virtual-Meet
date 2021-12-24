@@ -1,5 +1,5 @@
 .messenger {
-  height: calc(100vh - 94px);
+  height: calc(100vh);
   width: 100vw;
   display: flex;
 }
@@ -22,6 +22,9 @@
   margin-bottom: 8px;
   cursor: pointer;
   user-select: none;
+  color: rgb(170, 170, 170);
+  text-transform: uppercase;
+  font-size: small;
 }
 
 .channels {
@@ -32,6 +35,19 @@
   margin-bottom: 10px;
   display: flex;
   align-items: center;
+  color: rgb(170, 170, 170);
+  cursor: pointer;
+}
+
+.selected {
+  color: white !important;
+}
+
+.category:hover {
+  color: rgb(255, 255, 255);
+}
+.channelName:hover {
+  color: rgb(255, 255, 255);
 }
 
 .drop__icon {

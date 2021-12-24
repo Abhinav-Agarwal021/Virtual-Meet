@@ -13,8 +13,11 @@ export const GrpChat = () => {
 
     const [categories, setCategories] = useState([])
     const [channels, setChannels] = useState([])
+    const [openChat, setOpenChat] = useState(false)
+    const [selectedIndex, setSelectedIndex] = useState(null)
+    const [openedChat, setOpenedChat] = useState(null)
 
-    const [catOpen, setCatOpen] = useState({})
+    const [catClosed, setCatClosed] = useState([])
 
     useEffect(() => {
         const getRoomData = async () => {
@@ -35,8 +38,24 @@ export const GrpChat = () => {
     }, [id])
 
     const handleCat = (idx) => {
-        const currentState = Object.assign({}, catOpen);
-        setCatOpen({ ...currentState, [idx]: !catOpen[idx] });
+        if (catClosed.includes(idx)) {
+            var newOpen = [...catClosed].filter((e) => e !== idx);
+        } else {
+            newOpen = [...catClosed, idx];
+        }
+
+        setCatClosed(newOpen);
+    }
+
+    const handleOpenChat = (channel, idx) => {
+        setSelectedIndex(idx);
+        if (channel.type === 'text') {
+            setOpenChat(true);
+            setOpenedChat(channel.name);
+        }
+        else {
+            setOpenChat(false)
+        }
     }
 
     return (
@@ -45,14 +64,14 @@ export const GrpChat = () => {
                 {categories.map((cat, idx) =>
                     <div className={styles.serverName__wrapper}>
                         <div className={styles.category} key={idx} onClick={() => handleCat(idx)}>
-                            <FaChevronDown className={catOpen[idx] ? styles.drop__icon : styles.right__icon} />
+                            <FaChevronDown className={!catClosed.includes(idx) ? styles.drop__icon : styles.right__icon} />
                             {cat.name}
                         </div>
-                        {catOpen[idx] &&
+                        {!catClosed.includes(idx) &&
                             <div className={styles.channels}>
-                                {channels.map((channel, idx) =>
+                                {channels.map((channel, index) =>
                                     channel.categoryId === cat.id &&
-                                    <div key={idx} className={styles.channelName}>
+                                    <div key={index} className={`${styles.channelName} ${selectedIndex === index && styles.selected}`} onClick={() => handleOpenChat(channel, index)}>
                                         {channel.type === 'voice' ? <RiVoiceprintFill className={styles.channel__type} /> : <BsChatText className={styles.channel__type} />}
                                         {channel.name}
                                     </div>
@@ -62,16 +81,18 @@ export const GrpChat = () => {
                     </div>
                 )}
             </div>
-            <div className={styles.chat__Box}>
-                <div className={styles.chat__wrapper}>
-                    <div className={styles.chatBox__top}>
-                    </div>
-                    <div className={styles.send__chat}>
-                        <input className={styles.write__mssg} type="message" placeholder="Message #Welcome" />
-                        <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" />
+            {openChat && openedChat &&
+                <div className={styles.chat__Box}>
+                    <div className={styles.chat__wrapper}>
+                        <div className={styles.chatBox__top}>
+                        </div>
+                        <div className={styles.send__chat}>
+                            <input className={styles.write__mssg} type="message" placeholder={`Message #${openedChat}`} />
+                            <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" />
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     )
 }
