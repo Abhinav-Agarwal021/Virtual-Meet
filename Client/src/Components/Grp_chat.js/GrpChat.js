@@ -1,12 +1,16 @@
-import React, { useState, useEffect,useRef } from 'react'
-import { getChannels, getMs, getRoom, sendMssgs } from '../../http/Http';
+import React, { useState, useEffect, useRef } from 'react'
+import { getChannels, getMs, getRId, getRoom, sendMssgs } from '../../http/Http';
 import styles from './GrpChat.module.css'
 import { useSelector } from 'react-redux';
 import { io } from "socket.io-client"
 
 import { FaChevronDown } from "react-icons/fa";
+import { BsPersonPlus } from "react-icons/bs";
+import { FiSettings } from "react-icons/fi";
 import { RiVoiceprintFill } from "react-icons/ri";
 import { BsChatText } from "react-icons/bs";
+import { BsPlusCircle } from "react-icons/bs";
+import { BsFileEarmarkPlus } from "react-icons/bs";
 import { Message } from '../../Shared Components/Messages/Message';
 
 export const GrpChat = () => {
@@ -20,7 +24,8 @@ export const GrpChat = () => {
     const [selectedIndex, setSelectedIndex] = useState(null)
     const [openedChat, setOpenedChat] = useState(null)
     const [catClosed, setCatClosed] = useState([])
-    
+    const [room, setRoom] = useState(null)
+
     const [newMssg, setNewMssg] = useState("")
     const [arrivalMessage, setArrivalMessage] = useState(null)
     const [messages, setMessages] = useState([])
@@ -113,7 +118,7 @@ export const GrpChat = () => {
 
         socket.current.emit("sendMessage", {
             senderId: user.id,
-            receiverId:"",
+            receiverId: "",
             message: newMssg,
         });
 
@@ -130,9 +135,41 @@ export const GrpChat = () => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages])
 
+    useEffect(() => {
+
+        const getRoomsData = async () => {
+            const res = await getRId(id);
+            setRoom(res.data);
+        }
+
+        getRoomsData();
+    }, [id])
+
     return (
         <div className={styles.messenger}>
             <div className={styles.server__menu}>
+                <div className={styles.category__navbar}>
+                    <p>{room?.server}</p>
+                    <FaChevronDown className={styles.server_set__dropdown} />
+                </div>
+                <div className={styles.server__set}>
+                    <div className={styles.set}>
+                        <p>Invite People</p>
+                        <BsPersonPlus />
+                    </div>
+                    <div className={styles.set}>
+                        <p>Server Settings</p>
+                        <FiSettings />
+                    </div>
+                    <div className={styles.set}>
+                        <p>Create Channel</p>
+                        <BsPlusCircle />
+                    </div>
+                    <div className={styles.set}>
+                        <p>Create Category</p>
+                        <BsFileEarmarkPlus />
+                    </div>
+                </div>
                 {categories.map((cat, idx) =>
                     <div className={styles.serverName__wrapper}>
                         <div className={styles.category} key={idx} onClick={() => handleCat(idx)}>
@@ -153,8 +190,8 @@ export const GrpChat = () => {
                     </div>
                 )}
             </div>
-            {openChat && openedChat &&
-                <div className={styles.chat__Box}>
+            <div className={styles.chat__Box}>
+                {openChat && openedChat ?
                     <div className={styles.chat__wrapper}>
                         <div className={styles.chatBox__top}>
                             {messages.map((msg) => (
@@ -168,8 +205,12 @@ export const GrpChat = () => {
                             <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" onClick={sendMssg} />
                         </div>
                     </div>
-                </div>
-            }
+                    :
+                    <div className={styles.default}>
+                        Select any channel to start a conversation with
+                    </div>
+                }
+            </div>
         </div>
     )
 }

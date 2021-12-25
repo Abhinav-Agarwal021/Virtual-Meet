@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
+import { useHistory } from "react-router-dom"
 import styles from "./AddRooms.module.css"
 import { useSelector } from 'react-redux';
 import { TextInput } from '../../Shared Components/TextInput/TextInput'
 import { createRoom as create, sendCat, sendChannels, sendRoles } from '../../http/Http'
 
 export const AddRooms = ({ onClose }) => {
+
+    const history = useHistory();
 
     const { user } = useSelector((state) => state.user);
     const [server, setServer] = useState(`${user.name}'s Server`);
@@ -16,6 +19,7 @@ export const AddRooms = ({ onClose }) => {
             const res = await sendCat({ roomId: data.data.id, name: "text channels", role: "public" })
             await sendRoles({ roomId: data.data.id, userId: user.id, role: ["admin", "public"] })
             await sendChannels({ categoryId: res.data.id, name: "general", type: "text", roomId: data.data.id })
+            history.push(`/grp/${data.data.id}`)
             onClose();
         } catch (err) {
             console.log(err.message);
