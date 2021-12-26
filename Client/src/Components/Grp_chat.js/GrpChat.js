@@ -12,7 +12,7 @@ import { BsChatText } from "react-icons/bs";
 import { BsPlusCircle } from "react-icons/bs";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import { Message } from '../../Shared Components/Messages/Message';
-import { AddRooms } from '../../Add-Components/Add_rooms/AddRooms';
+import { AddRooms } from '../Add_rooms/AddRooms';
 
 export const GrpChat = () => {
 
@@ -156,10 +156,12 @@ export const GrpChat = () => {
 
     const handleCreateChannel = () => {
         setShowChannelModal(true);
+        setOpenServerSet(false)
     }
 
     const handleCreateCat = () => {
         setShowCatModal(true);
+        setOpenServerSet(false)
     }
 
     return (
@@ -232,8 +234,8 @@ export const GrpChat = () => {
                     }
                 </div>
             </div>
-            {showCatModal && <AddRooms onClose={() => setShowCatModal(false)} />}
-            {showChannelModal && <AddRooms onClose={() => setShowChannelModal(false)} />}
+            {showCatModal && <AddRooms field="Category Name" onClose={() => setShowCatModal(false)} />}
+            {showChannelModal && <AddRooms field="Channel Name" onClose={() => setShowChannelModal(false)} />}
         </>
     )
 }

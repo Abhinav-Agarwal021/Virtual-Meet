@@ -113,15 +113,6 @@ export const Chat = () => {
 
     return (
         <div className={styles.messenger}>
-            {/*<div className={styles.server__menu}>
-                <div className={styles.serverName__wrapper}>
-                    {conversations.map((c) => (
-                        <div onClick={() => setCurrentChat(c)}>
-                            <span>#Welcome</span>
-                        </div>
-                    ))}
-                </div>
-                    </div>*/}
             <div className={styles.chat__Box}>
                 <div className={styles.chat__wrapper}>
                     <div className={styles.chatBox__top}>
