@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styles from "./Rooms.module.css"
 import { RoomCard } from '../../Shared Components/RoomCard/RoomCard';
-import { AddRooms } from '../Add_rooms/AddRooms';
+import { AddRooms } from '../../Add-Components/Add_rooms/AddRooms';
 import { getCs, getRId, getRs, getUsBD, sendCList } from '../../http/Http';
 import { Loader } from "../../Shared Components/Loader/Loader"
 import { useSelector } from 'react-redux';

@@ -12,6 +12,7 @@ import { BsChatText } from "react-icons/bs";
 import { BsPlusCircle } from "react-icons/bs";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import { Message } from '../../Shared Components/Messages/Message';
+import { AddRooms } from '../../Add-Components/Add_rooms/AddRooms';
 
 export const GrpChat = () => {
 
@@ -29,6 +30,10 @@ export const GrpChat = () => {
     const [newMssg, setNewMssg] = useState("")
     const [arrivalMessage, setArrivalMessage] = useState(null)
     const [messages, setMessages] = useState([])
+
+    const [openServerSet, setOpenServerSet] = useState(false)
+    const [showCatModal, setShowCatModal] = useState(false)
+    const [showChannelModal, setShowChannelModal] = useState(false)
 
     const { user } = useSelector((state) => state.user);
 
@@ -145,72 +150,90 @@ export const GrpChat = () => {
         getRoomsData();
     }, [id])
 
+    const handleServerSet = () => {
+        setOpenServerSet(!openServerSet);
+    }
+
+    const handleCreateChannel = () => {
+        setShowChannelModal(true);
+    }
+
+    const handleCreateCat = () => {
+        setShowCatModal(true);
+    }
+
     return (
-        <div className={styles.messenger}>
-            <div className={styles.server__menu}>
-                <div className={styles.category__navbar}>
-                    <p>{room?.server}</p>
-                    <FaChevronDown className={styles.server_set__dropdown} />
-                </div>
-                <div className={styles.server__set}>
-                    <div className={styles.set}>
-                        <p>Invite People</p>
-                        <BsPersonPlus />
+        <>
+            <div className={styles.messenger}>
+                <div className={styles.server__menu}>
+                    <div className={styles.category__navbar} onClick={handleServerSet}>
+                        <p>{room?.server}</p>
+                        <FaChevronDown className={styles.server_set__dropdown} />
                     </div>
-                    <div className={styles.set}>
-                        <p>Server Settings</p>
-                        <FiSettings />
-                    </div>
-                    <div className={styles.set}>
-                        <p>Create Channel</p>
-                        <BsPlusCircle />
-                    </div>
-                    <div className={styles.set}>
-                        <p>Create Category</p>
-                        <BsFileEarmarkPlus />
-                    </div>
-                </div>
-                {categories.map((cat, idx) =>
-                    <div className={styles.serverName__wrapper}>
-                        <div className={styles.category} key={idx} onClick={() => handleCat(idx)}>
-                            <FaChevronDown className={!catClosed.includes(idx) ? styles.drop__icon : styles.right__icon} />
-                            {cat.name}
-                        </div>
-                        {!catClosed.includes(idx) &&
-                            <div className={styles.channels}>
-                                {channels.map((channel, index) =>
-                                    channel.categoryId === cat.id &&
-                                    <div key={index} className={`${styles.channelName} ${selectedIndex === index && styles.selected}`} onClick={() => handleOpenChat(channel, index)}>
-                                        {channel.type === 'voice' ? <RiVoiceprintFill className={styles.channel__type} /> : <BsChatText className={styles.channel__type} />}
-                                        {channel.name}
-                                    </div>
-                                )}
+                    {openServerSet &&
+                        <div className={styles.server__set}>
+                            <div className={styles.set}>
+                                <p>Invite People</p>
+                                <BsPersonPlus />
                             </div>
-                        }
-                    </div>
-                )}
-            </div>
-            <div className={styles.chat__Box}>
-                {openChat && openedChat ?
-                    <div className={styles.chat__wrapper}>
-                        <div className={styles.chatBox__top}>
-                            {messages.map((msg) => (
-                                <div ref={scrollRef}>
-                                    <Message mssg={msg} own={msg.sender === user.id} />
+                            <div className={styles.set}>
+                                <p>Server Settings</p>
+                                <FiSettings />
+                            </div>
+                            <div className={styles.set} onClick={handleCreateChannel}>
+                                <p>Create Channel</p>
+                                <BsPlusCircle />
+                            </div>
+                            <div className={styles.set} onClick={handleCreateCat}>
+                                <p>Create Category</p>
+                                <BsFileEarmarkPlus />
+                            </div>
+                        </div>
+                    }
+                    {categories.map((cat, idx) =>
+                        <div className={styles.serverName__wrapper}>
+                            <div className={styles.category} key={idx} onClick={() => handleCat(idx)}>
+                                <FaChevronDown className={!catClosed.includes(idx) ? styles.drop__icon : styles.right__icon} />
+                                {cat.name}
+                            </div>
+                            {!catClosed.includes(idx) &&
+                                <div className={styles.channels}>
+                                    {channels.map((channel, index) =>
+                                        channel.categoryId === cat.id &&
+                                        <div key={index} className={`${styles.channelName} ${selectedIndex === index && styles.selected}`} onClick={() => handleOpenChat(channel, index)}>
+                                            {channel.type === 'voice' ? <RiVoiceprintFill className={styles.channel__type} /> : <BsChatText className={styles.channel__type} />}
+                                            {channel.name}
+                                        </div>
+                                    )}
                                 </div>
-                            ))}
+                            }
                         </div>
-                        <div className={styles.send__chat}>
-                            <input value={newMssg} className={styles.write__mssg} type="message" placeholder={`Message #${openedChat.name}`} onChange={(e) => setNewMssg(e.target.value)} />
-                            <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" onClick={sendMssg} />
+                    )}
+                </div>
+                <div className={styles.chat__Box}>
+                    {openChat && openedChat ?
+                        <div className={styles.chat__wrapper}>
+                            <div className={styles.chatBox__top}>
+                                {messages.map((msg) => (
+                                    <div ref={scrollRef}>
+                                        <Message mssg={msg} own={msg.sender === user.id} />
+                                    </div>
+                                ))}
+                            </div>
+                            <div className={styles.send__chat}>
+                                <input value={newMssg} className={styles.write__mssg} type="message" placeholder={`Message #${openedChat.name}`} onChange={(e) => setNewMssg(e.target.value)} />
+                                <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" onClick={sendMssg} />
+                            </div>
                         </div>
-                    </div>
-                    :
-                    <div className={styles.default}>
-                        Select any channel to start a conversation with
-                    </div>
-                }
+                        :
+                        <div className={styles.default}>
+                            Select any channel to start a conversation with
+                        </div>
+                    }
+                </div>
             </div>
-        </div>
+            {showCatModal && <AddRooms onClose={() => setShowCatModal(false)} />}
+            {showChannelModal && <AddRooms onClose={() => setShowChannelModal(false)} />}
+        </>
     )
 }

@@ -44,7 +44,7 @@ export const AddRooms = ({ onClose }) => {
                     />
                 </div>
                 <div className={styles.modalFooter}>
-                    <h2>Start a room, open to everyone</h2>
+                    <h2>Start a room, the type you want</h2>
                     <button
                         onClick={createRoom}
                         className={styles.footerButton}
