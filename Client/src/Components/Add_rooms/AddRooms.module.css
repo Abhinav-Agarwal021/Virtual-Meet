@@ -19,7 +19,7 @@
 }
 
 .modalHeader {
-  padding: 30px;
+  padding: 15px 30px 30px 30px;
   border-bottom: 2px solid #262626;
 }
 
@@ -31,6 +31,11 @@
 
 .heading {
   margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.type{
+  font-size: 15px;
 }
 
 .subHeading {

@@ -41,18 +41,18 @@ class GrpService {
     }
 
     async getRoom(data) {
-        const { roomId } = data;
+        const roomId = data;
 
-        const room = await CategoryModel.find(roomId)
+        const room = await CategoryModel.find({roomId})
 
         return room;
     }
 
     async getChannels(data) {
-        const { roomId } = data;
+        const roomId = data;
 
-        const channel = await ChannelModel.find(roomId)
-        
+        const channel = await ChannelModel.find({roomId})
+
         return channel;
     }
 }

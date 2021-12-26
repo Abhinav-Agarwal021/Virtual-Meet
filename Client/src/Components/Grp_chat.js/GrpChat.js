@@ -60,6 +60,12 @@ export const GrpChat = () => {
         socket.current.emit("addUser", user.id);
     }, [user]);
 
+    const getCat = async () => {
+        setShowCatModal(false)
+        const room = await getRoom(id);
+        setCategories(room.data);
+    }
+
     useEffect(() => {
         const getRoomData = async () => {
             const room = await getRoom(id);
@@ -234,8 +240,8 @@ export const GrpChat = () => {
                     }
                 </div>
             </div>
-            {showCatModal && <AddRooms field="Category Name" onClose={() => setShowCatModal(false)} />}
-            {showChannelModal && <AddRooms field="Channel Name" onClose={() => setShowChannelModal(false)} />}
+            {showCatModal && <AddRooms field="Category Name" currentRoom={room} category onClose={getCat} />}
+            {showChannelModal && <AddRooms field="Channel Name" currentRoom={room} channel onClose={() => setShowChannelModal(false)} />}
         </>
     )
 }

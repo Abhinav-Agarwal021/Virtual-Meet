@@ -11,6 +11,7 @@
 .server__menu {
   width: 204px;
   background-color: rgb(48, 48, 48);
+  overflow-y: auto;
 }
 
 .serverName__wrapper {
@@ -39,6 +40,7 @@
   color: rgba(131, 131, 133, 255);
   cursor: pointer;
   font-family: cursive;
+  user-select: none;
 }
 
 .selected {
@@ -136,6 +138,7 @@
   color: rgba(114, 118, 125, 255);
   font-size: 30px;
   text-align: center;
+  user-select: none;
 }
 
 .category__navbar {
