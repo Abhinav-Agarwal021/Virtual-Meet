@@ -67,7 +67,13 @@ export const sendChannels = (data) => api.post('/api/grp/channels', data)
 export const getRoom = (data) => api.get(`/api/grp/${data}`)
 
 //getChannels dec using room id
-export const getChannels=(data)=>api.get(`/api/grp/channels/${data}`)
+export const getChannels = (data) => api.get(`/api/grp/channels/${data}`)
+
+//send invite code in db
+export const sendCode = (data) => api.post('/api/grp/codes', data);
+
+//check code and add user to a server
+export const verifyCode = (data) => api.post('/api/grp/invites', data);
 
 
 api.interceptors.response.use(

@@ -36,6 +36,26 @@ class RoomService {
         return room;
     }
 
+    async updateRoomInfo(data) {
+        const { Id, userId } = data;
+
+        const room = await RoomModel.findById(Id)
+
+        const contain = room.members.includes(userId)
+
+        if (!contain) {
+            const room=await RoomModel.updateOne(
+                { _id: Id },
+                {
+                    $push: {
+                        members: userId
+                    }
+                }
+            )
+            return room;
+        }
+    }
+
 }
 
 module.exports = new RoomService();

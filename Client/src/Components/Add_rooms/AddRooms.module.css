@@ -122,15 +122,38 @@
   border: none;
 }
 
-.cat__optionsselect:focus{
+.cat__optionsselect:focus {
   border: none;
   outline: none;
 }
-.cat__optionsselect:active{
+.cat__optionsselect:active {
   border: none;
   outline: none;
 }
 
 .select__cat {
   margin-top: 12px;
+}
+
+.right__icon {
+  width: 10px;
+  margin-right: 10px;
+  transform: rotate(-90deg);
+}
+
+.own__channel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(61, 61, 61);
+  margin-top: 20px;
+  padding: 5px 15px;
+  border-radius: 15px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 15px;
+}
+
+input {
+  font-size: 15px;
 }

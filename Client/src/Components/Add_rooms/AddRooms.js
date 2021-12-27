@@ -3,9 +3,10 @@ import { useHistory } from "react-router-dom"
 import styles from "./AddRooms.module.css"
 import { useSelector } from 'react-redux';
 import { TextInput } from '../../Shared Components/TextInput/TextInput'
-import { createRoom as create, sendCat, sendChannels, sendRoles } from '../../http/Http'
+import { createRoom as create, sendCat, sendChannels, sendRoles, verifyCode } from '../../http/Http'
 
 import { RiVoiceprintFill } from "react-icons/ri";
+import { FaChevronDown } from "react-icons/fa";
 import { BsChatText } from "react-icons/bs";
 
 export const AddRooms = (props) => {
@@ -13,6 +14,8 @@ export const AddRooms = (props) => {
     const history = useHistory();
 
     const { user } = useSelector((state) => state.user);
+    const [showModal, setShowModal] = useState(false)
+    const [showJoinModal, setShowJoinModal] = useState(false)
     const [server, setServer] = useState(`${props.room ? `${user.name}'s Server` : ""}`);
     const [role, setRole] = useState("public")
 
@@ -59,85 +62,115 @@ export const AddRooms = (props) => {
         setSelectedCatId(option);
     }
 
+    const handleAddServer = () => {
+        setShowModal(true);
+    }
+
+    const joinServer = () => {
+        setShowJoinModal(true)
+    }
+
+    const useCodetojoin = async () => {
+        await verifyCode({ code: server, userId: user.id })
+        props.onClose()
+    }
+
     return (
-        <div className={styles.modalMask}>
-            <div className={styles.modalBody}>
-                <button onClick={props.onClose} className={styles.closeButton}>
-                    <img src="/images/close.png" alt="close" />
-                </button>
-                <div className={styles.modalHeader}>
-                    {props.channel &&
-                        <>
-                            <div className={styles.select__channeltype}>
-                                <h3 className={`${styles.heading} ${styles.type}`}>CHANNEL TYPE</h3>
-                                <div className={styles.text__channel}>
-                                    <input
-                                        type="radio"
-                                        value="text"
-                                        checked={selectedOption === "text"}
-                                        onChange={onValueChange}
-                                    />
-                                    <BsChatText className={styles.channel__type} />
-                                    Text Channel
-                                </div>
-                                <div className={styles.voice__channel}>
-                                    <input
-                                        type="radio"
-                                        value="voice"
-                                        checked={selectedOption === "voice"}
-                                        onChange={onValueChange}
-                                    />
-                                    <RiVoiceprintFill className={styles.channel__type} />
-                                    Voice Channel
-                                </div>
-                            </div>
-                            <div className={styles.select__cat}>
-                                <select className={styles.cat__optionsselect} defaultValue={selectedCat}
-                                onChange={handleCat} >
-                                <option className={styles.cat__options} value="~select~">~select~</option>
-                                    {props.roomCategories.map((cat) =>
-                                        <option className={styles.cat__options} value={cat.name} id={cat.id}>{cat.name}</option>
-                                    )}
-                                </select>
-                            </div>
-                        </>
-                    }
-                    <h3 className={styles.heading}>
-                        {props.field}
-                    </h3>
-                    <TextInput
-                        fullwidth="true"
-                        value={server}
-                        onChange={(e) => setServer(e.target.value)}
-                    />
-                    {props.category &&
-                        <>
-                            <h3 className={styles.heading}>
-                                Role
-                            </h3>
-                            <TextInput
-                                fullwidth="true"
-                                value={role}
-                                onChange={(e) => setRole(e.target.value)}
-                            />
-                        </>
-                    }
-                </div>
-                <div className={styles.modalFooter}>
-                    {props.room &&
-                        <h2>Start a room, the type you want</h2>
-                    }
-                    {props.channel &&
-                        <h2>Create a channel in a particular category</h2>
-                    }
-                    <button
-                        onClick={props.room ? createRoom : props.category ? createCat : props.channel ? createChannel : null}
-                        className={styles.footerButton}
-                    >
-                        <span>Let's go</span>
+        <>
+            <div className={styles.modalMask}>
+                <div className={styles.modalBody}>
+                    <button onClick={props.onClose} className={styles.closeButton}>
+                        <img src="/images/close.png" alt="close" />
                     </button>
+                    <div className={styles.modalHeader}>
+                        {props.options &&
+                            <div className={styles.own__channel} onClick={handleAddServer}>
+                                <h3 className={styles.heading}>Create My Own</h3>
+                                <FaChevronDown className={styles.right__icon} />
+                            </div>
+                        }
+                        {props.channel &&
+                            <>
+                                <div className={styles.select__channeltype}>
+                                    <h3 className={`${styles.heading} ${styles.type}`}>CHANNEL TYPE</h3>
+                                    <div className={styles.text__channel}>
+                                        <input
+                                            type="radio"
+                                            value="text"
+                                            checked={selectedOption === "text"}
+                                            onChange={onValueChange}
+                                        />
+                                        <BsChatText className={styles.channel__type} />
+                                        Text Channel
+                                    </div>
+                                    <div className={styles.voice__channel}>
+                                        <input
+                                            type="radio"
+                                            value="voice"
+                                            checked={selectedOption === "voice"}
+                                            onChange={onValueChange}
+                                        />
+                                        <RiVoiceprintFill className={styles.channel__type} />
+                                        Voice Channel
+                                    </div>
+                                </div>
+                                <div className={styles.select__cat}>
+                                    <select className={styles.cat__optionsselect} defaultValue={selectedCat}
+                                        onChange={handleCat} >
+                                        <option className={styles.cat__options} value="~select~">~select~</option>
+                                        {props.roomCategories.map((cat) =>
+                                            <option className={styles.cat__options} value={cat.name} id={cat.id}>{cat.name}</option>
+                                        )}
+                                    </select>
+                                </div>
+                            </>
+                        }
+                        {!props.options &&
+                            <>
+                                <h3 className={styles.heading}>
+                                    {props.field}
+                                </h3>
+                                <TextInput
+                                    fullwidth="true"
+                                    value={server}
+                                    onChange={(e) => setServer(e.target.value)}
+                                />
+                            </>
+                        }
+                        {props.category &&
+                            <>
+                                <h3 className={styles.heading}>
+                                    Role
+                                </h3>
+                                <TextInput
+                                    fullwidth="true"
+                                    value={role}
+                                    onChange={(e) => setRole(e.target.value)}
+                                />
+                            </>
+                        }
+                    </div>
+                    <div className={styles.modalFooter}>
+                        {props.room &&
+                            <h2>Start a room, the type you want</h2>
+                        }
+                        {props.channel &&
+                            <h2>Create a channel in a particular category</h2>
+                        }
+                        {props.options &&
+                            <h2>Have an Invite Code already?</h2>
+                        }
+                        <button
+                            onClick={props.room ? createRoom : props.category ? createCat : props.channel ? createChannel : props.options ? joinServer : props.invite ? useCodetojoin : null}
+                            className={styles.footerButton}
+                        >
+                            <span>{props.options ? "Join a server" : "Let's go"}</span>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+            {showModal && <AddRooms field="Server's Name" room onClose={() => setShowModal(false)} />}
+            {showJoinModal && <AddRooms field="Invite code" invite onClose={() => setShowJoinModal(false)} />}
+        </>
     )
 }

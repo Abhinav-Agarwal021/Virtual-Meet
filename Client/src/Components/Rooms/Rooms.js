@@ -89,7 +89,7 @@ export const Rooms = (props) => {
         }
         fetchRooms();
 
-    }, [user,props])
+    }, [user, props])
 
     useEffect(() => {
 
@@ -108,7 +108,7 @@ export const Rooms = (props) => {
         }
         fetchConversations();
 
-    }, [user,props])
+    }, [user, props])
 
     if (loading) return <Loader message="Loading! please wait....." />
     return (
@@ -133,7 +133,7 @@ export const Rooms = (props) => {
                                     src="/images/add-room-icon.png"
                                     alt="add-room"
                                 />
-                                <span>Start a room</span>
+                                <span>Add a server</span>
                             </button>
                         </div>
                     }
@@ -148,7 +148,7 @@ export const Rooms = (props) => {
                     ))}
                 </div>
             </div>
-            {showModal && <AddRooms field="Server's Name" room onClose={() => setShowModal(false)} />}
+            {showModal && <AddRooms field="Add a server" options onClose={() => setShowModal(false)} />}
         </>
     )
 }
