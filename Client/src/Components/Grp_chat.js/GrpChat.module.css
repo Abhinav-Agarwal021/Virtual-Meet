@@ -161,6 +161,9 @@
 .server_set__dropdown {
   width: 12px;
 }
+.server_set__close {
+  width: 15px;
+}
 
 .server__set {
   position: absolute;

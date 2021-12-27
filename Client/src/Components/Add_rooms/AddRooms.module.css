@@ -34,7 +34,7 @@
   margin-top: 15px;
 }
 
-.type{
+.type {
   font-size: 15px;
 }
 
@@ -87,4 +87,50 @@
   outline: 0;
   border: 0;
   cursor: pointer;
+}
+
+.channel__type {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.text__channel {
+  padding: 5px;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.voice__channel {
+  padding: 5px;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.cat__options {
+  text-transform: uppercase;
+}
+.cat__optionsselect {
+  text-transform: uppercase;
+  width: 100%;
+  background: #323232;
+  padding: 10px;
+  color: #fff;
+  border-radius: 10px;
+  border: none;
+}
+
+.cat__optionsselect:focus{
+  border: none;
+  outline: none;
+}
+.cat__optionsselect:active{
+  border: none;
+  outline: none;
+}
+
+.select__cat {
+  margin-top: 12px;
 }

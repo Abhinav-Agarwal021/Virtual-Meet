@@ -11,6 +11,8 @@ import { RiVoiceprintFill } from "react-icons/ri";
 import { BsChatText } from "react-icons/bs";
 import { BsPlusCircle } from "react-icons/bs";
 import { BsFileEarmarkPlus } from "react-icons/bs";
+import { AiOutlineClose } from "react-icons/ai";
+
 import { Message } from '../../Shared Components/Messages/Message';
 import { AddRooms } from '../Add_rooms/AddRooms';
 
@@ -74,6 +76,12 @@ export const GrpChat = () => {
 
         getRoomData();
     }, [id])
+
+    const getChannel = async () => {
+        setShowChannelModal(false)
+        const channels = await getChannels(id);
+        setChannels(channels.data);
+    }
 
     useEffect(() => {
         const getChannelscat = async () => {
@@ -176,7 +184,9 @@ export const GrpChat = () => {
                 <div className={styles.server__menu}>
                     <div className={styles.category__navbar} onClick={handleServerSet}>
                         <p>{room?.server}</p>
-                        <FaChevronDown className={styles.server_set__dropdown} />
+                        {openServerSet ? <AiOutlineClose className={styles.server_set__close} /> :
+                            <FaChevronDown className={styles.server_set__dropdown} />
+                        }
                     </div>
                     {openServerSet &&
                         <div className={styles.server__set}>
@@ -241,7 +251,7 @@ export const GrpChat = () => {
                 </div>
             </div>
             {showCatModal && <AddRooms field="Category Name" currentRoom={room} category onClose={getCat} />}
-            {showChannelModal && <AddRooms field="Channel Name" currentRoom={room} channel onClose={() => setShowChannelModal(false)} />}
+            {showChannelModal && <AddRooms field="Channel Name" currentRoom={room} roomCategories={categories} channel onClose={getChannel} />}
         </>
     )
 }
