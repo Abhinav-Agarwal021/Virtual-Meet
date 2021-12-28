@@ -58,19 +58,6 @@ class RoomService {
         return updatedRoom;
     }
 
-    async leaveRoom(data) {
-        const { roomId, userId } = data;
-
-        await RoomModel.updateOne(
-            { _id: roomId },
-            {
-                $pull: {
-                    members: userId
-                }
-            }
-        )
-    }
-
 }
 
 module.exports = new RoomService();

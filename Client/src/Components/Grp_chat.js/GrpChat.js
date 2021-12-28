@@ -201,6 +201,7 @@ export const GrpChat = () => {
 
     const handleLeaveServer = async () => {
         await leaveServer({ roomId: id, userId: user.id })
+        setOpenServerSet(false);
         history.push('/rooms')
     }
 

@@ -95,12 +95,6 @@ class GrpService {
         const user = await UserRolesModel.find({ roomId , userId });
         return user;
     }
-
-    async deleteRole(data) {
-        const { roomId, userId } = data;
-
-        await UserRolesModel.findOneAndDelete({ roomId, userId });
-    }
 }
 
 module.exports = new GrpService();

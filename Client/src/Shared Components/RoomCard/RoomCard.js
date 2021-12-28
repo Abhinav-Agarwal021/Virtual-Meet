@@ -24,8 +24,10 @@ export const RoomCard = ({ room, conv, onClick }) => {
 
     useEffect(() => {
         const getFriendUId = async () => {
-            const res = await getUs(friendId);
-            setFriend(res.data)
+            if (friendId) {
+                const res = await getUs(friendId);
+                setFriend(res.data)
+            }
         }
 
         getFriendUId();

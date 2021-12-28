@@ -1,6 +1,8 @@
 const CategoryDto = require("../dtos/categoryDto");
 const ChannelDto = require("../dtos/channelDto");
 const rolesDto = require("../dtos/rolesDto");
+const RoomModel = require("../models/RoomModel");
+const UserRolesModel = require("../models/UserRolesModel");
 const GrpService = require("../Services/GrpService");
 const RoomService = require("../Services/RoomService");
 
@@ -109,12 +111,17 @@ class GrpController {
         return res.json(user);
     }
 
-    async leaveServer(req, res) {
-        const { roomId, userId } = req.body;
+    async leaveServer(req) {
 
-        await RoomService.leaveRoom({ roomId, userId });
-
-        await GrpService.deleteRole({ roomId, userId });
+        await RoomModel.updateOne(
+            { _id: req.body.roomId },
+            {
+                $pull: {
+                    members: req.body.userId
+                }
+            }
+        )
+        await UserRolesModel.findOneAndDelete(req.body);
     }
 }
 
