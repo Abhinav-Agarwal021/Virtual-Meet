@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { getChannels, getMs, getRId, getRoom, sendCode, sendMssgs } from '../../http/Http';
+import { getChannels, getMs, getRId, getRoom, leaveServer, sendCode, sendMssgs, UserRoles } from '../../http/Http';
 import styles from './GrpChat.module.css'
 import { useSelector } from 'react-redux';
 import { io } from "socket.io-client"
+import { useHistory } from 'react-router-dom';
 
 import { FaChevronDown } from "react-icons/fa";
 import { BsPersonPlus } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
+import { FiLogOut } from "react-icons/fi";
 import { RiVoiceprintFill } from "react-icons/ri";
 import { BsChatText } from "react-icons/bs";
 import { BsPlusCircle } from "react-icons/bs";
@@ -18,6 +20,8 @@ import { AddRooms } from '../Add_rooms/AddRooms';
 
 export const GrpChat = () => {
 
+    const history = useHistory();
+
     var url = window.location.pathname;
     var id = url.substring(url.lastIndexOf('/') + 1);
 
@@ -28,6 +32,7 @@ export const GrpChat = () => {
     const [openedChat, setOpenedChat] = useState(null)
     const [catClosed, setCatClosed] = useState([])
     const [room, setRoom] = useState(null)
+    const [isAdmin, setIsAdmin] = useState(false)
 
     const [newMssg, setNewMssg] = useState("")
     const [arrivalMessage, setArrivalMessage] = useState(null)
@@ -91,6 +96,17 @@ export const GrpChat = () => {
 
         getChannelscat();
     }, [id])
+
+    useEffect(() => {
+        const getUserRoles = async () => {
+            const userRole = await UserRoles({ roomId: id, userId: user.id })
+            if (userRole.data[0].role.includes("admin")) {
+                setIsAdmin(true)
+            }
+        }
+
+        getUserRoles()
+    }, [id, user])
 
     useEffect(() => {
         const getMessages = async () => {
@@ -183,6 +199,11 @@ export const GrpChat = () => {
         await sendCode({ roomId: id })
     }
 
+    const handleLeaveServer = async () => {
+        await leaveServer({ roomId: id, userId: user.id })
+        history.push('/rooms')
+    }
+
     return (
         <>
             <div className={styles.messenger}>
@@ -195,22 +216,31 @@ export const GrpChat = () => {
                     </div>
                     {openServerSet &&
                         <div className={styles.server__set}>
-                            <div className={styles.set} onClick={inviteFrnds}>
-                                <p>Invite People</p>
-                                <BsPersonPlus />
-                            </div>
-                            <div className={styles.set}>
-                                <p>Server Settings</p>
-                                <FiSettings />
-                            </div>
-                            <div className={styles.set} onClick={handleCreateChannel}>
-                                <p>Create Channel</p>
-                                <BsPlusCircle />
-                            </div>
-                            <div className={styles.set} onClick={handleCreateCat}>
-                                <p>Create Category</p>
-                                <BsFileEarmarkPlus />
-                            </div>
+                            {isAdmin ?
+                                <>
+                                    <div className={styles.set} onClick={inviteFrnds}>
+                                        <p>Invite People</p>
+                                        <BsPersonPlus />
+                                    </div>
+                                    <div className={styles.set}>
+                                        <p>Server Settings</p>
+                                        <FiSettings />
+                                    </div>
+                                    <div className={styles.set} onClick={handleCreateChannel}>
+                                        <p>Create Channel</p>
+                                        <BsPlusCircle />
+                                    </div>
+                                    <div className={styles.set} onClick={handleCreateCat}>
+                                        <p>Create Category</p>
+                                        <BsFileEarmarkPlus />
+                                    </div>
+                                </>
+                                :
+                                <div className={styles.leave} onClick={handleLeaveServer}>
+                                    <p>Leave Server</p>
+                                    <FiLogOut />
+                                </div>
+                            }
                         </div>
                     }
                     {categories.map((cat, idx) =>

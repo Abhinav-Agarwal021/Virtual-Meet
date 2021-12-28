@@ -101,6 +101,21 @@ class GrpController {
 
         return res.json(room)
     }
+
+    async getUserRoles(req, res) {
+        const { roomId, userId } = req.body;
+
+        const user = await GrpService.getUserRoles({ roomId, userId });
+        return res.json(user);
+    }
+
+    async leaveServer(req, res) {
+        const { roomId, userId } = req.body;
+
+        await RoomService.leaveRoom({ roomId, userId });
+
+        await GrpService.deleteRole({ roomId, userId });
+    }
 }
 
 module.exports = new GrpController();

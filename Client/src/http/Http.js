@@ -75,6 +75,12 @@ export const sendCode = (data) => api.post('/api/grp/codes', data);
 //check code and add user to a server
 export const verifyCode = (data) => api.post('/api/grp/invites', data);
 
+//get user roles
+export const UserRoles = (data) => api.post('/api/grp/roles', data);
+
+//leave server
+export const leaveServer = (data) => api.post('/api/grp/leave', data);
+
 
 api.interceptors.response.use(
     (config) => {

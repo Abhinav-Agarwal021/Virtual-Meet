@@ -71,8 +71,10 @@ export const AddRooms = (props) => {
     }
 
     const useCodetojoin = async () => {
-        await verifyCode({ code: server, userId: user.id })
+        const updatedData = await verifyCode({ code: server, userId: user.id })
+        await sendRoles({ roomId: updatedData.data._id, userId: user.id, role: ["public"] })
         props.onClose()
+        history.push(`/grp/${updatedData.data._id}`)
     }
 
     return (

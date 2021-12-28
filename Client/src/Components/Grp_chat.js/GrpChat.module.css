@@ -195,3 +195,23 @@
 .set > p {
   width: 95%;
 }
+
+.leave {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px 6px;
+  font-family: cursive;
+  cursor: pointer;
+  user-select: none;
+  color: rgb(231, 57, 57);
+}
+
+.leave:hover {
+  background-color: rgb(60, 60, 219);
+  border-radius: 3px;
+}
+
+.leave > p {
+  width: 95%;
+}

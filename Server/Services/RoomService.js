@@ -44,7 +44,7 @@ class RoomService {
         const contain = room.members.includes(userId)
 
         if (!contain) {
-            const room=await RoomModel.updateOne(
+            await RoomModel.updateOne(
                 { _id: Id },
                 {
                     $push: {
@@ -52,8 +52,23 @@ class RoomService {
                     }
                 }
             )
-            return room;
         }
+
+        const updatedRoom = await RoomModel.findById(Id);
+        return updatedRoom;
+    }
+
+    async leaveRoom(data) {
+        const { roomId, userId } = data;
+
+        await RoomModel.updateOne(
+            { _id: roomId },
+            {
+                $pull: {
+                    members: userId
+                }
+            }
+        )
     }
 
 }
