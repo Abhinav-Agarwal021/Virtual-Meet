@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styles from "./Rooms.module.css"
 import { RoomCard } from '../../Shared Components/RoomCard/RoomCard';
 import { AddRooms } from '../Add_rooms/AddRooms';
-import { getCs, getRId, getRs, getUsBD, sendCList } from '../../http/Http';
+import { checkCList, getCs, getRId, getRs, getUsBD, sendCList } from '../../http/Http';
 import { Loader } from "../../Shared Components/Loader/Loader"
 import { useSelector } from 'react-redux';
 
@@ -30,13 +30,20 @@ export const Rooms = (props) => {
         if (!searchno) return;
 
         if (searchno !== user.phone) {
-            try {
-                const friend = await getUsBD(searchno);
-                setSearchno('')
-                const conv = await sendCList({ senderId: user.id, receiverId: friend.data._id });
-                history.push(`/chat/${conv.data.id}`)
-            } catch (error) {
-                console.log(error)
+            const friend = await getUsBD(searchno);
+            const check = await checkCList({ senderId: user.id, receiverId: friend.data._id });
+            console.log(check)
+            setSearchno('')
+            if (!check.data) {
+                try {
+                    const conv = await sendCList({ senderId: user.id, receiverId: friend.data._id });
+                    history.push(`/chat/${conv.data.id}`)
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+            else {
+                history.push(`/chat/${check.data[0]._id}`)
             }
         }
         else {

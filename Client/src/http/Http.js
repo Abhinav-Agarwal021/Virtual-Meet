@@ -39,6 +39,9 @@ export const getRId = (id) => api.get(`/api/room/${id}`)
 //sends conversation list
 export const sendCList = (data) => api.post('/api/chat', data);
 
+//check user in conversation
+export const checkCList = (data) => api.post('/api/check', data);
+
 //fetching conversations using user id
 export const getCs = (data) => api.get(`/api/chat/${data}`)
 

@@ -4,10 +4,21 @@ const Message = require('../models/MessageModel')
 
 class ConversationController {
 
+    async checkCs(req, res) {
+        const { senderId, receiverId } = req.body;
+
+        const check = await conversation.find({ members: [senderId, receiverId] })
+        if (await conversation.find({ members: [senderId, receiverId] }).count() > 0) {
+            return res.json(check)
+        }
+        else
+            return res.json(false)
+
+    }
+
     async chatApp(req, res) {
 
         const { senderId, receiverId } = req.body;
-
 
         try {
             const newConversation = await conversation.create({
@@ -35,7 +46,7 @@ class ConversationController {
             const data = await conversation.findById(req.params.convId);
             return res.json(data);
         } catch (error) {
-            res.json({message:error})
+            res.json({ message: error })
         }
     }
 

@@ -41,6 +41,7 @@ export const GrpChat = () => {
     const [openServerSet, setOpenServerSet] = useState(false)
     const [showCatModal, setShowCatModal] = useState(false)
     const [showChannelModal, setShowChannelModal] = useState(false)
+    const [showInviteModal, setShowInviteModal] = useState(false)
 
     const { user } = useSelector((state) => state.user);
 
@@ -195,8 +196,9 @@ export const GrpChat = () => {
     }
 
     const inviteFrnds = async () => {
-        setOpenServerSet(false)
-        await sendCode({ roomId: id })
+        setShowInviteModal(true);
+        //await sendCode({ roomId: id })
+        //setOpenServerSet(false)
     }
 
     const handleLeaveServer = async () => {
@@ -288,6 +290,7 @@ export const GrpChat = () => {
             </div>
             {showCatModal && <AddRooms field="Category Name" currentRoom={room} category onClose={getCat} />}
             {showChannelModal && <AddRooms field="Channel Name" currentRoom={room} roomCategories={categories} channel onClose={getChannel} />}
+            {showInviteModal && <AddRooms field="Channel Name" currentRoom={room} roomCategories={categories} channel onClose={getChannel} />}
         </>
     )
 }
