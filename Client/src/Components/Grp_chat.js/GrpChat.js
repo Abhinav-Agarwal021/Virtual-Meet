@@ -17,6 +17,7 @@ import { AiOutlineClose } from "react-icons/ai";
 
 import { Message } from '../../Shared Components/Messages/Message';
 import { AddRooms } from '../Add_rooms/AddRooms';
+import { InviteModal } from '../../Shared Components/InviteModal/InviteModal';
 
 export const GrpChat = () => {
 
@@ -42,6 +43,8 @@ export const GrpChat = () => {
     const [showCatModal, setShowCatModal] = useState(false)
     const [showChannelModal, setShowChannelModal] = useState(false)
     const [showInviteModal, setShowInviteModal] = useState(false)
+
+    const [code, setCode] = useState(null)
 
     const { user } = useSelector((state) => state.user);
 
@@ -196,9 +199,10 @@ export const GrpChat = () => {
     }
 
     const inviteFrnds = async () => {
+        const send = await sendCode({ roomId: id })
+        setCode(send.data);
         setShowInviteModal(true);
-        //await sendCode({ roomId: id })
-        //setOpenServerSet(false)
+        setOpenServerSet(false)
     }
 
     const handleLeaveServer = async () => {
@@ -290,7 +294,7 @@ export const GrpChat = () => {
             </div>
             {showCatModal && <AddRooms field="Category Name" currentRoom={room} category onClose={getCat} />}
             {showChannelModal && <AddRooms field="Channel Name" currentRoom={room} roomCategories={categories} channel onClose={getChannel} />}
-            {showInviteModal && <AddRooms field="Channel Name" currentRoom={room} roomCategories={categories} channel onClose={getChannel} />}
+            {showInviteModal && <InviteModal codeData={code} onClose={() => setShowInviteModal(false)} />}
         </>
     )
 }
