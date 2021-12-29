@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { checkCode, getChannels, getMs, getRId, getRoom, leaveServer, sendCode, sendMssgs, UserRoles } from '../../http/Http';
+import { checkCode, deleteRole, getChannels, getMs, getRId, getRoom, leaveServer, sendCode, sendMssgs, UserRoles } from '../../http/Http';
 import styles from './GrpChat.module.css'
 import { useSelector } from 'react-redux';
 import { io } from "socket.io-client"
@@ -213,9 +213,11 @@ export const GrpChat = () => {
     }
 
     const handleLeaveServer = async () => {
-        await leaveServer({ roomId: id, userId: user.id })
+        const leave=await leaveServer({ roomId: id, userId: user.id })
+        console.log(leave)
         setOpenServerSet(false);
         history.push('/rooms')
+        await deleteRole({ roomId: id, userId: user.id })
     }
 
     return (

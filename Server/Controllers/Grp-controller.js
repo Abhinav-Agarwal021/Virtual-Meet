@@ -119,17 +119,24 @@ class GrpController {
         return res.json(user);
     }
 
-    async leaveServer(req) {
+    async leaveServer(req,res) {
+        const { roomId, userId } = req.body;
 
-        await RoomModel.updateOne(
-            { _id: req.body.roomId },
+        const update = await RoomModel.findOneAndUpdate(
+            { _id: roomId },
             {
                 $pull: {
-                    members: req.body.userId
+                    members: userId
                 }
             }
         )
-        await UserRolesModel.findOneAndDelete(req.body);
+        return res.json(update)
+    }
+
+    async deleteRole(req,res) {
+        const { roomId, userId } = req.body;
+        const del = await UserRolesModel.findOneAndDelete({ roomId }, { userId });
+        return res.json(del);
     }
 }
 

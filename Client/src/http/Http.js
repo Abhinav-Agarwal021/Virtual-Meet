@@ -84,6 +84,9 @@ export const verifyCode = (data) => api.post('/api/grp/invites', data);
 //get user roles
 export const UserRoles = (data) => api.post('/api/grp/roles', data);
 
+//delete role
+export const deleteRole = (data) => api.post('/api/grp/delete-role', data);
+
 //leave server
 export const leaveServer = (data) => api.post('/api/grp/leave', data);
 
