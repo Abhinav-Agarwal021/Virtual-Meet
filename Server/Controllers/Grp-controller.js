@@ -83,6 +83,13 @@ class GrpController {
         return res.json(Invites);
     }
 
+    async checkInviteCode(req, res) {
+        const { roomId } = req.body;
+
+        const codedet = await GrpService.getCodeData(roomId)
+        return res.json(codedet);
+    }
+
     async verifyInvitecode(req, res) {
         const { code, userId } = req.body;
 
@@ -100,6 +107,7 @@ class GrpController {
         const Id = data.roomId.toString();
 
         const room = await RoomService.updateRoomInfo({ Id, userId });
+        await GrpService.updateUsedPeople(code);
 
         return res.json(room)
     }

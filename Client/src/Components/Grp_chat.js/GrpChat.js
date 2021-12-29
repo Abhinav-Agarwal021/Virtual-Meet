@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { getChannels, getMs, getRId, getRoom, leaveServer, sendCode, sendMssgs, UserRoles } from '../../http/Http';
+import { checkCode, getChannels, getMs, getRId, getRoom, leaveServer, sendCode, sendMssgs, UserRoles } from '../../http/Http';
 import styles from './GrpChat.module.css'
 import { useSelector } from 'react-redux';
 import { io } from "socket.io-client"
@@ -199,8 +199,15 @@ export const GrpChat = () => {
     }
 
     const inviteFrnds = async () => {
-        const send = await sendCode({ roomId: id })
-        setCode(send.data);
+        const check = await checkCode({ roomId: id });
+        if (check.data[0] === undefined) {
+            const send = await sendCode({ roomId: id })
+            console.log(send)
+            setCode(send.data);
+        }
+        else {
+            setCode(check.data[0]);
+        }
         setShowInviteModal(true);
         setOpenServerSet(false)
     }

@@ -75,6 +75,9 @@ export const getChannels = (data) => api.get(`/api/grp/channels/${data}`)
 //send invite code in db
 export const sendCode = (data) => api.post('/api/grp/codes', data);
 
+//check if prev code send exits and not expired
+export const checkCode = (data) => api.post('/api/grp/invites/check', data);
+
 //check code and add user to a server
 export const verifyCode = (data) => api.post('/api/grp/invites', data);
 

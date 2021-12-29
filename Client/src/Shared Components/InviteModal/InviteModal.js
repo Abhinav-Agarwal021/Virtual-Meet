@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { checkCList, getUsBD, sendCList } from '../../http/Http'
+import { checkCList, getUsBD, sendCList, sendMssgs } from '../../http/Http'
 import styles from './InviteModal.module.css'
 import { useHistory } from 'react-router-dom'
 
@@ -11,35 +11,9 @@ export const InviteModal = (props) => {
 
     const [searchno, setSearchno] = useState('')
     const [clicked, setClicked] = useState(false)
+    const [sent, setSent] = useState(false)
 
     const { user } = useSelector((state) => state.user);
-
-    const handleSearch = async (e) => {
-        e.preventDefault();
-
-        if (!searchno) return;
-
-        /*if (searchno !== user.phone) {
-            const friend = await getUsBD(searchno);
-            const check = await checkCList({ senderId: user.id, receiverId: friend.data._id });
-            console.log(check)
-            setSearchno('')
-            if (!check.data) {
-                try {
-                    const conv = await sendCList({ senderId: user.id, receiverId: friend.data._id });
-                    history.push(`/chat/${conv.data.id}`)
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-            else {
-                history.push(`/chat/${check.data[0]._id}`)
-            }
-        }
-        else {
-            console.log("please enter another number")
-        }*/
-    }
 
     const copyLink = () => {
         setClicked(true)
@@ -47,6 +21,61 @@ export const InviteModal = (props) => {
         setTimeout(() => {
             setClicked(false)
         }, 1000);
+    }
+    const sendLink = async (e) => {
+        e.preventDefault();
+        setSent(true)
+
+        setTimeout(() => {
+            setSent(false)
+        }, 1000);
+
+        if (!searchno) return;
+
+        if (searchno !== user.phone) {
+            const friend = await getUsBD(searchno);
+            const check = await checkCList({ senderId: user.id, receiverId: friend.data._id });
+            console.log(check)
+            setSearchno('')
+            if (!check.data) {
+                try {
+                    const conv = await sendCList({ senderId: user.id, receiverId: friend.data._id });
+                    const userCs = {
+                        sender: user.id,
+                        message: `you can join my server using Invite code : ${props.codeData.code}`,
+                        conversationId: conv.data.id
+                    }
+
+                    try {
+                        await sendMssgs(userCs);
+                    } catch (error) {
+                        console.log("message not sent")
+                    }
+                    history.push(`/chat/${conv.data.id}`)
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+            else {
+                const userCs = {
+                    sender: user.id,
+                    message: `you can join my server using Invite code : ${props.codeData.code}`,
+                    conversationId: check.data[0]._id
+                }
+
+                try {
+                    await sendMssgs(userCs);
+                } catch (error) {
+                    console.log("message not sent")
+                }
+                history.push(`/chat/${check.data[0]._id}`)
+            }
+        }
+        else {
+            console.log("please enter another number")
+        }
+
+        props.onClose();
     }
 
     return (
@@ -59,9 +88,9 @@ export const InviteModal = (props) => {
                     <h3 className={styles.heading}>
                         Invite friends to this server
                     </h3>
-                    <div className={styles.searchBox}>
-                        <input type="text" value={searchno} placeholder='search for friend' className={styles.searchInput} onChange={(e) => setSearchno(e.target.value)} />
-                        <img src="/images/search-icon.png" alt="search" onClick={handleSearch} />
+                    <div className={styles.code}>
+                        <input type="text" value={searchno} placeholder='DM code to a friend' className={styles.searchInput} onChange={(e) => setSearchno(e.target.value)} />
+                        <button className={`${styles.footerButton} ${sent && styles.copied}`} onClick={sendLink}>{sent ? "sent" : "send"}</button>
                     </div>
                 </div>
                 <div className={styles.modalFooter}>

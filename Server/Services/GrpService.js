@@ -70,10 +70,17 @@ class GrpService {
         const Invites = await InviteCodesModel.create({
             roomId,
             code,
-            expired: false
+            expired: false,
+            used: 0
         })
 
         return Invites;
+    }
+
+    async getCodeData(data) {
+        const roomId = data;
+        const codeInfo = await InviteCodesModel.find({ roomId, expired: false })
+        return codeInfo;
     }
 
     async getCodeInfo(data) {
@@ -92,8 +99,23 @@ class GrpService {
     async getUserRoles(data) {
         const { roomId, userId } = data;
 
-        const user = await UserRolesModel.find({ roomId , userId });
+        const user = await UserRolesModel.find({ roomId, userId });
         return user;
+    }
+
+    async updateUsedPeople(data) {
+        const code = data;
+
+        await InviteCodesModel.findOneAndUpdate(
+            {
+                code
+            },
+            {
+                $inc: {
+                    used: 1
+                }
+            }
+        )
     }
 }
 

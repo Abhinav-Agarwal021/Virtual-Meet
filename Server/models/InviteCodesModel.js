@@ -5,7 +5,8 @@ const InviteCodes = new schema(
     {
         roomId: { type: schema.Types.ObjectId },
         code: { type: String },
-        expired: { type: Boolean }
+        expired: { type: Boolean },
+        used: { type: Number }
     },
     {
         timestamps: true

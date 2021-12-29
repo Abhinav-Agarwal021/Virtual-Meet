@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom"
 import styles from "./AddRooms.module.css"
 import { useSelector } from 'react-redux';
 import { TextInput } from '../../Shared Components/TextInput/TextInput'
-import { createRoom as create, sendCat, sendChannels, sendRoles, verifyCode } from '../../http/Http'
+import { createRoom as create, sendCat, sendChannels, sendRoles, UserRoles, verifyCode } from '../../http/Http'
 
 import { RiVoiceprintFill } from "react-icons/ri";
 import { FaChevronDown } from "react-icons/fa";
@@ -72,7 +72,10 @@ export const AddRooms = (props) => {
 
     const useCodetojoin = async () => {
         const updatedData = await verifyCode({ code: server, userId: user.id })
-        await sendRoles({ roomId: updatedData.data._id, userId: user.id, role: ["public"] })
+        const userRole = await UserRoles({ roomId: updatedData.data._id, userId: user.id })
+        if (userRole.data[0] === undefined) {
+            await sendRoles({ roomId: updatedData.data._id, userId: user.id, role: ["public"] })
+        }
         props.onClose()
         history.push(`/grp/${updatedData.data._id}`)
     }

@@ -32,7 +32,6 @@ export const Rooms = (props) => {
         if (searchno !== user.phone) {
             const friend = await getUsBD(searchno);
             const check = await checkCList({ senderId: user.id, receiverId: friend.data._id });
-            console.log(check)
             setSearchno('')
             if (!check.data) {
                 try {

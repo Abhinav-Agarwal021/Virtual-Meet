@@ -37,7 +37,7 @@
 }
 
 .logoutButton:hover {
-  background-color: #2ee59d;
+  background-color: #41eb5e;
   box-shadow: 0px 15px 20px rgba(12, 153, 97, 0.8);
   color: #fff;
   transform: translateY(-7px);
