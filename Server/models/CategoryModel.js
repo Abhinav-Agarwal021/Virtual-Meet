@@ -5,7 +5,7 @@ const CategorySchema = new schema(
     {
         roomId: { type: schema.Types.ObjectId, required: true },
         name: { type: String, required: true },
-        role: { type: String }
+        role: { type: String, unique: true }
     },
     {
         timestamps: true

@@ -87,6 +87,9 @@ export const UserRoles = (data) => api.post('/api/grp/roles', data);
 //delete role
 export const deleteRole = (data) => api.post('/api/grp/delete-role', data);
 
+//update role
+export const addRole = (data) => api.post('/api/grp/add-role', data);
+
 //leave server
 export const leaveServer = (data) => api.post('/api/grp/leave', data);
 

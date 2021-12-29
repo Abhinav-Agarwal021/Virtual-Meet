@@ -117,6 +117,24 @@ class GrpService {
             }
         )
     }
+
+    async updateRoles(data) {
+        const { roomId, userId, role } = data;
+
+        const user = await UserRolesModel.find({ roomId, userId });
+
+        const userrole = await UserRolesModel.updateOne(
+            {
+                _id:user[0]._id.toString()
+            },
+            {
+                $push: {
+                    role
+                }
+            }
+        )
+        return userrole;
+    }
 }
 
 module.exports = new GrpService();

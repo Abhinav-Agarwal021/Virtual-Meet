@@ -45,6 +45,7 @@ export const GrpChat = () => {
     const [showInviteModal, setShowInviteModal] = useState(false)
 
     const [code, setCode] = useState(null)
+    const [userRoles, setUserRoles] = useState(null)
 
     const { user } = useSelector((state) => state.user);
 
@@ -104,6 +105,7 @@ export const GrpChat = () => {
     useEffect(() => {
         const getUserRoles = async () => {
             const userRole = await UserRoles({ roomId: id, userId: user.id })
+            setUserRoles(userRole.data[0].role)
             if (userRole.data[0].role.includes("admin")) {
                 setIsAdmin(true)
             }
@@ -213,7 +215,7 @@ export const GrpChat = () => {
     }
 
     const handleLeaveServer = async () => {
-        const leave=await leaveServer({ roomId: id, userId: user.id })
+        const leave = await leaveServer({ roomId: id, userId: user.id })
         console.log(leave)
         setOpenServerSet(false);
         history.push('/rooms')
@@ -260,6 +262,7 @@ export const GrpChat = () => {
                         </div>
                     }
                     {categories.map((cat, idx) =>
+                        userRoles?.includes(cat.role) &&
                         <div className={styles.serverName__wrapper}>
                             <div className={styles.category} key={idx} onClick={() => handleCat(idx)}>
                                 <FaChevronDown className={!catClosed.includes(idx) ? styles.drop__icon : styles.right__icon} />

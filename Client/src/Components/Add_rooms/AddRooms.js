@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom"
 import styles from "./AddRooms.module.css"
 import { useSelector } from 'react-redux';
 import { TextInput } from '../../Shared Components/TextInput/TextInput'
-import { createRoom as create, sendCat, sendChannels, sendRoles, UserRoles, verifyCode } from '../../http/Http'
+import { addRole, createRoom as create, sendCat, sendChannels, sendRoles, UserRoles, verifyCode } from '../../http/Http'
 
 import { RiVoiceprintFill } from "react-icons/ri";
 import { FaChevronDown } from "react-icons/fa";
@@ -41,6 +41,9 @@ export const AddRooms = (props) => {
     const createCat = async () => {
         if (!server) return;
         await sendCat({ roomId: props.currentRoom?._id, name: server, role })
+        if (role !== "public") {
+            await addRole({ roomId: props.currentRoom?._id, userId: user.id, role })
+        }
         props.onClose();
     }
 
