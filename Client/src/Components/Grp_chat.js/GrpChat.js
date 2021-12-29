@@ -14,10 +14,12 @@ import { BsChatText } from "react-icons/bs";
 import { BsPlusCircle } from "react-icons/bs";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlinePlus } from "react-icons/ai";
 
 import { Message } from '../../Shared Components/Messages/Message';
 import { AddRooms } from '../Add_rooms/AddRooms';
 import { InviteModal } from '../../Shared Components/InviteModal/InviteModal';
+import { UpdateModal } from '../../Shared Components/UpdatesModal/UpdateModal';
 
 export const GrpChat = () => {
 
@@ -43,6 +45,8 @@ export const GrpChat = () => {
     const [showCatModal, setShowCatModal] = useState(false)
     const [showChannelModal, setShowChannelModal] = useState(false)
     const [showInviteModal, setShowInviteModal] = useState(false)
+    const [channelUpdates, setChannelUpdates] = useState(false)
+    const [catUpdates, setCatUpdates] = useState(false)
 
     const [code, setCode] = useState(null)
     const [userRoles, setUserRoles] = useState(null)
@@ -222,6 +226,14 @@ export const GrpChat = () => {
         await deleteRole({ roomId: id, userId: user.id })
     }
 
+    const handleChannelUpdates = () => {
+        setChannelUpdates(true);
+    }
+
+    const handleCatUpdates = () => {
+        setCatUpdates(true);
+    }
+
     return (
         <>
             <div className={styles.messenger}>
@@ -264,17 +276,24 @@ export const GrpChat = () => {
                     {categories.map((cat, idx) =>
                         userRoles?.includes(cat.role) &&
                         <div className={styles.serverName__wrapper}>
-                            <div className={styles.category} key={idx} onClick={() => handleCat(idx)}>
-                                <FaChevronDown className={!catClosed.includes(idx) ? styles.drop__icon : styles.right__icon} />
-                                {cat.name}
+                            <div className={styles.category} key={idx} >
+                                <div className={styles.category__desc} onClick={() => handleCat(idx)}>
+                                    <FaChevronDown className={!catClosed.includes(idx) ? styles.drop__icon : styles.right__icon} />
+                                    <p>{cat.name}</p>
+                                </div>
+                                <AiOutlinePlus onClick={handleCreateChannel} />
+                                <FiSettings className={styles.settings__icon} onClick={handleCatUpdates} />
                             </div>
                             {!catClosed.includes(idx) &&
                                 <div className={styles.channels}>
                                     {channels.map((channel, index) =>
                                         channel.categoryId === cat.id &&
-                                        <div key={index} className={`${styles.channelName} ${selectedIndex === index && styles.selected}`} onClick={() => handleOpenChat(channel, index)}>
-                                            {channel.type === 'voice' ? <RiVoiceprintFill className={styles.channel__type} /> : <BsChatText className={styles.channel__type} />}
-                                            {channel.name}
+                                        <div key={index} className={`${styles.channelName} ${selectedIndex === index && styles.selected}`} >
+                                            <div className={styles.channel__desc} onClick={() => handleOpenChat(channel, index)}>
+                                                {channel.type === 'voice' ? <RiVoiceprintFill className={styles.channel__type} /> : <BsChatText className={styles.channel__type} />}
+                                                <p>{channel.name}</p>
+                                            </div>
+                                            <FiSettings className={styles.settings__icon} onClick={handleChannelUpdates} />
                                         </div>
                                     )}
                                 </div>
@@ -307,6 +326,8 @@ export const GrpChat = () => {
             {showCatModal && <AddRooms field="Category Name" currentRoom={room} category onClose={getCat} />}
             {showChannelModal && <AddRooms field="Channel Name" currentRoom={room} roomCategories={categories} channel onClose={getChannel} />}
             {showInviteModal && <InviteModal codeData={code} onClose={() => setShowInviteModal(false)} />}
+            {channelUpdates && <UpdateModal channel onClose={() => setChannelUpdates(false)} />}
+            {catUpdates && <UpdateModal cat onClose={() => setCatUpdates(false)} />}
         </>
     )
 }
