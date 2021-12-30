@@ -48,6 +48,9 @@ export const GrpChat = () => {
     const [channelUpdates, setChannelUpdates] = useState(false)
     const [catUpdates, setCatUpdates] = useState(false)
 
+    const [currentCat, setCurrentCat] = useState(null)
+    const [currentChannel, setCurrentChannel] = useState(null)
+
     const [code, setCode] = useState(null)
     const [userRoles, setUserRoles] = useState(null)
 
@@ -226,11 +229,13 @@ export const GrpChat = () => {
         await deleteRole({ roomId: id, userId: user.id })
     }
 
-    const handleChannelUpdates = () => {
+    const handleChannelUpdates = (channel) => {
+        setCurrentChannel(channel)
         setChannelUpdates(true);
     }
 
-    const handleCatUpdates = () => {
+    const handleCatUpdates = (cat) => {
+        setCurrentCat(cat)
         setCatUpdates(true);
     }
 
@@ -281,8 +286,12 @@ export const GrpChat = () => {
                                     <FaChevronDown className={!catClosed.includes(idx) ? styles.drop__icon : styles.right__icon} />
                                     <p>{cat.name}</p>
                                 </div>
-                                <AiOutlinePlus onClick={handleCreateChannel} />
-                                <FiSettings className={styles.settings__icon} onClick={handleCatUpdates} />
+                                {isAdmin &&
+                                    <>
+                                        <AiOutlinePlus onClick={handleCreateChannel} />
+                                        <FiSettings className={styles.settings__icon} onClick={()=>handleCatUpdates(cat)} />
+                                    </>
+                                }
                             </div>
                             {!catClosed.includes(idx) &&
                                 <div className={styles.channels}>
@@ -293,7 +302,9 @@ export const GrpChat = () => {
                                                 {channel.type === 'voice' ? <RiVoiceprintFill className={styles.channel__type} /> : <BsChatText className={styles.channel__type} />}
                                                 <p>{channel.name}</p>
                                             </div>
-                                            <FiSettings className={styles.settings__icon} onClick={handleChannelUpdates} />
+                                            {isAdmin &&
+                                                <FiSettings className={styles.settings__icon} onClick={()=>handleChannelUpdates(channel)} />
+                                            }
                                         </div>
                                     )}
                                 </div>
@@ -326,8 +337,8 @@ export const GrpChat = () => {
             {showCatModal && <AddRooms field="Category Name" currentRoom={room} category onClose={getCat} />}
             {showChannelModal && <AddRooms field="Channel Name" currentRoom={room} roomCategories={categories} channel onClose={getChannel} />}
             {showInviteModal && <InviteModal codeData={code} onClose={() => setShowInviteModal(false)} />}
-            {channelUpdates && <UpdateModal channel onClose={() => setChannelUpdates(false)} />}
-            {catUpdates && <UpdateModal cat onClose={() => setCatUpdates(false)} />}
+            {channelUpdates && <UpdateModal currentChannel={currentChannel} channel onClose={() => setChannelUpdates(false)} />}
+            {catUpdates && <UpdateModal currentCat={currentCat} cat onClose={() => setCatUpdates(false)} />}
         </>
     )
 }
