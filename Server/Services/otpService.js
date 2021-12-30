@@ -15,6 +15,7 @@ class OtpService {
     }
 
     async sendBySms(phone, otp) {
+        //const usePhone = "+91" + phone;
         return await twilio.messages.create({
             to: phone,
             from: process.env.SMS_FROM,

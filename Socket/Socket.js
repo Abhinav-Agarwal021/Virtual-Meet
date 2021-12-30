@@ -28,11 +28,10 @@ io.on("connection", (socket) => {
     });
 
     socket.on("sendMessage", ({ senderId, receiverId, message }) => {
-        const user = getUser(receiverId);
-        io.to(user?.socketId).emit("getMessage", {
-            senderId,
-            message,
-        });
+            io.local.emit("getMessage", {
+                senderId,
+                message,
+            });
     });
 
     socket.on("disconnect", () => {

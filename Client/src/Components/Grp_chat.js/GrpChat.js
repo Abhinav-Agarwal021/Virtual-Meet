@@ -72,11 +72,6 @@ export const GrpChat = () => {
     };
 
     useEffect(() => {
-        arrivalMessage &&
-            setMessages((prev) => [...prev, arrivalMessage]);
-    }, [arrivalMessage]);
-
-    useEffect(() => {
         socket.current = io("ws://localhost:8900");
         socket.current.on("getMessage", (data) => {
             setArrivalMessage({
@@ -87,6 +82,11 @@ export const GrpChat = () => {
         });
     }, []);
 
+    useEffect(() => {
+        arrivalMessage &&
+            setMessages((prev) => [...prev, arrivalMessage]);
+    }, [arrivalMessage]);
+    
     useEffect(() => {
         socket.current.emit("addUser", user.id);
     }, [user]);

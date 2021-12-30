@@ -125,12 +125,10 @@ export const Rooms = (props) => {
                         <span className={styles.heading}>
                             {props.dm ? "Direct Messages" : "Rooms"}
                         </span>
-                        {!props.dm &&
-                            <div className={styles.searchBox}>
-                                <input type="text" value={searchno} placeholder='Find or start a conversation' className={styles.searchInput} onChange={(e) => setSearchno(e.target.value)} />
-                                <img src="/images/search-icon.png" alt="search" onClick={handleSearch} />
-                            </div>
-                        }
+                        <div className={styles.searchBox}>
+                            <input type="text" value={searchno} placeholder='Find or start a conversation' className={styles.searchInput} onChange={(e) => setSearchno(e.target.value)} />
+                            <img src="/images/search-icon.png" alt="search" onClick={handleSearch} />
+                        </div>
                     </div>
                     {!props.dm &&
                         <div className={styles.right}>
