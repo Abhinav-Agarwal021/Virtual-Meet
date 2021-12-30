@@ -125,7 +125,7 @@ class GrpService {
 
         const userrole = await UserRolesModel.updateOne(
             {
-                _id:user[0]._id.toString()
+                _id: user[0]._id.toString()
             },
             {
                 $push: {
@@ -134,6 +134,43 @@ class GrpService {
             }
         )
         return userrole;
+    }
+
+    async updateCat(data) {
+        const { catId, name, role } = data;
+
+        const cat = await CategoryModel.updateMany(
+            { _id: catId },
+            {
+                $set: {
+                    role,
+                    name
+                }
+            }
+        )
+        return cat;
+    }
+
+    async updateChannel(data) {
+        const { channelId, name } = data;
+
+        const channel = await ChannelModel.updateOne({ _id: channelId }, { $set: { name } });
+        return channel;
+    }
+
+    async deleteCat(data) {
+        const { catId } = data;
+
+        const cat = await CategoryModel.findOneAndDelete({ _id: catId });
+        await ChannelModel.findOneAndDelete({ categoryId: catId })
+        return cat;
+    }
+
+    async deleteChannel(data) {
+        const { channelId } = data;
+
+        const channel = await ChannelModel.findOneAndDelete({ _id: channelId });
+        return channel;
     }
 }
 

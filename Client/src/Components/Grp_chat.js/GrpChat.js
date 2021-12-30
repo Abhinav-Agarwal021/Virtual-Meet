@@ -239,6 +239,20 @@ export const GrpChat = () => {
         setCatUpdates(true);
     }
 
+    const getCurrentCat = async () => {
+        setCatUpdates(false);
+        const room = await getRoom(id);
+        setCategories(room.data);
+        const channels = await getChannels(id);
+        setChannels(channels.data);
+    }
+
+    const getCurrentChannel = async () => {
+        setChannelUpdates(false);
+        const channels = await getChannels(id);
+        setChannels(channels.data);
+    }
+
     return (
         <>
             <div className={styles.messenger}>
@@ -289,7 +303,7 @@ export const GrpChat = () => {
                                 {isAdmin &&
                                     <>
                                         <AiOutlinePlus onClick={handleCreateChannel} />
-                                        <FiSettings className={styles.settings__icon} onClick={()=>handleCatUpdates(cat)} />
+                                        <FiSettings className={styles.settings__icon} onClick={() => handleCatUpdates(cat)} />
                                     </>
                                 }
                             </div>
@@ -303,7 +317,7 @@ export const GrpChat = () => {
                                                 <p>{channel.name}</p>
                                             </div>
                                             {isAdmin &&
-                                                <FiSettings className={styles.settings__icon} onClick={()=>handleChannelUpdates(channel)} />
+                                                <FiSettings className={styles.settings__icon} onClick={() => handleChannelUpdates(channel)} />
                                             }
                                         </div>
                                     )}
@@ -337,8 +351,8 @@ export const GrpChat = () => {
             {showCatModal && <AddRooms field="Category Name" currentRoom={room} category onClose={getCat} />}
             {showChannelModal && <AddRooms field="Channel Name" currentRoom={room} roomCategories={categories} channel onClose={getChannel} />}
             {showInviteModal && <InviteModal codeData={code} onClose={() => setShowInviteModal(false)} />}
-            {channelUpdates && <UpdateModal currentChannel={currentChannel} channel onClose={() => setChannelUpdates(false)} />}
-            {catUpdates && <UpdateModal currentCat={currentCat} cat onClose={() => setCatUpdates(false)} />}
+            {channelUpdates && <UpdateModal currentChannel={currentChannel} channel onClose={getCurrentChannel} />}
+            {catUpdates && <UpdateModal currentCat={currentCat} cat onClose={getCurrentCat} />}
         </>
     )
 }

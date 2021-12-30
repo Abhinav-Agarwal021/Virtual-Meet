@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { sendOtp, verifyOtp, activateUser, refresh, logout, getUser, getUserByData } = require('../Controllers/Auth-Controllers')
 const { chatApp, getIds, sendChats, getChats, getConversation, checkCs } = require('../Controllers/Conversation-Controller');
-const { createCat, createRole, createChannel, getRoom, getChannels, generateInviteCode, verifyInvitecode, getUserRoles, leaveServer, checkInviteCode, deleteRole, updateRole } = require('../Controllers/Grp-controller');
+const { createCat, createRole, createChannel, getRoom, getChannels, generateInviteCode, verifyInvitecode, getUserRoles, leaveServer, checkInviteCode, deleteRole, updateRole, updateCat, updateChannel, deleteCat, deleteChannel } = require('../Controllers/Grp-controller');
 const { create, getRooms, getRoomId, updateRoom } = require('../Controllers/Rooms-Controller');
 const authMiddlewares = require('../middlewares/authMiddlewares')
 
@@ -37,6 +37,11 @@ router.post('/grp/roles', getUserRoles);
 router.post('/grp/leave', leaveServer);
 router.post('/grp/delete-role', deleteRole);
 router.post('/grp/add-role', updateRole);
-router.post('/grp/invites/check',checkInviteCode)
+router.post('/grp/invites/check', checkInviteCode)
+
+router.post('/grp/update-cat', updateCat);
+router.post('/grp/update-channel', updateChannel);
+router.post('/grp/delete-cat', deleteCat);
+router.post('/grp/delete-channel', deleteChannel);
 
 module.exports = router;

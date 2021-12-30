@@ -80,10 +80,13 @@
   cursor: pointer;
 }
 
-.delete{
+.delete {
   background: rgb(230, 60, 60);
 }
 
+.delete:hover {
+  background: rgb(255, 0, 0) !important;
+}
 .footerButton:hover {
   background: #13763b;
 }

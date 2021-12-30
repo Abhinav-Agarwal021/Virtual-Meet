@@ -145,6 +145,34 @@ class GrpController {
         const user = await GrpService.updateRoles({ roomId, userId, role });
         return res.json(user);
     }
+
+    async updateCat(req, res) {
+        const { catId, name, role } = req.body;
+
+        const cat = await GrpService.updateCat({ catId, name, role });
+        return res.json(cat);
+    }
+
+    async updateChannel(req, res) {
+        const { channelId, name } = req.body;
+
+        const channel = await GrpService.updateChannel({ channelId, name });
+        return res.json(channel);
+    }
+
+    async deleteCat(req, res) {
+        const { catId } = req.body;
+
+        const cat = await GrpService.deleteCat({catId});
+        return res.json(cat);
+    }
+
+    async deleteChannel(req, res) {
+        const { channelId } = req.body;
+
+        const channel = await GrpService.deleteChannel({channelId});
+        return res.json(channel);
+    }
 }
 
 module.exports = new GrpController();

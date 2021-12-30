@@ -93,6 +93,18 @@ export const addRole = (data) => api.post('/api/grp/add-role', data);
 //leave server
 export const leaveServer = (data) => api.post('/api/grp/leave', data);
 
+//update channel
+export const updateChannel = (data) => api.post('/api/grp/update-channel', data)
+
+//update category
+export const updateCat = (data) => api.post('/api/grp/update-cat', data);
+
+//delete category
+export const deleteCat = (data) => api.post('/api/grp/delete-cat', data);
+
+//delete channel
+export const deleteChannel = (data) => api.post('/api/grp/delete-channel', data);
+
 
 api.interceptors.response.use(
     (config) => {
