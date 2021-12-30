@@ -27,6 +27,12 @@ export const Otp = () => {
         }
     }
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            Submit();
+        }
+    }
+
     return (
         <div className={styles.cardWrapper}>
             <Card
@@ -36,6 +42,7 @@ export const Otp = () => {
                 <TextInput
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
+                    onKeyDown={handleKeyDown}
                 />
                 <div className={styles.actionButtonWrap}>
                     <Button text="Next" onClick={Submit} />

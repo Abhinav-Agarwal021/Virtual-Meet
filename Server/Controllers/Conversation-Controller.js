@@ -7,8 +7,8 @@ class ConversationController {
     async checkCs(req, res) {
         const { senderId, receiverId } = req.body;
 
-        const check = await conversation.find({ members: [senderId, receiverId] })
-        if (await conversation.find({ members: [senderId, receiverId] }).count() > 0) {
+        const check = await conversation.find({ members: { $all: [senderId, receiverId] } })
+        if (await conversation.find({ members: { $all: [senderId, receiverId] } }).count() > 0) {
             return res.json(check)
         }
         else

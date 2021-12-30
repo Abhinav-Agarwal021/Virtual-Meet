@@ -47,6 +47,12 @@ export const Avatar = (props) => {
         }
     }
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            submit();
+        }
+    }
+
     if (loading) return <Loader message="Activation in progress....." />
     return (
         <div className={styles.cardWrapper}>
@@ -59,6 +65,7 @@ export const Avatar = (props) => {
                         id="avatarInput"
                         type="file"
                         className={styles.avatarInput}
+                        onKeyDown={handleKeyDown}
                     />
                     <label className={styles.avatarLabel} htmlFor="avatarInput">
                         Upload a profile picture

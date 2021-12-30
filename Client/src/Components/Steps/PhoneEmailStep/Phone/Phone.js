@@ -21,12 +21,19 @@ export const Phone = (props) => {
         props.onClick()
     }
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            send();
+        }
+    }
+
     return (
         <div className={styles.cardWrapper}>
             <Card title="Enter you phone number" icon="phone">
                 <TextInput
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
+                    onKeyDown={handleKeyDown}
                 />
                 <div>
                     <div className={styles.actionButtonWrap}>

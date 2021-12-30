@@ -24,8 +24,7 @@ export const Rooms = (props) => {
         setShowModal(true);
     }
 
-    const handleSearch = async (e) => {
-        e.preventDefault();
+    const handleSearch = async () => {
 
         if (!searchno) return;
 
@@ -47,6 +46,12 @@ export const Rooms = (props) => {
         }
         else {
             console.log("please enter another number")
+        }
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleSearch();
         }
     }
 
@@ -126,7 +131,7 @@ export const Rooms = (props) => {
                             {props.dm ? "Direct Messages" : "Rooms"}
                         </span>
                         <div className={styles.searchBox}>
-                            <input type="text" value={searchno} placeholder='Find or start a conversation' className={styles.searchInput} onChange={(e) => setSearchno(e.target.value)} />
+                            <input type="text" value={searchno} placeholder='Find or start a conversation' className={styles.searchInput} onChange={(e) => setSearchno(e.target.value)} onKeyDown={handleKeyDown}/>
                             <img src="/images/search-icon.png" alt="search" onClick={handleSearch} />
                         </div>
                     </div>

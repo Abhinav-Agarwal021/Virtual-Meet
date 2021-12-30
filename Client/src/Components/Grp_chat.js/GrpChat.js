@@ -166,9 +166,7 @@ export const GrpChat = () => {
         }
     }
 
-    const sendMssg = async (e) => {
-        e.preventDefault();
-
+    const sendMssg = async () => {
         if (!newMssg) return;
         const userCs = {
             sender: user.id,
@@ -188,6 +186,12 @@ export const GrpChat = () => {
             setMessages([...messages, res.data])
         } catch (error) {
             console.log("message not sent")
+        }
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            sendMssg();
         }
     }
 
@@ -349,7 +353,7 @@ export const GrpChat = () => {
                                 ))}
                             </div>
                             <div className={styles.send__chat}>
-                                <input value={newMssg} className={styles.write__mssg} type="message" placeholder={`Message #${openedChat.name}`} onChange={(e) => setNewMssg(e.target.value)} />
+                                <input value={newMssg} className={styles.write__mssg} type="message" placeholder={`Message #${openedChat.name}`} onChange={(e) => setNewMssg(e.target.value)} onKeyDown={handleKeyDown}/>
                                 <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" onClick={sendMssg} />
                             </div>
                         </div>

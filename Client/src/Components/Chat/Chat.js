@@ -78,8 +78,7 @@ export const Chat = () => {
         getMessages()
     }, [currentChat])
 
-    const sendMssg = async (e) => {
-        e.preventDefault();
+    const sendMssg = async () => {
 
         if (!newMssg) return;
         const userCs = {
@@ -107,6 +106,12 @@ export const Chat = () => {
         }
     }
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            sendMssg();
+        }
+    }
+
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages])
@@ -123,7 +128,7 @@ export const Chat = () => {
                         ))}
                     </div>
                     <div className={styles.send__chat}>
-                        <input value={newMssg} className={styles.write__mssg} type="message" placeholder={`Message @${friend?.name}`} onChange={(e) => setNewMssg(e.target.value)} />
+                        <input value={newMssg} className={styles.write__mssg} type="message" placeholder={`Message @${friend?.name}`} onChange={(e) => setNewMssg(e.target.value)} onKeyDown={handleKeyDown}/>
                         <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" onClick={sendMssg} />
                     </div>
                 </div>

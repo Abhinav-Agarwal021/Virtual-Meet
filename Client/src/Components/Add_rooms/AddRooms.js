@@ -73,7 +73,7 @@ export const AddRooms = (props) => {
         setShowJoinModal(true)
     }
 
-    const useCodetojoin = async () => {
+    const Codetojoin = async () => {
         const updatedData = await verifyCode({ code: server, userId: user.id })
         const userRole = await UserRoles({ roomId: updatedData.data._id, userId: user.id })
         if (userRole.data[0] === undefined) {
@@ -81,6 +81,23 @@ export const AddRooms = (props) => {
         }
         props.onClose()
         history.push(`/grp/${updatedData.data._id}`)
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            if (props.invite) {
+                Codetojoin();
+            }
+            else if (props.room) {
+                createRoom();
+            }
+            else if (props.category) {
+                createCat();
+            }
+            else if (props.channel) {
+                createChannel();
+            }
+        }
     }
 
     return (
@@ -142,6 +159,7 @@ export const AddRooms = (props) => {
                                     fullwidth="true"
                                     value={server}
                                     onChange={(e) => setServer(e.target.value)}
+                                    onKeyDown={handleKeyDown}
                                 />
                             </>
                         }
@@ -154,6 +172,7 @@ export const AddRooms = (props) => {
                                     fullwidth="true"
                                     value={role}
                                     onChange={(e) => setRole(e.target.value)}
+                                    onKeyDown={handleKeyDown}
                                 />
                             </>
                         }
@@ -169,7 +188,7 @@ export const AddRooms = (props) => {
                             <h2>Have an Invite Code already?</h2>
                         }
                         <button
-                            onClick={props.room ? createRoom : props.category ? createCat : props.channel ? createChannel : props.options ? joinServer : props.invite ? useCodetojoin : null}
+                            onClick={props.room ? createRoom : props.category ? createCat : props.channel ? createChannel : props.options ? joinServer : props.invite ? Codetojoin : null}
                             className={styles.footerButton}
                         >
                             <span>{props.options ? "Join a server" : "Let's go"}</span>

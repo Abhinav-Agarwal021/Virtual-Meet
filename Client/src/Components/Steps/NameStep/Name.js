@@ -21,12 +21,19 @@ export const Name = (props) => {
         props.onClick()
     }
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            sendName();
+        }
+    }
+
     return (
         <div className={styles.cardWrapper}>
             <Card title="Enter you Full Name">
                 <TextInput
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    onKeyDown={handleKeyDown}
                 />
                 <div>
                     <div className={styles.actionButtonWrap}>
