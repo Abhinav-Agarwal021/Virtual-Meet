@@ -59,6 +59,18 @@ export const GrpChat = () => {
     const socket = useRef();
     const scrollRef = useRef()
 
+    const [isHoveringId, setisHoveringId] = useState(null)
+    const [isHovering, setIsHovering] = useState(false);
+    const handleMouseOver = (idx) => {
+        setIsHovering(true);
+        setisHoveringId(idx)
+    };
+
+    const handleMouseOut = () => {
+        setIsHovering(false);
+        setisHoveringId(null)
+    };
+
     useEffect(() => {
         arrivalMessage &&
             setMessages((prev) => [...prev, arrivalMessage]);
@@ -295,7 +307,7 @@ export const GrpChat = () => {
                     {categories.map((cat, idx) =>
                         userRoles?.includes(cat.role) &&
                         <div className={styles.serverName__wrapper}>
-                            <div className={styles.category} key={idx} >
+                            <div className={styles.category} key={idx}>
                                 <div className={styles.category__desc} onClick={() => handleCat(idx)}>
                                     <FaChevronDown className={!catClosed.includes(idx) ? styles.drop__icon : styles.right__icon} />
                                     <p>{cat.name}</p>
@@ -311,12 +323,12 @@ export const GrpChat = () => {
                                 <div className={styles.channels}>
                                     {channels.map((channel, index) =>
                                         channel.categoryId === cat.id &&
-                                        <div key={index} className={`${styles.channelName} ${selectedIndex === index && styles.selected}`} >
+                                        <div key={index} className={`${styles.channelName} ${selectedIndex === index && styles.selected}`} onMouseOver={() => handleMouseOver(index)} onMouseOut={() => handleMouseOut(index)}>
                                             <div className={styles.channel__desc} onClick={() => handleOpenChat(channel, index)}>
                                                 {channel.type === 'voice' ? <RiVoiceprintFill className={styles.channel__type} /> : <BsChatText className={styles.channel__type} />}
                                                 <p>{channel.name}</p>
                                             </div>
-                                            {isAdmin &&
+                                            {isAdmin && ((isHovering && isHoveringId === index) || selectedIndex === index) &&
                                                 <FiSettings className={styles.settings__icon} onClick={() => handleChannelUpdates(channel)} />
                                             }
                                         </div>
