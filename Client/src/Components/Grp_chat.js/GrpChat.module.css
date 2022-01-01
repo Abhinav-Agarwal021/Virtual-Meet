@@ -268,3 +268,15 @@
 .leave > p {
   width: 95%;
 }
+
+.emoji__selection {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
+
+.emojis {
+  position: absolute;
+  bottom: 72px;
+  left: 10px;
+}

@@ -84,3 +84,16 @@
   margin-right: 2px;
   cursor: pointer;
 }
+
+.go__back {
+  border: 1px white solid;
+  border-radius: 50%;
+  margin-right: 10px;
+  padding: 3px;
+  cursor: pointer;
+}
+
+.go__back__icon {
+  width: 25px;
+  height: 15px;
+}

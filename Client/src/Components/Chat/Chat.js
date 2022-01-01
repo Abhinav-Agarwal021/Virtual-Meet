@@ -2,8 +2,11 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { getCsBId, getMs, getUs, sendMssgs } from '../../http/Http'
 import { Message } from '../../Shared Components/Messages/Message'
+import Picker from 'emoji-picker-react';
 import { io } from "socket.io-client"
 import styles from "./Chat.module.css"
+
+import { GoSmiley } from "react-icons/go";
 
 export const Chat = () => {
 
@@ -18,8 +21,14 @@ export const Chat = () => {
     const scrollRef = useRef()
 
     const [newMssg, setNewMssg] = useState("")
+    const [emojisOpen, setEmojisOpen] = useState(false)
 
     const { user } = useSelector((state) => state.user);
+
+    const onEmojiClick = (event, emojiObject) => {
+        event.preventDefault();
+        setNewMssg(newMssg + emojiObject.emoji);
+    };
 
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
@@ -41,13 +50,13 @@ export const Chat = () => {
     useEffect(() => {
         const chat = currentChat?.members.find((m) => m !== user.id)
 
-        const getFrined = async() => {
+        const getFrined = async () => {
             const Friend = await getUs(chat);
             setfriend(Friend.data);
         }
 
         getFrined();
-    }, [user,currentChat])
+    }, [user, currentChat])
 
     useEffect(() => {
         socket.current.emit("addUser", user.id);
@@ -127,8 +136,14 @@ export const Chat = () => {
                             </div>
                         ))}
                     </div>
+                    {emojisOpen &&
+                        <div className={styles.emojis}>
+                            <Picker onEmojiClick={onEmojiClick} disableAutoFocus disableSkinTonePicker />
+                        </div>
+                    }
                     <div className={styles.send__chat}>
-                        <input value={newMssg} className={styles.write__mssg} type="message" placeholder={`Message @${friend?.name}`} onChange={(e) => setNewMssg(e.target.value)} onKeyDown={handleKeyDown}/>
+                        <GoSmiley className={styles.emoji__selection} onClick={() => setEmojisOpen(!emojisOpen)} />
+                        <input value={newMssg} onClick={() => setEmojisOpen(false)} className={styles.write__mssg} autofocus="autofocus" type="message" placeholder={`Message @${friend?.name}`} onChange={(e) => setNewMssg(e.target.value)} onKeyDown={handleKeyDown} />
                         <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" onClick={sendMssg} />
                     </div>
                 </div>

@@ -39,7 +39,7 @@ export const UpdateModal = (props) => {
                     <h3 className={styles.heading}>
                         {props.channel ? "Edit Channel" : "Edit Category"}
                     </h3>
-                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                    <input type="text" autofocus="autofocus" value={name} onChange={(e) => setName(e.target.value)} />
                     {props.cat &&
                         <>
                             <h3 className={styles.heading}>

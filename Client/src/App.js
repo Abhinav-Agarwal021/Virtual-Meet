@@ -42,7 +42,6 @@ function App() {
           <Rooms dm={true} />
         </Protected>
         <Protected path="/chat/:id">
-          <Navbar />
           <Chat />
         </Protected>
         <Protected path="/grp/:id">

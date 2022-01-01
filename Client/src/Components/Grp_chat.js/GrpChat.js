@@ -3,6 +3,7 @@ import { checkCode, deleteRole, getChannels, getMs, getRId, getRoom, leaveServer
 import styles from './GrpChat.module.css'
 import { useSelector } from 'react-redux';
 import { io } from "socket.io-client"
+import Picker from 'emoji-picker-react';
 import { useHistory } from 'react-router-dom';
 
 import { FaChevronDown } from "react-icons/fa";
@@ -15,6 +16,7 @@ import { BsPlusCircle } from "react-icons/bs";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
 import { AiOutlinePlus } from "react-icons/ai";
+import { GoSmiley } from "react-icons/go";
 
 import { Message } from '../../Shared Components/Messages/Message';
 import { AddRooms } from '../Add_rooms/AddRooms';
@@ -52,6 +54,7 @@ export const GrpChat = () => {
     const [currentChannel, setCurrentChannel] = useState(null)
 
     const [code, setCode] = useState(null)
+    const [emojisOpen, setEmojisOpen] = useState(false)
     const [userRoles, setUserRoles] = useState(null)
 
     const { user } = useSelector((state) => state.user);
@@ -71,6 +74,11 @@ export const GrpChat = () => {
         setisHoveringId(null)
     };
 
+    const onEmojiClick = (event, emojiObject) => {
+        event.preventDefault();
+        setNewMssg(newMssg + emojiObject.emoji);
+    };
+
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
         socket.current.on("getMessage", (data) => {
@@ -86,7 +94,7 @@ export const GrpChat = () => {
         arrivalMessage &&
             setMessages((prev) => [...prev, arrivalMessage]);
     }, [arrivalMessage]);
-    
+
     useEffect(() => {
         socket.current.emit("addUser", user.id);
     }, [user]);
@@ -352,8 +360,14 @@ export const GrpChat = () => {
                                     </div>
                                 ))}
                             </div>
+                            {emojisOpen &&
+                                <div>
+                                    <Picker onEmojiClick={onEmojiClick} disableAutoFocus disableSkinTonePicker />
+                                </div>
+                            }
                             <div className={styles.send__chat}>
-                                <input value={newMssg} className={styles.write__mssg} type="message" placeholder={`Message #${openedChat.name}`} onChange={(e) => setNewMssg(e.target.value)} onKeyDown={handleKeyDown}/>
+                                <GoSmiley className={styles.emoji__selection} onClick={() => setEmojisOpen(!emojisOpen)} />
+                                <input value={newMssg} autofocus="autofocus" className={styles.write__mssg} type="message" placeholder={`Message #${openedChat.name}`} onChange={(e) => setNewMssg(e.target.value)} onKeyDown={handleKeyDown} />
                                 <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" onClick={sendMssg} />
                             </div>
                         </div>

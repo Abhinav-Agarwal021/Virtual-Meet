@@ -1,5 +1,5 @@
 .messenger {
-  height: calc(100vh - 95px);
+  height: calc(100vh);
   width: 100vw;
   display: flex;
 }
@@ -73,4 +73,16 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+
+.emoji__selection {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
+
+.emojis {
+  position: absolute;
+  bottom: 72px;
+  left: 10px;
 }

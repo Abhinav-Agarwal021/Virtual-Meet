@@ -6,6 +6,8 @@ import { checkCList, getCs, getRId, getRs, getUsBD, sendCList } from '../../http
 import { Loader } from "../../Shared Components/Loader/Loader"
 import { useSelector } from 'react-redux';
 
+import { MdKeyboardBackspace } from "react-icons/md";
+
 import { useHistory } from 'react-router-dom';
 
 export const Rooms = (props) => {
@@ -121,17 +123,24 @@ export const Rooms = (props) => {
 
     }, [user, props])
 
+    const handleBack = () => {
+        history.goBack();
+    }
+
     if (loading) return <Loader message="Loading! please wait....." />
     return (
         <>
             <div className="container">
                 <div className={styles.roomsHeader}>
                     <div className={styles.left}>
+                        <span className={styles.go__back} onClick={handleBack} >
+                            <MdKeyboardBackspace className={styles.go__back__icon} />
+                        </span>
                         <span className={styles.heading}>
                             {props.dm ? "Direct Messages" : "Rooms"}
                         </span>
                         <div className={styles.searchBox}>
-                            <input type="text" value={searchno} placeholder='Find or start a conversation' className={styles.searchInput} onChange={(e) => setSearchno(e.target.value)} onKeyDown={handleKeyDown}/>
+                            <input type="text" value={searchno} placeholder='Find or start a conversation' className={styles.searchInput} onChange={(e) => setSearchno(e.target.value)} onKeyDown={handleKeyDown} />
                             <img src="/images/search-icon.png" alt="search" onClick={handleSearch} />
                         </div>
                     </div>
