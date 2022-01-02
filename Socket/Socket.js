@@ -27,9 +27,10 @@ io.on("connection", (socket) => {
         io.emit("getUsers", users);
     });
 
-    socket.on("sendMessage", ({ senderId, receiverId, message }) => {
+    socket.on("sendMessage", ({ senderId, senderName, message }) => {
             io.local.emit("getMessage", {
                 senderId,
+                senderName,
                 message,
             });
     });

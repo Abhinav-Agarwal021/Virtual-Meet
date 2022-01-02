@@ -4,7 +4,7 @@ const schema = mongoose.Schema;
 const InviteCodes = new schema(
     {
         roomId: { type: schema.Types.ObjectId },
-        code: { type: String },
+        code: { type: String, unique: true },
         expired: { type: Boolean },
         used: { type: Number }
     },

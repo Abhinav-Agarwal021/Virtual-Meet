@@ -35,6 +35,7 @@ export const Chat = () => {
         socket.current.on("getMessage", (data) => {
             setArrivalMessage({
                 sender: data.senderId,
+                senderName: data.senderName,
                 message: data.message,
                 createdAt: Date.now(),
             });
@@ -50,12 +51,14 @@ export const Chat = () => {
     useEffect(() => {
         const chat = currentChat?.members.find((m) => m !== user.id)
 
-        const getFrined = async () => {
-            const Friend = await getUs(chat);
-            setfriend(Friend.data);
-        }
+        if (chat) {
+            const getFrined = async () => {
+                const Friend = await getUs(chat);
+                setfriend(Friend.data);
+            }
 
-        getFrined();
+            getFrined();
+        }
     }, [user, currentChat])
 
     useEffect(() => {
@@ -76,15 +79,17 @@ export const Chat = () => {
     }, [id])
 
     useEffect(() => {
-        const getMessages = async () => {
-            try {
-                const res = await getMs(currentChat?._id)
-                setMessages(res.data);
-            } catch (error) {
-                console.log(error)
+        if (currentChat) {
+            const getMessages = async () => {
+                try {
+                    const res = await getMs(currentChat?._id)
+                    setMessages(res.data);
+                } catch (error) {
+                    console.log(error)
+                }
             }
+            getMessages()
         }
-        getMessages()
     }, [currentChat])
 
     const sendMssg = async () => {
@@ -92,6 +97,7 @@ export const Chat = () => {
         if (!newMssg) return;
         const userCs = {
             sender: user.id,
+            senderName: user.name,
             message: newMssg,
             conversationId: currentChat?._id
         }
@@ -102,6 +108,7 @@ export const Chat = () => {
 
         socket.current.emit("sendMessage", {
             senderId: user.id,
+            senderName: user.name,
             receiverId,
             message: newMssg,
         });
@@ -143,8 +150,8 @@ export const Chat = () => {
                     }
                     <div className={styles.send__chat}>
                         <GoSmiley className={styles.emoji__selection} onClick={() => setEmojisOpen(!emojisOpen)} />
-                        <input value={newMssg} onClick={() => setEmojisOpen(false)} className={styles.write__mssg} autofocus="autofocus" type="message" placeholder={`Message @${friend?.name}`} onChange={(e) => setNewMssg(e.target.value)} onKeyDown={handleKeyDown} />
-                        <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" onClick={sendMssg} />
+                        <input value={newMssg} onClick={() => setEmojisOpen(false)} className={styles.write__mssg} autoFocus="autoFocus" type="message" placeholder={`Message @${friend?.name}`} onChange={(e) => setNewMssg(e.target.value)} onKeyDown={handleKeyDown} />
+                        <img className={styles.send__mssg} src="/images/send-icon.png" alt="" onClick={sendMssg} />
                     </div>
                 </div>
             </div>

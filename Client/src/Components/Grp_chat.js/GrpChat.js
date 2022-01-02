@@ -84,6 +84,7 @@ export const GrpChat = () => {
         socket.current.on("getMessage", (data) => {
             setArrivalMessage({
                 sender: data.senderId,
+                senderName: data.senderName,
                 message: data.message,
                 createdAt: Date.now(),
             });
@@ -142,15 +143,17 @@ export const GrpChat = () => {
     }, [id, user])
 
     useEffect(() => {
-        const getMessages = async () => {
-            try {
-                const res = await getMs(openedChat?.id)
-                setMessages(res.data);
-            } catch (error) {
-                console.log(error)
+        if (openedChat) {
+            const getMessages = async () => {
+                try {
+                    const res = await getMs(openedChat?.id)
+                    setMessages(res.data);
+                } catch (error) {
+                    console.log(error)
+                }
             }
+            getMessages()
         }
-        getMessages()
     }, [openedChat])
 
     const handleCat = (idx) => {
@@ -178,12 +181,14 @@ export const GrpChat = () => {
         if (!newMssg) return;
         const userCs = {
             sender: user.id,
+            senderName: user.name,
             message: newMssg,
             conversationId: openedChat?.id
         }
 
         socket.current.emit("sendMessage", {
             senderId: user.id,
+            senderName: user.name,
             receiverId: "",
             message: newMssg,
         });
@@ -318,7 +323,7 @@ export const GrpChat = () => {
                     }
                     {categories.map((cat, idx) =>
                         userRoles?.includes(cat.role) &&
-                        <div className={styles.serverName__wrapper}>
+                        <div key={idx} className={styles.serverName__wrapper}>
                             <div className={styles.category} key={idx}>
                                 <div className={styles.category__desc} onClick={() => handleCat(idx)}>
                                     <FaChevronDown className={!catClosed.includes(idx) ? styles.drop__icon : styles.right__icon} />
@@ -354,8 +359,8 @@ export const GrpChat = () => {
                     {openChat && openedChat ?
                         <div className={styles.chat__wrapper}>
                             <div className={styles.chatBox__top}>
-                                {messages.map((msg) => (
-                                    <div ref={scrollRef}>
+                                {messages.map((msg, idx) => (
+                                    <div key={idx} ref={scrollRef}>
                                         <Message mssg={msg} own={msg.sender === user.id} />
                                     </div>
                                 ))}
@@ -367,8 +372,8 @@ export const GrpChat = () => {
                             }
                             <div className={styles.send__chat}>
                                 <GoSmiley className={styles.emoji__selection} onClick={() => setEmojisOpen(!emojisOpen)} />
-                                <input value={newMssg} autofocus="autofocus" className={styles.write__mssg} type="message" placeholder={`Message #${openedChat.name}`} onChange={(e) => setNewMssg(e.target.value)} onKeyDown={handleKeyDown} />
-                                <img className={styles.send__mssg} src="/Images/send-icon.png" alt="" onClick={sendMssg} />
+                                <input value={newMssg} autoFocus="autoFocus" className={styles.write__mssg} type="message" placeholder={`Message #${openedChat.name}`} onChange={(e) => setNewMssg(e.target.value)} onKeyDown={handleKeyDown} />
+                                <img className={styles.send__mssg} src="/images/send-icon.png" alt="" onClick={sendMssg} />
                             </div>
                         </div>
                         :

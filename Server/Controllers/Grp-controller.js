@@ -161,16 +161,16 @@ class GrpController {
     }
 
     async deleteCat(req, res) {
-        const { catId } = req.body;
+        const { catId, userId } = req.body;
 
-        const cat = await GrpService.deleteCat({catId});
+        const cat = await GrpService.deleteCat({ catId, userId });
         return res.json(cat);
     }
 
     async deleteChannel(req, res) {
         const { channelId } = req.body;
 
-        const channel = await GrpService.deleteChannel({channelId});
+        const channel = await GrpService.deleteChannel({ channelId });
         return res.json(channel);
     }
 }

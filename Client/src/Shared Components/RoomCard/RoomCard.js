@@ -3,7 +3,7 @@ import { getCsBId, getUs } from '../../http/Http'
 import styles from "./RoomCard.module.css"
 import { useSelector } from 'react-redux'
 
-export const RoomCard = ({ room, conv, onClick }) => {
+export const RoomCard = (props) => {
 
     const { user } = useSelector((state) => state.user)
 
@@ -13,16 +13,16 @@ export const RoomCard = ({ room, conv, onClick }) => {
     useEffect(() => {
 
         const getConvData = async () => {
-            const res = await getCsBId(conv?._id);
+            const res = await getCsBId(props.conv?._id);
             setConvData(res.data)
         }
 
         getConvData();
-    }, [conv])
+    }, [props.conv])
 
-    const friendId = convData?.members?.find((m) => m !== user.id)
 
     useEffect(() => {
+        const friendId = convData?.members?.find((m) => m !== user.id)
         const getFriendUId = async () => {
             if (friendId) {
                 const res = await getUs(friendId);
@@ -31,11 +31,11 @@ export const RoomCard = ({ room, conv, onClick }) => {
         }
 
         getFriendUId();
-    }, [friendId])
+    }, [user, convData])
 
     return (
-        <div className={styles.card} onClick={onClick}>
-            <h3 className={styles.topic}>{room ? room.server : friend?.name}</h3>
+        <div className={styles.card} onClick={props.onClick}>
+            <h3 className={styles.topic}>{props.room ? props.room.server : friend?.name}</h3>
             {/*<div className={styles.speakers}>
                 <div className={styles.avatars}>
                     {room.speakers.map((speaker) => (

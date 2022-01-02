@@ -158,11 +158,11 @@ export const Rooms = (props) => {
                 </div>
 
                 <div className={styles.roomList}>
-                    {!props.dm && room.map((room) => (
-                        <RoomCard key={room.id} room={room} onClick={() => handleOpenRoom(room.id)} />
+                    {!props.dm && room.map((room, idx) => (
+                        <RoomCard key={idx} room={room} onClick={() => handleOpenRoom(room.id)} />
                     ))}
-                    {props.dm && conversation.map((conv) => (
-                        <RoomCard key={conv.id} conv={conv} onClick={() => handleOpenChat(conv._id)} />
+                    {props.dm && conversation.map((conv, index) => (
+                        <RoomCard key={index} conv={conv} onClick={() => handleOpenChat(conv._id)} />
                     ))}
                 </div>
             </div>

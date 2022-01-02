@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import { deleteCat, deleteChannel, updateCat, updateChannel } from '../../http/Http'
 import styles from './UpdateModal.module.css'
+import { useSelector } from 'react-redux'
 
 export const UpdateModal = (props) => {
+
+    const { user } = useSelector(state => state.user)
 
     const [name, setName] = useState(props.channel ? props.currentChannel.name : props.currentCat.name)
     const [role, setRole] = useState(props.cat && props.currentCat.role)
@@ -13,7 +16,7 @@ export const UpdateModal = (props) => {
     }
 
     const handleDeleteCat = async () => {
-        await deleteCat({ catId: props.currentCat.id })
+        await deleteCat({ catId: props.currentCat.id, userId: user.id })
         props.onClose();
 
     }
@@ -39,7 +42,7 @@ export const UpdateModal = (props) => {
                     <h3 className={styles.heading}>
                         {props.channel ? "Edit Channel" : "Edit Category"}
                     </h3>
-                    <input type="text" autofocus="autofocus" value={name} onChange={(e) => setName(e.target.value)} />
+                    <input type="text" autoFocus="autoFocus" value={name} onChange={(e) => setName(e.target.value)} />
                     {props.cat &&
                         <>
                             <h3 className={styles.heading}>

@@ -4,6 +4,7 @@ const ChannelModel = require("../models/ChannelModel")
 
 const crypto = require('crypto');
 const InviteCodesModel = require("../models/InviteCodesModel");
+const RoomModel = require("../models/RoomModel");
 
 class GrpService {
     async CreateCat(data) {
@@ -123,17 +124,21 @@ class GrpService {
 
         const user = await UserRolesModel.find({ roomId, userId });
 
-        const userrole = await UserRolesModel.updateOne(
-            {
-                _id: user[0]._id.toString()
-            },
-            {
-                $push: {
-                    role
+        await RoomModel.updateOne({ _id: roomId }, { $push: { roles: role } })
+
+        if (!user[0].role.includes(role)) {
+            const userrole = await UserRolesModel.updateOne(
+                {
+                    _id: user[0]._id.toString()
+                },
+                {
+                    $push: {
+                        role
+                    }
                 }
-            }
-        )
-        return userrole;
+            )
+            return userrole;
+        }
     }
 
     async updateCat(data) {
@@ -159,7 +164,21 @@ class GrpService {
     }
 
     async deleteCat(data) {
-        const { catId } = data;
+        const { catId, userId } = data;
+
+        const category = await CategoryModel.findOne({ _id: catId });
+
+        const user = await UserRolesModel.find({ roomId: category.roomId.toString(), userId });
+
+        if (user[0].role.includes(category.role)) {
+            await UserRolesModel.updateOne(
+                {
+                    _id: user[0]._id.toString()
+                },
+                { $pull: { role: category.role } }
+            )
+        }
+        await RoomModel.updateOne({ _id: category.roomId.toString() }, { $pull: { roles: category.role } })
 
         const cat = await CategoryModel.findOneAndDelete({ _id: catId });
         await ChannelModel.findOneAndDelete({ categoryId: catId })
