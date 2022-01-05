@@ -86,3 +86,44 @@
   bottom: 72px;
   left: 10px;
 }
+
+.dm__navbar {
+  width: 100%;
+  background: rgb(48, 48, 48);
+  display: flex;
+  align-items: center;
+  font-size: larger;
+  color: rgb(236, 236, 236);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.friend {
+  padding: 20px 20px;
+  width: 230px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.phone__call {
+  position: absolute;
+  width: 23px;
+  height: 23px;
+  right: 20px;
+  cursor: pointer;
+}
+
+.go__back {
+  border: 1px white solid;
+  border-radius: 50%;
+  margin-left: 15px;
+  padding: 3px;
+  cursor: pointer;
+}
+
+.go__back__icon {
+  width: 25px;
+  height: 15px;
+}

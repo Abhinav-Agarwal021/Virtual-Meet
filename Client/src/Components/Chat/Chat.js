@@ -5,8 +5,11 @@ import { Message } from '../../Shared Components/Messages/Message'
 import Picker from 'emoji-picker-react';
 import { io } from "socket.io-client"
 import styles from "./Chat.module.css"
+import { useHistory } from 'react-router-dom';
 
 import { GoSmiley } from "react-icons/go";
+import { BiPhoneCall } from "react-icons/bi";
+import { MdKeyboardBackspace } from "react-icons/md";
 
 export const Chat = () => {
 
@@ -24,6 +27,7 @@ export const Chat = () => {
     const [emojisOpen, setEmojisOpen] = useState(false)
 
     const { user } = useSelector((state) => state.user);
+    const history = useHistory();
 
     const onEmojiClick = (event, emojiObject) => {
         event.preventDefault();
@@ -132,10 +136,23 @@ export const Chat = () => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages])
 
+    const handleBack = () => {
+        history.goBack();
+    }
+
     return (
         <div className={styles.messenger}>
             <div className={styles.chat__Box}>
                 <div className={styles.chat__wrapper}>
+                    <div className={styles.dm__navbar}>
+                        <span className={styles.go__back} onClick={handleBack} >
+                            <MdKeyboardBackspace className={styles.go__back__icon} />
+                        </span>
+                        <div className={styles.friend}>
+                            @ {friend?.name}
+                        </div>
+                        <BiPhoneCall className={styles.phone__call} />
+                    </div>
                     <div className={styles.chatBox__top}>
                         {messages.map((msg) => (
                             <div ref={scrollRef}>
