@@ -143,8 +143,8 @@ export const AddRooms = (props) => {
                                     <select className={styles.cat__optionsselect} defaultValue={selectedCat}
                                         onChange={handleCat} >
                                         <option className={styles.cat__options} value="~select~">~select~</option>
-                                        {props.roomCategories.map((cat) =>
-                                            <option className={styles.cat__options} value={cat.name} id={cat.id}>{cat.name}</option>
+                                        {props.roomCategories.map((cat, idx) =>
+                                            <option key={idx} className={styles.cat__options} value={cat.name} id={cat.id}>{cat.name}</option>
                                         )}
                                     </select>
                                 </div>

@@ -22,6 +22,7 @@ import { Message } from '../../Shared Components/Messages/Message';
 import { AddRooms } from '../Add_rooms/AddRooms';
 import { InviteModal } from '../../Shared Components/InviteModal/InviteModal';
 import { UpdateModal } from '../../Shared Components/UpdatesModal/UpdateModal';
+import { VideoChat } from '../VideoChat/VideoChat';
 
 export const GrpChat = () => {
 
@@ -33,8 +34,10 @@ export const GrpChat = () => {
     const [categories, setCategories] = useState([])
     const [channels, setChannels] = useState([])
     const [openChat, setOpenChat] = useState(false)
+    const [openVideo, setOpenVideo] = useState(false)
     const [selectedIndex, setSelectedIndex] = useState(null)
     const [openedChat, setOpenedChat] = useState(null)
+    const [videoChat, setVideoChat] = useState(null)
     const [catClosed, setCatClosed] = useState([])
     const [room, setRoom] = useState(null)
     const [isAdmin, setIsAdmin] = useState(false)
@@ -63,14 +66,11 @@ export const GrpChat = () => {
     const scrollRef = useRef()
 
     const [isHoveringId, setisHoveringId] = useState(null)
-    const [isHovering, setIsHovering] = useState(false);
     const handleMouseOver = (idx) => {
-        setIsHovering(true);
         setisHoveringId(idx)
     };
 
     const handleMouseOut = () => {
-        setIsHovering(false);
         setisHoveringId(null)
     };
 
@@ -170,10 +170,13 @@ export const GrpChat = () => {
         setSelectedIndex(idx);
         if (channel.type === 'text') {
             setOpenChat(true);
+            setOpenVideo(false)
             setOpenedChat(channel);
         }
         else {
             setOpenChat(false)
+            setOpenVideo(true)
+            setVideoChat(channel);
         }
     }
 
@@ -345,7 +348,7 @@ export const GrpChat = () => {
                                                 {channel.type === 'voice' ? <RiVoiceprintFill className={styles.channel__type} /> : <BsChatText className={styles.channel__type} />}
                                                 <p>{channel.name}</p>
                                             </div>
-                                            {isAdmin && ((isHovering && isHoveringId === index) || selectedIndex === index) &&
+                                            {isAdmin && (isHoveringId === index || selectedIndex === index) &&
                                                 <FiSettings className={styles.settings__icon} onClick={() => handleChannelUpdates(channel)} />
                                             }
                                         </div>
@@ -377,6 +380,9 @@ export const GrpChat = () => {
                             </div>
                         </div>
                         :
+                        /*(openVideo && videoChat) ?
+                            <VideoChat channelId={videoChat.id} />
+                            :*/
                         <div className={styles.default}>
                             Select any channel to start a conversation with
                         </div>
