@@ -25,6 +25,8 @@ const getUser = (userId) => {
 io.on("connection", (socket) => {
     console.log("user is connected...")
 
+    socket.emit("me", socket.id)
+
     socket.on("addUser", (userId) => {
         addUser(userId, socket.id);
         io.emit("getUsers", users);
@@ -38,6 +40,17 @@ io.on("connection", (socket) => {
         });
     });
 
+    //for individual call
+    socket.on("callfriend", ({ userToCall,name, signalData, from }) => {
+        io.to(userToCall).emit("callfriend",{signal:signalData,from,name})
+    })
+
+    socket.on("callanswered", (data) => {
+        io.to(data.to).emit("callanswered", data.signal);
+    })
+
+
+    //for video chat with multiple people
     socket.on("join room", roomId => {
         if (peerUsers[roomId]) {
             const length = peerUsers[roomId].length;
@@ -65,6 +78,7 @@ io.on("connection", (socket) => {
     socket.on("returningSignal", data => {
         io.to(data.callerId).emit('receiving returned signal', { signal: data.signal, id: socket.id })
     })
+    //till here
 
     socket.on("disconnect", () => {
         console.log("a user disconnected!");
