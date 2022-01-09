@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react'
 import styles from './VideoChat.module.css'
+import { useSelector } from 'react-redux';
 import { io } from "socket.io-client";
 import Peer from "simple-peer";
 
-export const VideoChat = () => {
+export const VideoChat = (props) => {
 
     const socket = useRef();
     const myVideo = useRef();
@@ -15,7 +16,8 @@ export const VideoChat = () => {
     const [call, setCall] = useState({})
     const [callAnswered, setCallAnswered] = useState(false)
     const [callEnded, setCallEnded] = useState(false)
-    const [name, setName] = useState('');
+
+    const { user } = useSelector((state) => state.user);
 
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
@@ -28,8 +30,8 @@ export const VideoChat = () => {
 
         socket.on('me', (id) => setMe(id));
 
-        socket.on('callfriend', ({ name: callerName, from, signal }) => {
-            setCall({ isReceivedCall: true, name: callerName, from, signal });
+        socket.on('callfriend', ({ from, signal }) => {
+            setCall({ isReceivedCall: true, from, signal });
         })
     }, [])
 
@@ -51,40 +53,30 @@ export const VideoChat = () => {
         connectionRef.current = peer;
     };
 
-    const callUser = (id) => {
-        const peer = new Peer({ initiator: true, trickle: false, stream });
-
-        peer.on('signal', (data) => {
-            socket.emit('callfriend', { userToCall: id, signalData: data, from: me, name });
-        });
-
-        peer.on('stream', (currentStream) => {
-            userVideo.current.srcObject = currentStream;
-        });
-
-        socket.on('callanswered', (signal) => {
-            setCallAnswered(true);
-
-            peer.signal(signal);
-        });
-
-        connectionRef.current = peer;
-    };
-
     const leaveCall = () => {
         setCallEnded(true);
 
         connectionRef.current.destroy();
-
-        window.location.reload();
     };
 
     return (
-        callAnswered && !callEnded &&
-        <div className={styles.video__containers}>
-            <video className={styles.video} muted ref={myVideo} autoPlay playsInline />
-            <video className={styles.video} muted ref={null} autoPlay playsInline />
+        (callAnswered && !callEnded) ?
+            <div className={styles.video__containers}>
+                <video className={styles.video} muted ref={myVideo} autoPlay playsInline />
+                <video className={styles.video} muted ref={null} autoPlay playsInline />
                 <button onClick={leaveCall}>End call</button>
-        </div>
+            </div>
+            :
+            (call.isReceivedCall && !callAnswered) ?
+                <div className={styles.calling}>
+                    <h1>{user.name} is calling....</h1>
+                    <button onClick={answerCall}>accept call</button>
+                </div>
+                :
+                stream &&
+                <div className={styles.me__calling}>
+                    <h1>wait while the call is connected....</h1>
+                    <button>cancel</button>
+                </div>
     )
 }

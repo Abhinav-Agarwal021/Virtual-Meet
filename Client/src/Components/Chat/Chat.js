@@ -4,12 +4,14 @@ import { getCsBId, getMs, getUs, sendMssgs } from '../../http/Http'
 import { Message } from '../../Shared Components/Messages/Message'
 import Picker from 'emoji-picker-react';
 import { io } from "socket.io-client"
+import Peer from "simple-peer";
 import styles from "./Chat.module.css"
 import { useHistory } from 'react-router-dom';
 
 import { GoSmiley } from "react-icons/go";
 import { BiPhoneCall } from "react-icons/bi";
 import { MdKeyboardBackspace } from "react-icons/md";
+import Styles from '../one_to_one_video_Chat/VideoChat.module.css'
 
 export const Chat = () => {
 
@@ -34,8 +36,83 @@ export const Chat = () => {
         setNewMssg(newMssg + emojiObject.emoji);
     };
 
+    const myVideo = useRef();
+    const userVideo = useRef();
+    const connectionRef = useRef();
+
+    const [stream, setStream] = useState(null)
+    const [me, setMe] = useState('')
+    const [call, setCall] = useState({})
+    const [callAnswered, setCallAnswered] = useState(false)
+    const [callEnded, setCallEnded] = useState(false)
+
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
+        navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: {
+                width: { min: 1024, ideal: 1280, max: 1920 },
+                height: { min: 576, ideal: 720, max: 1080 }
+            }
+        })
+            .then((currentStream) => {
+                setStream(currentStream);
+                console.log(currentStream)
+                myVideo.current.srcObject = currentStream;
+            })
+
+        socket.current.on('me', (id) => setMe(id));
+
+        socket.current.on('callfriend', ({ from, signal }) => {
+            setCall({ isReceivedCall: true, from, signal });
+        })
+    }, [])
+
+    const answerCall = () => {
+        setCallAnswered(true);
+
+        const peer = new Peer({ initiator: false, trickle: false, stream });
+
+        peer.on('signal', (data) => {
+            socket.current.emit('callanswered', { signal: data, to: call.from });
+        });
+
+        peer.on('stream', (currentStream) => {
+            userVideo.current.srcObject = currentStream;
+        });
+
+        peer.signal(call.signal);
+
+        connectionRef.current = peer;
+    };
+
+    const callUser = (id) => {
+        const peer = new Peer({ initiator: true, trickle: false, stream });
+
+        peer.on('signal', (data) => {
+            socket.current.emit('callfriend', { userToCall: id, signalData: data, from: me });
+        });
+
+        peer.on('stream', (currentStream) => {
+            userVideo.current.srcObject = currentStream;
+        });
+
+        socket.current.on('callanswered', (signal) => {
+            setCallAnswered(true);
+
+            peer.signal(signal);
+        });
+
+        connectionRef.current = peer;
+    };
+
+    const leaveCall = () => {
+        setCallEnded(true);
+
+        connectionRef.current.destroy();
+    };
+
+    useEffect(() => {
         socket.current.on("getMessage", (data) => {
             setArrivalMessage({
                 sender: data.senderId,
@@ -140,6 +217,10 @@ export const Chat = () => {
         history.goBack();
     }
 
+    const handleCallUser = () => {
+        callUser(friend?.id);
+    }
+
     return (
         <div className={styles.messenger}>
             <div className={styles.chat__Box}>
@@ -151,7 +232,23 @@ export const Chat = () => {
                         <div className={styles.friend}>
                             @ {friend?.name}
                         </div>
-                        <BiPhoneCall className={styles.phone__call} />
+                        <BiPhoneCall className={styles.phone__call} onClick={handleCallUser} />
+                    </div>
+                    {/*{
+                            (callAnswered && !callEnded) ?
+                                <div className={Styles.video__containers}>
+                                    <video className={Styles.video} muted ref={userVideo} autoPlay playsInline />
+                                     <button onClick={leaveCall}>End call</button>
+                                </div>
+                                :
+                                (call.isReceivedCall && !callAnswered) ?
+                                    <div className={Styles.calling}>
+                                        <h1>{user.name} is calling....</h1>
+                                        <button onClick={answerCall}>accept call</button>
+                                    </div>
+                                    : */}
+                    <div className={Styles.me__calling}>
+                        <video className={Styles.video} muted ref={myVideo} autoPlay playsInline />
                     </div>
                     <div className={styles.chatBox__top}>
                         {messages.map((msg) => (
