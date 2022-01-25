@@ -63,7 +63,19 @@ export const Chat = () => {
         socket.current.on("callfriend", ({ from, name: callerName, signal }) => {
             setCall({ isReceivedCall: true, from, name: callerName, signal });
         });
+
+        socket.current.on("callended", () => {
+            setCall({ isReceivedCall: false });
+            setCallAnswered(false);
+            setCallEnded(true);
+            connectionRef.current.destroy();
+        })
     }, []);
+
+    const declineCall = () => {
+        setCallAnswered(true);
+        setCallEnded(true);
+    }
 
     const answerCall = () => {
         setCallAnswered(true);
@@ -91,6 +103,7 @@ export const Chat = () => {
                 userToCall: id,
                 signalData: data,
                 from: me,
+                name: user.name
             });
         });
 
@@ -108,8 +121,11 @@ export const Chat = () => {
     };
 
     const leaveCall = () => {
+        setCall({ isReceivedCall: false });
+        setCallAnswered(false);
         setCallEnded(true);
         connectionRef.current.destroy();
+        socket.current.emit("endcall", { userToendCall: friend?._id });
     };
 
     useEffect(() => {
@@ -249,8 +265,9 @@ export const Chat = () => {
                     {call.isReceivedCall && !callAnswered && (
                         <div className={Styles.calling}>
                             {console.log("user is calling")}
-                            <h1>{user.name} is calling....</h1>
+                            <h1>{call.name} is calling....</h1>
                             <button onClick={answerCall}>accept call</button>
+                            <button onClick={declineCall}>Decline</button>
                         </div>
                     )}
                     <div className={Styles.me__calling}>

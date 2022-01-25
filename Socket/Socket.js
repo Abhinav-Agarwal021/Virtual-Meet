@@ -41,17 +41,23 @@ io.on("connection", (socket) => {
   });
 
   //for individual call
-  socket.on("callfriend", ({ userToCall, signalData, from }) => {
+  socket.on("callfriend", ({ userToCall, signalData, from,name }) => {
     const friend = getUser(userToCall);
     io.to(friend.socketId).emit("callfriend", {
       signal: signalData,
       from,
+      name
     });
   });
 
   socket.on("callanswered", (data) => {
     io.to(data.to).emit("callanswered", data.signal);
   });
+
+  socket.on("endcall", ({ userToendCall }) => {
+    const friend = getUser(userToendCall);
+    io.to(friend.socketId).emit("callended");
+  })
 
   //for video chat with multiple people
   socket.on("join room", (roomId) => {
