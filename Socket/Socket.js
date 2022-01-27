@@ -41,7 +41,7 @@ io.on("connection", (socket) => {
   });
 
   //for individual call
-  socket.on("callfriend", ({ userToCall, signalData, from,name }) => {
+  socket.on("callfriend", ({ userToCall, signalData, from, name }) => {
     const friend = getUser(userToCall);
     io.to(friend.socketId).emit("callfriend", {
       signal: signalData,

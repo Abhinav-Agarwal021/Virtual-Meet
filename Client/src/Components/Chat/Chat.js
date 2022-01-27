@@ -11,6 +11,11 @@ import { useHistory } from "react-router-dom";
 import { GoSmiley } from "react-icons/go";
 import { BiPhoneCall } from "react-icons/bi";
 import { MdKeyboardBackspace } from "react-icons/md";
+import { BsCameraVideo } from "react-icons/bs";
+import { BsCameraVideoOff } from "react-icons/bs";
+import { AiOutlineAudio } from "react-icons/ai";
+import { AiOutlineAudioMuted } from "react-icons/ai";
+import { MdOutlineScreenShare } from "react-icons/md";
 import Styles from "../one_to_one_video_Chat/VideoChat.module.css";
 
 export const Chat = () => {
@@ -236,6 +241,32 @@ export const Chat = () => {
         callUser(friend?._id);
     };
 
+    const cameraOff = () => {
+        const videoTrack = stream.getTracks().find(track => track.kind === "video");
+        if (videoTrack.enabled) {
+            videoTrack.enabled = false;
+        }
+        else {
+            videoTrack.enabled = true;
+        }
+    }
+
+    const audioOff = () => {
+        const audioTrack = stream.getTracks().find(track => track.kind === "audio");
+        if (audioTrack.enabled) {
+            audioTrack.enabled = false;
+        }
+        else {
+            audioTrack.enabled = true;
+        }
+    }
+
+    const sharemyScreen = () => {
+        navigator.mediaDevices.getDisplayMedia({ video: { cursor: true }, audio: { noiseSuppression: true, echoCancellation: true } }).then(stream => {
+            const screenTrack = stream.getTracks()[0];
+        })
+    }
+
     return (
         <div className={styles.messenger}>
             <div className={styles.chat__Box}>
@@ -264,7 +295,6 @@ export const Chat = () => {
                     )}
                     {call.isReceivedCall && !callAnswered && (
                         <div className={Styles.calling}>
-                            {console.log("user is calling")}
                             <h1>{call.name} is calling....</h1>
                             <button onClick={answerCall}>accept call</button>
                             <button onClick={declineCall}>Decline</button>
@@ -278,6 +308,9 @@ export const Chat = () => {
                             autoPlay
                             playsInline
                         />
+                        <BsCameraVideo onClick={cameraOff} />
+                        <AiOutlineAudio onClick={audioOff} />
+                        <MdOutlineScreenShare onClick={sharemyScreen} />
                     </div>
                     <div className={styles.chatBox__top}>
                         {messages.map((msg) => (
