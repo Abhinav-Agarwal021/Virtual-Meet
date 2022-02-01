@@ -92,6 +92,7 @@ export const Chat = () => {
 
     const answerCall = () => {
         setCallAnswered(true);
+        setCallStarted(false);
 
         const peer = new Peer({ initiator: false, trickle: false, stream });
 
@@ -126,6 +127,7 @@ export const Chat = () => {
 
         socket.current.on("callanswered", (signal) => {
             setCallAnswered(true);
+            setCallStarted(false);
 
             peer.signal(signal);
         });
