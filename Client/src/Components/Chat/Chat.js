@@ -43,12 +43,15 @@ export const Chat = () => {
     const myVideo = useRef();
     const userVideo = useRef();
     const connectionRef = useRef();
+    const screenTrackRef = useRef();
 
     const [stream, setStream] = useState(null);
     const [me, setMe] = useState("");
     const [call, setCall] = useState({});
     const [callAnswered, setCallAnswered] = useState(false);
     const [callEnded, setCallEnded] = useState(false);
+    const [myVdoStatus, setMyVdoStatus] = useState(true);
+    const [screenShare, setScreenShare] = useState(false)
 
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
@@ -69,11 +72,9 @@ export const Chat = () => {
             setCall({ isReceivedCall: true, from, name: callerName, signal });
         });
 
-        socket.current.on("callended", () => {
-            setCall({ isReceivedCall: false });
-            setCallAnswered(false);
-            setCallEnded(true);
+        socket.current.on("endcall", () => {
             connectionRef.current.destroy();
+            window.location.reload();
         })
     }, []);
 
@@ -126,11 +127,10 @@ export const Chat = () => {
     };
 
     const leaveCall = () => {
-        setCall({ isReceivedCall: false });
-        setCallAnswered(false);
         setCallEnded(true);
         connectionRef.current.destroy();
         socket.current.emit("endcall", { userToendCall: friend?._id });
+        window.location.reload();
     };
 
     useEffect(() => {
@@ -245,9 +245,13 @@ export const Chat = () => {
         const videoTrack = stream.getTracks().find(track => track.kind === "video");
         if (videoTrack.enabled) {
             videoTrack.enabled = false;
+            setMyVdoStatus(false);
+            console.log(myVdoStatus);
         }
         else {
             videoTrack.enabled = true;
+            setMyVdoStatus(true);
+            console.log(myVdoStatus);
         }
     }
 
@@ -262,10 +266,52 @@ export const Chat = () => {
     }
 
     const sharemyScreen = () => {
-        navigator.mediaDevices.getDisplayMedia({ video: { cursor: true }, audio: { noiseSuppression: true, echoCancellation: true } }).then(stream => {
-            const screenTrack = stream.getTracks()[0];
-        })
-    }
+
+        if (screenShare) {
+            screenTrackRef.current.onended();
+            setScreenShare(false);
+        }
+
+        if (!screenShare) {
+            navigator.mediaDevices
+                .getDisplayMedia({ cursor: true })
+                .then((currentStream) => {
+                    const screenTrack = currentStream.getTracks()[0];
+
+
+                    // replaceTrack (oldTrack, newTrack, oldStream);
+                    connectionRef.current.replaceTrack(
+                        connectionRef.current.streams[0]
+                            .getTracks()
+                            .find((track) => track.kind === 'video'),
+                        screenTrack,
+                        stream
+                    );
+
+                    // Listen click end
+                    screenTrack.onended = () => {
+                        connectionRef.current.replaceTrack(
+                            screenTrack,
+                            connectionRef.current.streams[0]
+                                .getTracks()
+                                .find((track) => track.kind === 'video'),
+                            stream
+                        );
+
+                        myVideo.current.srcObject = stream;
+                        setScreenShare(false);
+                    };
+
+                    myVideo.current.srcObject = currentStream;
+                    screenTrackRef.current = screenTrack;
+                    setScreenShare(true);
+                }).catch((error) => {
+                    console.log("No stream for sharing")
+                });
+        } else {
+            screenTrackRef.current.onended();
+        }
+    };
 
     return (
         <div className={styles.messenger}>

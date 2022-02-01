@@ -56,7 +56,7 @@ io.on("connection", (socket) => {
 
   socket.on("endcall", ({ userToendCall }) => {
     const friend = getUser(userToendCall);
-    io.to(friend.socketId).emit("callended");
+    io.to(friend.socketId).emit("endcall");
   })
 
   //for video chat with multiple people
