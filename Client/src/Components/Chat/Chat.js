@@ -16,7 +16,7 @@ import { BsCameraVideoOff } from "react-icons/bs";
 import { AiOutlineAudio } from "react-icons/ai";
 import { AiOutlineAudioMuted } from "react-icons/ai";
 import { MdOutlineScreenShare } from "react-icons/md";
-import Styles from "../one_to_one_video_Chat/VideoChat.module.css";
+import { FcEndCall } from "react-icons/fc";
 
 export const Chat = () => {
     var url = window.location.pathname;
@@ -51,7 +51,9 @@ export const Chat = () => {
     const [callAnswered, setCallAnswered] = useState(false);
     const [callEnded, setCallEnded] = useState(false);
     const [myVdoStatus, setMyVdoStatus] = useState(true);
+    const [myaudioStatus, setMyaudioStatus] = useState(true);
     const [screenShare, setScreenShare] = useState(false)
+    const [callStarted, setCallStarted] = useState(false);
 
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
@@ -76,11 +78,16 @@ export const Chat = () => {
             connectionRef.current.destroy();
             window.location.reload();
         })
+
+        socket.current.on("callDeclined", () => {
+            setCallStarted(false);
+            window.location.reload();
+        })
     }, []);
 
     const declineCall = () => {
-        setCallAnswered(true);
-        setCallEnded(true);
+        socket.current.emit("callDeclined", { calldeclineId: friend?._id })
+        window.location.reload();
     }
 
     const answerCall = () => {
@@ -238,6 +245,7 @@ export const Chat = () => {
     };
 
     const handleCallUser = () => {
+        setCallStarted(true);
         callUser(friend?._id);
     };
 
@@ -246,12 +254,10 @@ export const Chat = () => {
         if (videoTrack.enabled) {
             videoTrack.enabled = false;
             setMyVdoStatus(false);
-            console.log(myVdoStatus);
         }
         else {
             videoTrack.enabled = true;
             setMyVdoStatus(true);
-            console.log(myVdoStatus);
         }
     }
 
@@ -259,9 +265,11 @@ export const Chat = () => {
         const audioTrack = stream.getTracks().find(track => track.kind === "audio");
         if (audioTrack.enabled) {
             audioTrack.enabled = false;
+            setMyaudioStatus(false);
         }
         else {
             audioTrack.enabled = true;
+            setMyaudioStatus(true);
         }
     }
 
@@ -322,41 +330,75 @@ export const Chat = () => {
                             <MdKeyboardBackspace className={styles.go__back__icon} />
                         </span>
                         <div className={styles.friend}>@ {friend?.name}</div>
-                        <BiPhoneCall
-                            className={styles.phone__call}
-                            onClick={handleCallUser}
-                        />
+                        {callAnswered && !callEnded && call.isReceivedCall ?
+                            <FcEndCall onClick={leaveCall} className={styles.phone__call} /> :
+                            <BiPhoneCall
+                                className={styles.phone__call}
+                                onClick={handleCallUser}
+                            />
+                        }
                     </div>
-                    {callAnswered && !callEnded && (
-                        <div className={Styles.video__containers}>
+                    <div className={styles.calling__area}>
+                        {callAnswered && !callEnded && (
+                            <div className={styles.video__containers}>
+                                <video
+                                    className={styles.video}
+                                    muted
+                                    ref={userVideo}
+                                    autoPlay
+                                    playsInline
+                                />
+                            </div>
+                        )}
+                        <div className={styles.me__calling}>
                             <video
-                                className={Styles.video}
+                                className={styles.video}
                                 muted
-                                ref={userVideo}
+                                ref={myVideo}
                                 autoPlay
                                 playsInline
                             />
-                            <button onClick={leaveCall}>End call</button>
                         </div>
-                    )}
-                    {call.isReceivedCall && !callAnswered && (
-                        <div className={Styles.calling}>
-                            <h1>{call.name} is calling....</h1>
-                            <button onClick={answerCall}>accept call</button>
-                            <button onClick={declineCall}>Decline</button>
+                        {callStarted && (
+                            <div className={styles.calling}>
+                                calling....
+                            </div>
+                        )}
+                        {call.isReceivedCall && !callAnswered && (
+                            <div className={styles.calling}>
+                                <h1>{call.name} is calling....</h1>
+                                <div className={styles.calling__btns}>
+                                    <button onClick={answerCall} className={styles.accept__btn}>Accept</button>
+                                    <button onClick={declineCall} className={styles.decline__btn}>Decline</button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <div className={styles.settings__area}>
+                        <div className={`${styles.sett__cover} ${!myVdoStatus && styles.cut}`}>
+                            {myVdoStatus ?
+                                <BsCameraVideo onClick={cameraOff} className={styles.set__icons} />
+                                :
+                                <BsCameraVideoOff onClick={cameraOff} className={styles.set__icons} />
+                            }
                         </div>
-                    )}
-                    <div className={Styles.me__calling}>
-                        <video
-                            className={Styles.video}
-                            muted
-                            ref={myVideo}
-                            autoPlay
-                            playsInline
-                        />
-                        <BsCameraVideo onClick={cameraOff} />
-                        <AiOutlineAudio onClick={audioOff} />
-                        <MdOutlineScreenShare onClick={sharemyScreen} />
+                        <div className={`${styles.sett__cover} ${!myaudioStatus && styles.cut}`}>
+                            {myaudioStatus ?
+                                <AiOutlineAudio onClick={audioOff} className={styles.set__icons} />
+                                :
+                                <AiOutlineAudioMuted onClick={audioOff} className={styles.set__icons} />
+                            }
+                        </div>
+                        {callAnswered && !callEnded &&
+                            <>
+                                <div className={styles.sett__cover}>
+                                    <MdOutlineScreenShare onClick={sharemyScreen} className={styles.set__icons} />
+                                </div>
+                                <div className={styles.sett__cover}>
+                                    <FcEndCall onClick={leaveCall} className={styles.set__icons} />
+                                </div>
+                            </>
+                        }
                     </div>
                     <div className={styles.chatBox__top}>
                         {messages.map((msg) => (

@@ -127,3 +127,94 @@
   width: 25px;
   height: 15px;
 }
+
+.calling__area {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.me__calling {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  height: 90%;
+}
+
+.me__calling > video {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+}
+.video__containers > video {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+}
+
+.calling {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.calling > .calling__btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 7px;
+}
+
+.video__containers {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  height: 90%;
+}
+
+.settings__area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.set__icons {
+  width: 25px;
+  height: 25px;
+  color: rgb(215, 215, 215);
+}
+
+.sett__cover {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(64, 68, 75, 255);
+  margin: 7px;
+}
+
+.cut {
+  background-color: rgb(224, 68, 68) !important;
+}
+
+.accept__btn,
+.decline__btn {
+  background-color: rgb(85, 90, 99);
+  color: white;
+  margin: 7px;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.calling > h1 {
+  font-size: medium;
+}

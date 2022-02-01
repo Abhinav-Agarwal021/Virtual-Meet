@@ -59,6 +59,11 @@ io.on("connection", (socket) => {
     io.to(friend.socketId).emit("endcall");
   })
 
+  socket.on("callDeclined", ({ calldeclineId }) => {
+    const friend = getUser(calldeclineId);
+    io.to(friend.socketId).emit("callDeclined");
+  })
+
   //for video chat with multiple people
   socket.on("join room", (roomId) => {
     if (peerUsers[roomId]) {
