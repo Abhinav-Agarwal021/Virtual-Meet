@@ -345,7 +345,6 @@ export const Chat = () => {
                             <div className={styles.video__containers}>
                                 <video
                                     className={styles.video}
-                                    muted
                                     ref={userVideo}
                                     autoPlay
                                     playsInline
@@ -355,7 +354,6 @@ export const Chat = () => {
                         <div className={styles.me__calling}>
                             <video
                                 className={styles.video}
-                                muted
                                 ref={myVideo}
                                 autoPlay
                                 playsInline

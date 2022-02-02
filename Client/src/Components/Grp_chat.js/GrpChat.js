@@ -380,12 +380,12 @@ export const GrpChat = () => {
                             </div>
                         </div>
                         :
-                        /*(openVideo && videoChat) ?
+                        (openVideo && videoChat) ?
                             <VideoChat channelId={videoChat.id} />
-                            :*/
-                        <div className={styles.default}>
-                            Select any channel to start a conversation with
-                        </div>
+                            :
+                            <div className={styles.default}>
+                                Select any channel to start a conversation with
+                            </div>
                     }
                 </div>
             </div>

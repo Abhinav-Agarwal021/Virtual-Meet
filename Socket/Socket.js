@@ -81,7 +81,7 @@ io.on("connection", (socket) => {
 
     socketToRoom[socket.id] = roomId;
     const usersinThisRoom = peerUsers[roomId].filter((id) => id != socket.id);
-
+    console.log(usersinThisRoom);
     socket.emit("all users", usersinThisRoom);
   });
 
