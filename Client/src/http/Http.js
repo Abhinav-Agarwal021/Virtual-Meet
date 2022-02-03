@@ -105,6 +105,9 @@ export const deleteCat = (data) => api.post('/api/grp/delete-cat', data);
 //delete channel
 export const deleteChannel = (data) => api.post('/api/grp/delete-channel', data);
 
+//update room name
+export const updateServerName = (data) => api.post('/api/grp/update-name', data);
+
 
 api.interceptors.response.use(
     (config) => {

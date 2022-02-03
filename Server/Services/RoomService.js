@@ -58,6 +58,19 @@ class RoomService {
         return updatedRoom;
     }
 
+    async updateName(data) {
+        const { id, serverName } = data;
+
+        const room = await RoomModel.updateOne(
+            { _id: id },
+            {
+                server: serverName
+            }
+        )
+
+        return room;
+    }
+
 }
 
 module.exports = new RoomService();

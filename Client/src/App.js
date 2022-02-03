@@ -10,7 +10,8 @@ import { useSelector } from "react-redux"
 import { useLoading } from "./hooks/useLoading"
 import { Loader } from './Shared Components/Loader/Loader';
 import { Chat } from './Components/Chat/Chat';
-import { GrpChat } from './Components/Grp_chat.js/GrpChat'
+import { GrpChat } from './Components/Grp_chat/GrpChat'
+import { GrpSettings } from './Components/GrpSettings/GrpSettings';
 
 function App() {
 
@@ -46,6 +47,9 @@ function App() {
         </Protected>
         <Protected path="/grp/:id">
           <GrpChat />
+        </Protected>
+        <Protected path="/settings/:id">
+          <GrpSettings />
         </Protected>
       </Switch>
     </BrowserRouter>

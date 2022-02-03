@@ -285,6 +285,10 @@ export const GrpChat = () => {
         setChannels(channels.data);
     }
 
+    const handleSettings = () => {
+        history.push(`/settings/${id}`)
+    }
+
     return (
         <>
             <div className={styles.messenger}>
@@ -303,7 +307,7 @@ export const GrpChat = () => {
                                         <p>Invite People</p>
                                         <BsPersonPlus />
                                     </div>
-                                    <div className={styles.set}>
+                                    <div className={styles.set} onClick={handleSettings}>
                                         <p>Server Settings</p>
                                         <FiSettings />
                                     </div>
