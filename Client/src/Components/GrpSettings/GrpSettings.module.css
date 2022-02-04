@@ -103,3 +103,66 @@
   border-radius: 10px;
   cursor: pointer;
 }
+
+.set__desc {
+  margin-top: 10px;
+  font-size: 15px;
+  color: rgb(197, 197, 197);
+}
+
+.create__btn {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.create__btn > button {
+  padding: 5px 12px;
+  background-color: rgb(82, 133, 228);
+  color: white;
+  border-radius: 5px;
+  outline: 0;
+  border: 0;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.set__display {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  letter-spacing: 1.3px;
+  margin-top: 30px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgb(95, 95, 95);
+}
+
+.set__display > p {
+  display: flex;
+  justify-content: center;
+}
+
+.role,
+.mem,
+.cat,
+.btn {
+  width: 25%;
+}
+
+.role__data {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid rgb(95, 95, 95);
+}
+
+.role__data > p {
+  display: flex;
+  justify-content: center;
+}
+
+.del__role {
+  color: rgb(190, 40, 40);
+  cursor: pointer;
+}
