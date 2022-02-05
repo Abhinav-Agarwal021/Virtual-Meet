@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom"
 import styles from "./AddRooms.module.css"
 import { useSelector } from 'react-redux';
 import { TextInput } from '../../Shared Components/TextInput/TextInput'
-import { addRole, createRoom as create, sendCat, sendChannels, sendRoles, UserRoles, verifyCode } from '../../http/Http'
+import { addRole, createRoom as create, sendCat, sendChannels, sendRoles, updateCat, UserRoles, verifyCode } from '../../http/Http'
 
 import { RiVoiceprintFill } from "react-icons/ri";
 import { FaChevronDown } from "react-icons/fa";
@@ -100,6 +100,11 @@ export const AddRooms = (props) => {
         }
     }
 
+    const createRole = async () => {
+        await updateCat({ catId: selectedCatId, role })
+        props.onClose()
+    }
+
     return (
         <>
             <div className={styles.modalMask}>
@@ -150,7 +155,21 @@ export const AddRooms = (props) => {
                                 </div>
                             </>
                         }
-                        {!props.options &&
+                        {props.role &&
+                            <>
+                                <h3 className={`${styles.heading} ${styles.type}`}>CHANNEL TYPE</h3>
+                                <div className={styles.select__cat}>
+                                    <select className={styles.cat__optionsselect} defaultValue={selectedCat}
+                                        onChange={handleCat} >
+                                        <option className={styles.cat__options} value="~select~">~select~</option>
+                                        {props.roomCategories.map((cat, idx) =>
+                                            <option key={idx} className={styles.cat__options} value={cat.name} id={cat.id}>{cat.name}</option>
+                                        )}
+                                    </select>
+                                </div>
+                            </>
+                        }
+                        {!props.options && !props.role &&
                             <>
                                 <h3 className={styles.heading}>
                                     {props.field}
@@ -163,7 +182,7 @@ export const AddRooms = (props) => {
                                 />
                             </>
                         }
-                        {props.category &&
+                        {(props.category || props.role) &&
                             <>
                                 <h3 className={styles.heading}>
                                     Role
@@ -184,11 +203,14 @@ export const AddRooms = (props) => {
                         {props.channel &&
                             <h2>Create a channel in a particular category</h2>
                         }
+                        {props.role &&
+                            <h2>Create a role for a particular category</h2>
+                        }
                         {props.options &&
                             <h2>Have an Invite Code already?</h2>
                         }
                         <button
-                            onClick={props.room ? createRoom : props.category ? createCat : props.channel ? createChannel : props.options ? joinServer : props.invite ? Codetojoin : null}
+                            onClick={props.room ? createRoom : props.category ? createCat : props.channel ? createChannel : props.options ? joinServer : props.invite ? Codetojoin : props.role ? createRole : null}
                             className={styles.footerButton}
                         >
                             <span>{props.options ? "Join a server" : "Let's go"}</span>

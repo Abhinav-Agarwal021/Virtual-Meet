@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getRId, getRoom, updateCat, updateServerName } from '../../http/Http';
-import { UpdateModal } from '../../Shared Components/UpdatesModal/UpdateModal';
+import { AddRooms } from '../Add_rooms/AddRooms';
 import styles from './GrpSettings.module.css'
 
 export const GrpSettings = () => {
@@ -11,6 +11,8 @@ export const GrpSettings = () => {
     const [selected, setSelected] = useState(1);
     const [serverName, setServerName] = useState(null);
     const [categories, setCategories] = useState([])
+    const [room, setRoom] = useState(null);
+    const [showRoleModal, setShowRoleModal] = useState(false)
 
     const settings = [
         "overview",
@@ -53,6 +55,7 @@ export const GrpSettings = () => {
     useEffect(() => {
         const getRoomData = async () => {
             const room = await getRoom(id);
+            setRoom(room);
             setCategories(room.data);
         }
 
@@ -63,6 +66,16 @@ export const GrpSettings = () => {
         await updateCat({ catId: cat.id, name: cat.name, role: "public" })
         const room = await getRoom(id);
         setCategories(room.data);
+    }
+
+    const getRoles = async () => {
+        setShowRoleModal(false);
+        const room = await getRoom(id);
+        setCategories(room.data);
+    }
+
+    const handleCreateRole = () => {
+        setShowRoleModal(true);
     }
 
     return (
@@ -104,7 +117,7 @@ export const GrpSettings = () => {
                             <p className={styles.set__desc}>use roles to organize your server members and customize their permissions.</p>
                         </div>
                         <div className={styles.create__btn}>
-                            <button>Create Role</button>
+                            <button onClick={handleCreateRole}>Create Role</button>
                         </div>
                         <div className={styles.set__header}>
                             <p className={styles.set__desc}># Deleting a role will make that category public and open to everyone</p>
@@ -127,6 +140,7 @@ export const GrpSettings = () => {
                     </div>
                 </div>
             }
+            {showRoleModal && <AddRooms currentRoom={room} roomCategories={categories.filter((cat) => cat.role === "public")} role onClose={getRoles} />}
         </div>
     );
 };
