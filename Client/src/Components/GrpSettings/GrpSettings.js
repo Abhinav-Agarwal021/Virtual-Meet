@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getRId, getRoom, updateServerName } from '../../http/Http';
+import { getRId, getRoom, updateCat, updateServerName } from '../../http/Http';
+import { UpdateModal } from '../../Shared Components/UpdatesModal/UpdateModal';
 import styles from './GrpSettings.module.css'
 
 export const GrpSettings = () => {
@@ -58,8 +59,10 @@ export const GrpSettings = () => {
         getRoomData();
     }, [id])
 
-    const handleDeleteRole = () => {
-        
+    const handleDeleteRole = async (cat) => {
+        await updateCat({ catId: cat.id, name: cat.name, role: "public" })
+        const room = await getRoom(id);
+        setCategories(room.data);
     }
 
     return (
@@ -118,7 +121,7 @@ export const GrpSettings = () => {
                                 <p className={styles.role}>{catdet.role}</p>
                                 <p className={styles.mem}>0</p>
                                 <p className={styles.cat}>{catdet.name}</p>
-                                <p className={`${styles.btn} ${styles.del__role}`} onClick={handleDeleteRole}>Delete Role</p>
+                                <p className={`${styles.btn} ${styles.del__role}`} onClick={() => handleDeleteRole(catdet)}>Delete Role</p>
                             </div>
                         ))}
                     </div>

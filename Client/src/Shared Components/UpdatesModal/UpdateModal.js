@@ -22,13 +22,13 @@ export const UpdateModal = (props) => {
     }
 
     const handleUpdateCat = async () => {
-        await updateCat({ catId: props.currentCat.id, name })
+        await updateCat({ catId: props.currentCat.id, name, role })
         props.onClose();
 
     }
 
     const handleUpdateChannel = async () => {
-        await updateChannel({ channelId: props.currentChannel.id, name, role })
+        await updateChannel({ channelId: props.currentChannel.id, name })
         props.onClose();
     }
 
