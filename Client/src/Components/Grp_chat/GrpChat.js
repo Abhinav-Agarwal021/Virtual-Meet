@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { checkCode, deleteRole, getChannels, getMs, getRId, getRoom, leaveServer, sendCode, sendMssgs, UserRoles } from '../../http/Http';
+import { checkCode, deleteRole, expireCode, getChannels, getMs, getRId, getRoom, leaveServer, sendCode, sendMssgs, UserRoles } from '../../http/Http';
 import styles from './GrpChat.module.css'
 import { useSelector } from 'react-redux';
 import { io } from "socket.io-client"
@@ -240,14 +240,20 @@ export const GrpChat = () => {
     }
 
     const inviteFrnds = async () => {
-        const check = await checkCode({ roomId: id });
+        var check = await checkCode({ roomId: id });
         if (check.data[0] === undefined) {
             const send = await sendCode({ roomId: id })
-            console.log(send)
             setCode(send.data);
         }
         else {
-            setCode(check.data[0]);
+            var exptime = 604800000;
+            if (Date.now() - Date.parse(check.data[0].createdAt) > exptime) {
+                await expireCode({ code: check.data[0].code })
+                const send = await sendCode({ roomId: id })
+                setCode(send.data);
+            }
+            else
+                setCode(check.data[0]);
         }
         setShowInviteModal(true);
         setOpenServerSet(false)

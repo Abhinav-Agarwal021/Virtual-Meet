@@ -78,6 +78,9 @@ export const sendCode = (data) => api.post('/api/grp/codes', data);
 //check if prev code send exits and not expired
 export const checkCode = (data) => api.post('/api/grp/invites/check', data);
 
+//get all the invites
+export const getCode = (data) => api.post('/api/grp/get-code', data);
+
 //check code and add user to a server
 export const verifyCode = (data) => api.post('/api/grp/invites', data);
 
@@ -107,6 +110,9 @@ export const deleteChannel = (data) => api.post('/api/grp/delete-channel', data)
 
 //update room name
 export const updateServerName = (data) => api.post('/api/grp/update-name', data);
+
+//expire an invite code
+export const expireCode = (data) => api.post('/api/grp/invites/expire', data);
 
 
 api.interceptors.response.use(

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getRId, getRoom, updateCat, updateServerName } from '../../http/Http';
+import { expireCode, getCode, getRId, getRoom, updateCat, updateServerName } from '../../http/Http';
 import { AddRooms } from '../Add_rooms/AddRooms';
 import styles from './GrpSettings.module.css'
 
@@ -8,11 +8,12 @@ export const GrpSettings = () => {
     var url = window.location.pathname;
     var id = url.substring(url.lastIndexOf('/') + 1);
 
-    const [selected, setSelected] = useState(1);
+    const [selected, setSelected] = useState(0);
     const [serverName, setServerName] = useState(null);
     const [categories, setCategories] = useState([])
     const [room, setRoom] = useState(null);
     const [showRoleModal, setShowRoleModal] = useState(false)
+    const [inviteCode, setInviteCode] = useState(null);
 
     const settings = [
         "overview",
@@ -78,6 +79,25 @@ export const GrpSettings = () => {
         setShowRoleModal(true);
     }
 
+    useEffect(() => {
+        const getCodes = async () => {
+            const check = await getCode({ roomId: id });
+            if (check.data[0] !== undefined) {
+                setInviteCode(check.data);
+            }
+        }
+        getCodes();
+    }, [id])
+
+    const expireInviteCode = async (invite) => {
+        console.log("pressed");
+        await expireCode({ code: invite.code })
+        const check = await getCode({ roomId: id });
+        if (check.data[0] !== undefined) {
+            setInviteCode(check.data);
+        }
+    }
+
     return (
         <div className={styles.server__Settings}>
             <div className={styles.server__menu}>
@@ -137,6 +157,41 @@ export const GrpSettings = () => {
                                 <p className={`${styles.btn} ${styles.del__role}`} onClick={() => handleDeleteRole(catdet)}>Delete Role</p>
                             </div>
                         ))}
+                    </div>
+                </div>
+            }
+            {selected === 3 &&
+                <div className={styles.content}>
+                    <div className={styles.set__content}>
+                        <div className={styles.set__header}>
+                            <p className={styles.sett__name}>Invites</p>
+                            <p className={styles.set__desc}>{inviteCode !== null ? "Here's a list of all invite links." : "No invites yet"}</p>
+                        </div>
+
+                        {inviteCode !== null ?
+                            <>
+                                <div className={styles.set__display}>
+                                    <p className={styles.role}>INVITE CODE</p>
+                                    <p className={styles.mem}>USES</p>
+                                    <p className={styles.cat}>EXPIRED</p>
+                                    <p className={styles.btn}></p>
+                                </div>
+                                {inviteCode.map((inv, idx) => (
+                                    <div key={idx} className={styles.role__data}>
+                                        <p className={styles.role}>{inv.code}</p>
+                                        <p className={styles.mem}>{inv.used}</p>
+                                        <p className={`${styles.cat} ${inv.expired ? styles.del__server : styles.green}`}>{inv.expired ? "expired" : "not expired"}</p>
+                                        {!inv.expired ?
+                                            <p className={`${styles.btn} ${styles.del__role}`} onClick={() => expireInviteCode(inv)}>Delete Invite</p>
+                                            :
+                                            <p className={`${styles.btn}`}></p>
+                                        }
+                                    </div>
+                                ))}
+                            </>
+                            :
+                            null
+                        }
                     </div>
                 </div>
             }

@@ -84,6 +84,12 @@ class GrpService {
         return codeInfo;
     }
 
+    async getAllCodeData(data) {
+        const roomId = data;
+        const codeInfo = await InviteCodesModel.find({ roomId })
+        return codeInfo;
+    }
+
     async getCodeInfo(data) {
         const code = data;
 

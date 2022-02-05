@@ -89,7 +89,7 @@ export const InviteModal = (props) => {
                         Invite friends to this server
                     </h3>
                     <div className={styles.code}>
-                        <input type="text" value={searchno} autofocus="autofocus" placeholder='DM code to a friend' className={styles.searchInput} onChange={(e) => setSearchno(e.target.value)} />
+                        <input type="text" value={searchno} autoFocus="autoFocus" placeholder='DM code to a friend' className={styles.searchInput} onChange={(e) => setSearchno(e.target.value)} />
                         <button className={`${styles.footerButton} ${sent && styles.copied}`} onClick={sendLink}>{sent ? "sent" : "send"}</button>
                     </div>
                 </div>

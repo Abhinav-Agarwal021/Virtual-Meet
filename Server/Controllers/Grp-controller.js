@@ -90,6 +90,13 @@ class GrpController {
         return res.json(codedet);
     }
 
+    async getAllInviteCode(req, res) {
+        const { roomId } = req.body;
+
+        const codedet = await GrpService.getAllCodeData(roomId)
+        return res.json(codedet);
+    }
+
     async verifyInvitecode(req, res) {
         const { code, userId } = req.body;
 
@@ -100,7 +107,7 @@ class GrpController {
         if (Date.now() - Date.parse(data.createdAt) > exptime) {
             await GrpService.updateCodeInfo(code)
             res.status(400).json({
-                message: "OTP expired!"
+                message: "Invite Code expired!"
             })
         }
 
@@ -110,6 +117,13 @@ class GrpController {
         await GrpService.updateUsedPeople(code);
 
         return res.json(room)
+    }
+
+    async expireCode(req, res) {
+        const { code } = req.body;
+        const delCode = await GrpService.updateCodeInfo(code)
+
+        return res.json(delCode);
     }
 
     async getUserRoles(req, res) {
