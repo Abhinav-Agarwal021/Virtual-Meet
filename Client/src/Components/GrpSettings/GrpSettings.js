@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { expireCode, getCode, getRId, getRoom, updateCat, updateServerName } from '../../http/Http';
+import { expireCode, getCode, getRId, getRoom, getUs, getUserByRole, updateCat, updateServerName } from '../../http/Http';
 import { AddRooms } from '../Add_rooms/AddRooms';
 import styles from './GrpSettings.module.css'
 
@@ -9,11 +9,14 @@ export const GrpSettings = () => {
     var id = url.substring(url.lastIndexOf('/') + 1);
 
     const [selected, setSelected] = useState(0);
-    const [serverName, setServerName] = useState(null);
+    const [serverName, setServerName] = useState("");
     const [categories, setCategories] = useState([])
     const [room, setRoom] = useState(null);
     const [showRoleModal, setShowRoleModal] = useState(false)
     const [inviteCode, setInviteCode] = useState(null);
+    const [selectedRole, setSelectedRole] = useState("public")
+    const [selectedRoleId, setSelectedRoleId] = useState(0);
+    const [usersOfRole, setUsersOfRole] = useState([]);
 
     const settings = [
         "overview",
@@ -39,6 +42,7 @@ export const GrpSettings = () => {
 
         const getRoomsData = async () => {
             const res = await getRId(id);
+            setRoom(res.data);
             setServerName(res.data.server);
         }
 
@@ -56,7 +60,6 @@ export const GrpSettings = () => {
     useEffect(() => {
         const getRoomData = async () => {
             const room = await getRoom(id);
-            setRoom(room);
             setCategories(room.data);
         }
 
@@ -97,6 +100,25 @@ export const GrpSettings = () => {
             setInviteCode(check.data);
         }
     }
+
+    const handleCat = async (e) => {
+        setSelectedRole(e.target.value)
+        const index = e.target.selectedIndex;
+        const el = e.target.childNodes[index]
+        const option = el.getAttribute('id');
+        setSelectedRoleId(option);
+    }
+
+    // useEffect(() => {
+    //     const getAllUsersByRole = async () => {
+    //         const users = await getUserByRole({ roomId: id, role: room?.roles[selectedRoleId] });
+    //         for (let i = 0; i < users.data.length; i++) {
+    //             const user = await getUs(users.data[i].userId);
+    //             // setUsersOfRole(user.data);
+    //         }
+    //     }
+    //     getAllUsersByRole();
+    // }, [id, room, selectedRoleId, usersOfRole])
 
     return (
         <div className={styles.server__Settings}>
@@ -146,7 +168,7 @@ export const GrpSettings = () => {
                         <div className={styles.set__display}>
                             <p className={styles.role}>ROLES</p>
                             <p className={styles.mem}>MEMBERS</p>
-                            <p className={styles.cat}>CATAGORY</p>
+                            <p className={styles.cat}>CATEGORY</p>
                             <p className={styles.btn}></p>
                         </div>
                         {categories.map((catdet, idx) => (
@@ -192,6 +214,36 @@ export const GrpSettings = () => {
                             :
                             null
                         }
+                    </div>
+                </div>
+            }
+            {selected === 2 &&
+                <div className={styles.content}>
+                    <div className={styles.set__content}>
+                        <div className={styles.set__header}>
+                            <p className={styles.sett__name}>Server Members</p>
+                        </div>
+                        <div className={styles.mem__display}>
+                            <p className={styles.display__role}>Display role:</p>
+                            <select className={styles.role__optionsselect} defaultValue={selectedRole}
+                                onChange={handleCat} >
+                                {room.roles.map((rol, idx) =>
+                                    <option key={idx} className={styles.role__options} value={rol} id={idx}>{rol}</option>
+                                )}
+                            </select>
+                        </div>
+                        {usersOfRole.map((inv, idx) => (
+                            <div key={idx} className={styles.role__data}>
+                                <p className={styles.role}>{inv.code}</p>
+                                <p className={styles.mem}>{inv.used}</p>
+                                <p className={`${styles.cat} ${inv.expired ? styles.del__server : styles.green}`}>{inv.expired ? "expired" : "not expired"}</p>
+                                {!inv.expired ?
+                                    <p className={`${styles.btn} ${styles.del__role}`} onClick={() => expireInviteCode(inv)}>Delete Invite</p>
+                                    :
+                                    <p className={`${styles.btn}`}></p>
+                                }
+                            </div>
+                        ))}
                     </div>
                 </div>
             }

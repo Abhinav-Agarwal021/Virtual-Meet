@@ -147,6 +147,13 @@ class GrpService {
         }
     }
 
+    async getUserByRole(data) {
+        const { roomId, role } = data;
+
+        const user = await UserRolesModel.find({ roomId, role: { $all: [role] } });
+        return user;
+    }
+
     async updateCat(data) {
         const { catId, name, role } = data;
 
