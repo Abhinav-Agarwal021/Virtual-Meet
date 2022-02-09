@@ -175,7 +175,7 @@
   display: flex;
   justify-content: flex-end;
   width: 100%;
-  margin-top: 20px;
+  margin: 20px 0;
 }
 
 .display__role {
@@ -208,4 +208,32 @@
 .role__optionsselect:active {
   border: none;
   outline: none;
+}
+
+.roles__display {
+  width: 75%;
+  display: flex;
+  align-items: center;
+}
+
+.roles__width {
+  max-width: 90%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.per__role {
+  padding: 5px 10px;
+  margin: 0 3px;
+  background: #323232;
+  color: white;
+  font-size: small;
+  border-radius: 10px;
+}
+
+.add__roles {
+  margin-left: 3px;
+  color: #323232;
+  background-color: rgb(200, 200, 200);
+  border-radius: 50%;
 }

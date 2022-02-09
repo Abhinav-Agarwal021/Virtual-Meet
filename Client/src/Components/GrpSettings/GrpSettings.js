@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { expireCode, getCode, getRId, getRoom, getUs, getUserByRole, updateCat, updateServerName } from '../../http/Http';
+import { expireCode, getCode, getRId, getRoom, getUs, getUserByRole, updateCat, updateServerName, UserRoles } from '../../http/Http';
 import { AddRooms } from '../Add_rooms/AddRooms';
 import styles from './GrpSettings.module.css'
+
+import { BsFillPlusCircleFill } from "react-icons/bs";
 
 export const GrpSettings = () => {
 
@@ -17,6 +19,7 @@ export const GrpSettings = () => {
     const [selectedRole, setSelectedRole] = useState("public")
     const [selectedRoleId, setSelectedRoleId] = useState(0);
     const [usersOfRole, setUsersOfRole] = useState([]);
+    const [usersDet, setUsersDet] = useState([]);
 
     const settings = [
         "overview",
@@ -109,16 +112,22 @@ export const GrpSettings = () => {
         setSelectedRoleId(option);
     }
 
-    // useEffect(() => {
-    //     const getAllUsersByRole = async () => {
-    //         const users = await getUserByRole({ roomId: id, role: room?.roles[selectedRoleId] });
-    //         for (let i = 0; i < users.data.length; i++) {
-    //             const user = await getUs(users.data[i].userId);
-    //             // setUsersOfRole(user.data);
-    //         }
-    //     }
-    //     getAllUsersByRole();
-    // }, [id, room, selectedRoleId, usersOfRole])
+    useEffect(() => {
+        const getAllUsersByRole = async () => {
+            const users = await getUserByRole({ roomId: id, role: room?.roles[selectedRoleId] });
+            var arrOfUsersRoles = [];
+            var arrOfUsers = [];
+            for (let i = 0; i < users.data.length; i++) {
+                const userRoles = await UserRoles({ roomId: id, userId: users.data[i].userId });
+                const user = await getUs(users.data[i].userId);
+                arrOfUsersRoles.push(userRoles.data[0]);
+                arrOfUsers.push(user.data);
+            }
+            setUsersOfRole(arrOfUsersRoles);
+            setUsersDet(arrOfUsers);
+        }
+        getAllUsersByRole();
+    }, [id, room, selectedRoleId])
 
     return (
         <div className={styles.server__Settings}>
@@ -232,16 +241,17 @@ export const GrpSettings = () => {
                                 )}
                             </select>
                         </div>
-                        {usersOfRole.map((inv, idx) => (
+                        {usersDet.map((det, idx) => (
                             <div key={idx} className={styles.role__data}>
-                                <p className={styles.role}>{inv.code}</p>
-                                <p className={styles.mem}>{inv.used}</p>
-                                <p className={`${styles.cat} ${inv.expired ? styles.del__server : styles.green}`}>{inv.expired ? "expired" : "not expired"}</p>
-                                {!inv.expired ?
-                                    <p className={`${styles.btn} ${styles.del__role}`} onClick={() => expireInviteCode(inv)}>Delete Invite</p>
-                                    :
-                                    <p className={`${styles.btn}`}></p>
-                                }
+                                <p className={styles.role}>{det.name}</p>
+                                <p className={styles.roles__display}>
+                                    {usersOfRole[idx]?.role.map((roles, index) => (
+                                        <span key={index} className={styles.roles__width}>
+                                            <span className={styles.per__role}>{roles}</span>
+                                        </span>
+                                    ))}
+                                    <BsFillPlusCircleFill className={styles.add__roles} />
+                                </p>
                             </div>
                         ))}
                     </div>
