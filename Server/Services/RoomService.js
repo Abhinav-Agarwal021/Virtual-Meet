@@ -64,7 +64,6 @@ class RoomService {
 
     async deleteRoom(data) {
         const { roomId } = data;
-        console.log(roomId)
         const room = await RoomModel.findOneAndDelete({ _id: roomId })
         await CategoryModel.deleteMany({ roomId })
         await UserRolesModel.deleteMany({ roomId })
