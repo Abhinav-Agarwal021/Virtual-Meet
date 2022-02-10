@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { expireCode, getCode, getRId, getRoom, getUs, getUserByRole, updateCat, updateServerName, UserRoles } from '../../http/Http';
+import { expireCode, getCode, getRId, getRoom, getUs, getUserByRole, updateCat, updateServerName, updateUserRole, UserRoles } from '../../http/Http';
 import { AddRooms } from '../Add_rooms/AddRooms';
 import styles from './GrpSettings.module.css'
 
 import { BsFillPlusCircleFill } from "react-icons/bs";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 
 export const GrpSettings = () => {
 
@@ -15,11 +16,14 @@ export const GrpSettings = () => {
     const [categories, setCategories] = useState([])
     const [room, setRoom] = useState(null);
     const [showRoleModal, setShowRoleModal] = useState(false)
+    const [showAddRoleModal, setShowAddRoleModal] = useState(false)
+    const [userComp, setUserComp] = useState(null)
     const [inviteCode, setInviteCode] = useState(null);
     const [selectedRole, setSelectedRole] = useState("public")
     const [selectedRoleId, setSelectedRoleId] = useState(0);
     const [usersOfRole, setUsersOfRole] = useState([]);
     const [usersDet, setUsersDet] = useState([]);
+    const [userIndex, setUserIndex] = useState(null)
 
     const settings = [
         "overview",
@@ -128,6 +132,44 @@ export const GrpSettings = () => {
         }
         getAllUsersByRole();
     }, [id, room, selectedRoleId])
+
+    const handleAddRole = (user, index) => {
+        setShowAddRoleModal(true);
+        setUserComp(user);
+        setUserIndex(index);
+    }
+
+    const updateRoles = async () => {
+        setShowAddRoleModal(false);
+
+        const users = await getUserByRole({ roomId: id, role: room?.roles[selectedRoleId] });
+        var arrOfUsersRoles = [];
+        var arrOfUsers = [];
+        for (let i = 0; i < users.data.length; i++) {
+            const userRoles = await UserRoles({ roomId: id, userId: users.data[i].userId });
+            const user = await getUs(users.data[i].userId);
+            arrOfUsersRoles.push(userRoles.data[0]);
+            arrOfUsers.push(user.data);
+        }
+        setUsersOfRole(arrOfUsersRoles);
+        setUsersDet(arrOfUsers);
+    }
+
+    const deleteRole = async (role, user) => {
+        await updateUserRole({ roomId: id, userId: user._id, role: role })
+
+        const users = await getUserByRole({ roomId: id, role: room?.roles[selectedRoleId] });
+        var arrOfUsersRoles = [];
+        var arrOfUsers = [];
+        for (let i = 0; i < users.data.length; i++) {
+            const userRoles = await UserRoles({ roomId: id, userId: users.data[i].userId });
+            const user = await getUs(users.data[i].userId);
+            arrOfUsersRoles.push(userRoles.data[0]);
+            arrOfUsers.push(user.data);
+        }
+        setUsersOfRole(arrOfUsersRoles);
+        setUsersDet(arrOfUsers);
+    }
 
     return (
         <div className={styles.server__Settings}>
@@ -247,10 +289,15 @@ export const GrpSettings = () => {
                                 <p className={styles.roles__display}>
                                     {usersOfRole[idx]?.role.map((roles, index) => (
                                         <span key={index} className={styles.roles__width}>
-                                            <span className={styles.per__role}>{roles}</span>
+                                            <span className={styles.per__role}>
+                                                <span>
+                                                    {roles}
+                                                </span>
+                                                <AiOutlineCloseCircle className={styles.del__role} onClick={() => deleteRole(roles, det)} />
+                                            </span>
                                         </span>
                                     ))}
-                                    <BsFillPlusCircleFill className={styles.add__roles} />
+                                    <BsFillPlusCircleFill className={styles.add__roles} onClick={() => handleAddRole(det, idx)} />
                                 </p>
                             </div>
                         ))}
@@ -258,6 +305,7 @@ export const GrpSettings = () => {
                 </div>
             }
             {showRoleModal && <AddRooms currentRoom={room} roomCategories={categories.filter((cat) => cat.role === "public")} role onClose={getRoles} />}
+            {showAddRoleModal && <AddRooms addRole roomDet={id} userDet={userComp} allRoles={room.roles.filter((role) => !usersOfRole[userIndex].role.includes(role))} onClose={updateRoles} />}
         </div>
     );
 };

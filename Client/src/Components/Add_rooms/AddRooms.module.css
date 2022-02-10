@@ -157,3 +157,9 @@
 input {
   font-size: 15px;
 }
+
+.select__cat > p {
+  display: flex;
+  justify-content: center;
+  font-size: medium;
+}

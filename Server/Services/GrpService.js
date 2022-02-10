@@ -130,7 +130,10 @@ class GrpService {
 
         const user = await UserRolesModel.find({ roomId, userId });
 
-        await RoomModel.updateOne({ _id: roomId }, { $push: { roles: role } })
+        const room = await RoomModel.findOne({ _id: roomId })
+
+        if (!room.roles.includes(role))
+            await RoomModel.updateOne({ _id: roomId }, { $push: { roles: role } })
 
         if (!user[0].role.includes(role)) {
             const userrole = await UserRolesModel.updateOne(
@@ -139,6 +142,26 @@ class GrpService {
                 },
                 {
                     $push: {
+                        role
+                    }
+                }
+            )
+            return userrole;
+        }
+    }
+
+    async updateUserRole(data) {
+        const { roomId, userId, role } = data;
+
+        const user = await UserRolesModel.find({ roomId, userId });
+
+        if (user[0].role.includes(role)) {
+            const userrole = await UserRolesModel.updateOne(
+                {
+                    _id: user[0]._id.toString()
+                },
+                {
+                    $pull: {
                         role
                     }
                 }

@@ -160,6 +160,13 @@ class GrpController {
         return res.json(user);
     }
 
+    async updateUserRole(req, res) {
+        const { roomId, userId, role } = req.body;
+
+        const user = await GrpService.updateUserRole({ roomId, userId, role });
+        return res.json(user);
+    }
+
     async getUserByRole(req, res) {
         const { roomId, role } = req.body;
 

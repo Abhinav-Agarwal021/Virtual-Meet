@@ -229,6 +229,8 @@
   color: white;
   font-size: small;
   border-radius: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .add__roles {
@@ -236,4 +238,8 @@
   color: #323232;
   background-color: rgb(200, 200, 200);
   border-radius: 50%;
+}
+
+.del__role {
+  margin-left: 5px;
 }

@@ -105,6 +105,11 @@ export const AddRooms = (props) => {
         props.onClose()
     }
 
+    const addRoles = async () => {
+        await addRole({ roomId: props.roomDet, userId: props.userDet._id, role: selectedCat })
+        props.onClose();
+    }
+
     return (
         <>
             <div className={styles.modalMask}>
@@ -169,7 +174,27 @@ export const AddRooms = (props) => {
                                 </div>
                             </>
                         }
-                        {!props.options && !props.role &&
+                        {props.addRole &&
+                            <>
+                                <h3 className={`${styles.heading} ${styles.type}`}>ROLE</h3>
+                                <div className={styles.select__cat}>
+                                    {props.allRoles.length !== 0 ?
+                                        <select className={styles.cat__optionsselect} defaultValue={selectedCat}
+                                            onChange={handleCat} >
+                                            <>
+                                                <option className={styles.cat__options} value="~select~">~select~</option>
+                                                {props.allRoles.map((role, idx) =>
+                                                    <option key={idx} className={styles.cat__options} value={role} id={idx}>{role}</option>
+                                                )}
+                                            </>
+                                        </select>
+                                        :
+                                        <p>{props.userDet.name} has all the roles in this room</p>
+                                    }
+                                </div>
+                            </>
+                        }
+                        {!props.options && !props.role && !props.addRole &&
                             <>
                                 <h3 className={styles.heading}>
                                     {props.field}
@@ -209,11 +234,14 @@ export const AddRooms = (props) => {
                         {props.options &&
                             <h2>Have an Invite Code already?</h2>
                         }
+                        {props.addRole &&
+                            <h2>Add a role to {props.userDet.name}</h2>
+                        }
                         <button
-                            onClick={props.room ? createRoom : props.category ? createCat : props.channel ? createChannel : props.options ? joinServer : props.invite ? Codetojoin : props.role ? createRole : null}
+                            onClick={props.room ? createRoom : props.category ? createCat : props.channel ? createChannel : props.options ? joinServer : props.invite ? Codetojoin : props.role ? createRole : props.addRole ? addRoles : null}
                             className={styles.footerButton}
                         >
-                            <span>{props.options ? "Join a server" : "Let's go"}</span>
+                            <span>{props.options ? "Join a server" : props.addRole ? "Add Role" : "Let's go"}</span>
                         </button>
                     </div>
                 </div>
