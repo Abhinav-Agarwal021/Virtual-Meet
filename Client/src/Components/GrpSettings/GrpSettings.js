@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { expireCode, getCode, getRId, getRoom, getUs, getUserByRole, updateCat, updateServerName, updateUserRole, UserRoles } from '../../http/Http';
+import { deleteServer, expireCode, getCode, getRId, getRoom, getUs, getUserByRole, updateCat, updateServerName, updateUserRole, UserRoles } from '../../http/Http';
 import { AddRooms } from '../Add_rooms/AddRooms';
 import styles from './GrpSettings.module.css'
+import { useHistory } from 'react-router-dom';
 
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
 export const GrpSettings = () => {
+
+    const history = useHistory();
 
     var url = window.location.pathname;
     var id = url.substring(url.lastIndexOf('/') + 1);
@@ -171,6 +174,11 @@ export const GrpSettings = () => {
         setUsersDet(arrOfUsers);
     }
 
+    const deleteRoom = async () => {
+        await deleteServer({ roomId: id });
+        history.push('/rooms')
+    }
+
     return (
         <div className={styles.server__Settings}>
             <div className={styles.server__menu}>
@@ -181,7 +189,7 @@ export const GrpSettings = () => {
                         </div>
                     ))}
                     <p className={styles.border}></p>
-                    <div className={`${styles.overview} ${(isHoveringId === 4) && styles.delhovered} ${styles.del__server}`} onMouseOver={() => handleMouseOver(4)} onMouseOut={() => handleMouseOut(4)}>
+                    <div className={`${styles.overview} ${(isHoveringId === 4) && styles.delhovered} ${styles.del__server}`} onMouseOver={() => handleMouseOver(4)} onMouseOut={() => handleMouseOut(4)} onClick={deleteRoom}>
                         delete server
                     </div>
                 </div>

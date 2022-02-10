@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { sendOtp, verifyOtp, activateUser, refresh, logout, getUser, getUserByData } = require('../Controllers/Auth-Controllers')
 const { chatApp, getIds, sendChats, getChats, getConversation, checkCs } = require('../Controllers/Conversation-Controller');
 const { createCat, createRole, createChannel, getRoom, getChannels, generateInviteCode, verifyInvitecode, getUserRoles, leaveServer, checkInviteCode, deleteRole, updateRole, updateCat, updateChannel, deleteCat, deleteChannel, expireCode, getAllInviteCode, getUserByRole, updateUserRole } = require('../Controllers/Grp-controller');
-const { create, getRooms, getRoomId, updateRoom, updateName } = require('../Controllers/Rooms-Controller');
+const { create, getRooms, getRoomId, updateRoom, updateName, deleteRoom } = require('../Controllers/Rooms-Controller');
 const authMiddlewares = require('../middlewares/authMiddlewares')
 
 router.post('/send-otp', sendOtp);
@@ -36,7 +36,8 @@ router.post('/grp/roles', getUserRoles);
 
 router.post('/grp/leave', leaveServer);
 router.post('/grp/delete-role', deleteRole);
-router.post('/grp/update-user-role',updateUserRole)
+router.post('/grp/update-user-role', updateUserRole)
+router.post('/grp/delete-server', deleteRoom);
 router.post('/grp/add-role', updateRole);
 router.post('/grp/user-by-role', getUserByRole);
 router.post('/grp/invites/check', checkInviteCode)

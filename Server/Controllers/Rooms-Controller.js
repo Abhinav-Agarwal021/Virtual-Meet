@@ -64,6 +64,13 @@ class RoomsController {
         }
     }
 
+    async deleteRoom(req, res) {
+        const { roomId } = req.body;
+        const room = await RoomService.deleteRoom({roomId})
+
+        return res.json(room);
+    }
+
 }
 
 module.exports = new RoomsController();

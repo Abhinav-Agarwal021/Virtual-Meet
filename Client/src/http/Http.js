@@ -120,6 +120,9 @@ export const updateServerName = (data) => api.post('/api/grp/update-name', data)
 //expire an invite code
 export const expireCode = (data) => api.post('/api/grp/invites/expire', data);
 
+//deletes whole server
+export const deleteServer = (data) => api.post('/api/grp/delete-server', data);
+
 
 api.interceptors.response.use(
     (config) => {

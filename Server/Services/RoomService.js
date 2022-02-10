@@ -1,4 +1,8 @@
+const CategoryModel = require("../models/CategoryModel");
+const ChannelModel = require("../models/ChannelModel");
+const InviteCodesModel = require("../models/InviteCodesModel");
 const RoomModel = require("../models/RoomModel");
+const UserRolesModel = require("../models/UserRolesModel");
 
 class RoomService {
 
@@ -56,6 +60,18 @@ class RoomService {
 
         const updatedRoom = await RoomModel.findById(Id);
         return updatedRoom;
+    }
+
+    async deleteRoom(data) {
+        const { roomId } = data;
+        console.log(roomId)
+        const room = await RoomModel.findOneAndDelete({ _id: roomId })
+        await CategoryModel.deleteMany({ roomId })
+        await UserRolesModel.deleteMany({ roomId })
+        await InviteCodesModel.deleteMany({ roomId })
+        await ChannelModel.deleteMany({ roomId })
+
+        return room;
     }
 
     async updateName(data) {
