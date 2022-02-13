@@ -68,7 +68,7 @@ io.on("connection", (socket) => {
   socket.on("join room", roomID => {
     if (peerUsers[roomID]) {
       const length = peerUsers[roomID].length;
-      if (length === 4) {
+      if (length === 20) {
         socket.emit("room full");
         return;
       }

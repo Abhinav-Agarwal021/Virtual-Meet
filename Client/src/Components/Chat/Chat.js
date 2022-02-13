@@ -51,7 +51,7 @@ export const Chat = () => {
     const [callAnswered, setCallAnswered] = useState(false);
     const [callEnded, setCallEnded] = useState(false);
     const [myVdoStatus, setMyVdoStatus] = useState(true);
-    const [myaudioStatus, setMyaudioStatus] = useState(false);
+    const [myaudioStatus, setMyaudioStatus] = useState(true);
     const [screenShare, setScreenShare] = useState(false)
     const [callStarted, setCallStarted] = useState(false);
 
@@ -60,7 +60,10 @@ export const Chat = () => {
 
         navigator.mediaDevices
             .getUserMedia({
-                audio: true,
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression:true,
+                },
                 video: true,
             })
             .then((currentStream) => {
@@ -347,7 +350,6 @@ export const Chat = () => {
                                     className={styles.video}
                                     ref={userVideo}
                                     autoPlay
-                                    muted
                                     playsInline
                                 />
                             </div>
@@ -357,7 +359,6 @@ export const Chat = () => {
                                 className={styles.video}
                                 ref={myVideo}
                                 autoPlay
-                                muted
                                 playsInline
                             />
                         </div>
