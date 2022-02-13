@@ -49,3 +49,8 @@
   font-weight: bold;
   margin-right: 5px;
 }
+
+.people__room{
+  font-size: small;
+  color: rgb(205, 205, 205);
+}

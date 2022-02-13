@@ -51,7 +51,7 @@ export const Chat = () => {
     const [callAnswered, setCallAnswered] = useState(false);
     const [callEnded, setCallEnded] = useState(false);
     const [myVdoStatus, setMyVdoStatus] = useState(true);
-    const [myaudioStatus, setMyaudioStatus] = useState(true);
+    const [myaudioStatus, setMyaudioStatus] = useState(false);
     const [screenShare, setScreenShare] = useState(false)
     const [callStarted, setCallStarted] = useState(false);
 
@@ -347,6 +347,7 @@ export const Chat = () => {
                                     className={styles.video}
                                     ref={userVideo}
                                     autoPlay
+                                    muted
                                     playsInline
                                 />
                             </div>
@@ -356,6 +357,7 @@ export const Chat = () => {
                                 className={styles.video}
                                 ref={myVideo}
                                 autoPlay
+                                muted
                                 playsInline
                             />
                         </div>
@@ -401,8 +403,8 @@ export const Chat = () => {
                         }
                     </div>
                     <div className={styles.chatBox__top}>
-                        {messages.map((msg) => (
-                            <div ref={scrollRef}>
+                        {messages.map((msg, idx) => (
+                            <div key={idx} ref={scrollRef}>
                                 <Message mssg={msg} own={msg.sender === user.id} />
                             </div>
                         ))}

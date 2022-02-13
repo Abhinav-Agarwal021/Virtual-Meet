@@ -36,23 +36,13 @@ export const RoomCard = (props) => {
     return (
         <div className={styles.card} onClick={props.onClick}>
             <h3 className={styles.topic}>{props.room ? props.room.server : friend?.name}</h3>
-            {/*<div className={styles.speakers}>
-                <div className={styles.avatars}>
-                    {room.speakers.map((speaker) => (
-                        <img src={speaker.avatar} alt="speaker-avatar" />
-                    ))}
-                </div>
-                <div className={styles.names}>
-                    {room.speakers.map((speaker, idx) => (
-                        <div key={idx} className={styles.nameWrapper}>
-                            <span key={idx}>{speaker.name}</span>
-                        </div>
-                    ))}
-                </div>
-                    </div>*/}
             <div className={styles.peopleCount}>
-                {/*<span>{room.totalPeople}</span>*/}
-                <img src="/images/user-icon.png" alt="user-icon" />
+                {props.room &&
+                    <>
+                        <span className={styles.people__room}>{props.room.members.length}</span>
+                        <img src="/images/user-icon.png" alt="user-icon" />
+                    </>
+                }
             </div>
         </div>
     )

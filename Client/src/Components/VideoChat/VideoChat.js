@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react'
 import styles from './VideoChat.module.css'
 import io from "socket.io-client";
 import Peer from "simple-peer";
-import { useSelector } from 'react-redux';
 
 const Video = (props) => {
     const ref = useRef();
@@ -30,8 +29,6 @@ export const VideoChat = (props) => {
     const userVideo = useRef();
     const peersRef = useRef([]);
     const channelId = props.channelId;
-
-    const { user } = useSelector((state) => state.user);
 
     useEffect(() => {
         socketRef.current = io("ws://localhost:8900");
