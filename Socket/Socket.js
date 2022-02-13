@@ -65,38 +65,29 @@ io.on("connection", (socket) => {
   })
 
   //for video chat with multiple people
-  socket.on("join room", (roomId) => {
-    if (peerUsers[roomId]) {
-      const length = peerUsers[roomId].length;
-      if (length === 10) {
-        socket.emit("room is full");
+  socket.on("join room", roomID => {
+    if (peerUsers[roomID]) {
+      const length = peerUsers[roomID].length;
+      if (length === 4) {
+        socket.emit("room full");
         return;
       }
-      if (!peerUsers[roomId].includes(socket.id)) {
-        peerUsers[roomId].push(socket.id);
-      }
+      peerUsers[roomID].push(socket.id);
     } else {
-      peerUsers[roomId] = [socket.id];
+      peerUsers[roomID] = [socket.id];
     }
+    socketToRoom[socket.id] = roomID;
+    const usersInThisRoom = peerUsers[roomID].filter(id => id !== socket.id);
 
-    socketToRoom[socket.id] = roomId;
-    const usersinThisRoom = peerUsers[roomId].filter((id) => id != socket.id);
-    console.log(usersinThisRoom);
-    socket.emit("all users", usersinThisRoom);
+    socket.emit("all users", usersInThisRoom);
   });
 
-  socket.on("sendSignal", (data) => {
-    io.to(data.userToSignal).emit("user joined", {
-      signal: data.signal,
-      callerId: data.callerId,
-    });
+  socket.on("sending signal", payload => {
+    io.to(payload.userToSignal).emit('user joined', { signal: payload.signal, callerID: payload.callerID });
   });
 
-  socket.on("returningSignal", (data) => {
-    io.to(data.callerId).emit("receiving returned signal", {
-      signal: data.signal,
-      id: socket.id,
-    });
+  socket.on("returning signal", payload => {
+    io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
   });
   //till here
 

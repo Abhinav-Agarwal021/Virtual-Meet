@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import styles from './VideoChat.module.css'
 import io from "socket.io-client";
 import Peer from "simple-peer";
+import { useSelector } from 'react-redux';
 
 const Video = (props) => {
     const ref = useRef();
@@ -13,7 +14,7 @@ const Video = (props) => {
     }, [props]);
 
     return (
-        <video className={styles.video} playsInline autoPlay ref={ref} />
+        <video className={styles.video} muted playsInline autoPlay ref={ref} />
     );
 }
 
@@ -29,6 +30,8 @@ export const VideoChat = (props) => {
     const userVideo = useRef();
     const peersRef = useRef([]);
     const channelId = props.channelId;
+
+    const { user } = useSelector((state) => state.user);
 
     useEffect(() => {
         socketRef.current = io("ws://localhost:8900");
@@ -47,6 +50,7 @@ export const VideoChat = (props) => {
                     peers.push(peer);
                 })
                 setPeers(peers);
+                console.log(peers)
             })
 
             socketRef.current.on("user joined", payload => {
@@ -64,7 +68,7 @@ export const VideoChat = (props) => {
                 item.peer.signal(payload.signal);
             });
         })
-    }, [channelId, peers])
+    }, [])
 
     const createPeer = (userToSignal, callerID, stream) => {
         const peer = new Peer({
@@ -74,7 +78,7 @@ export const VideoChat = (props) => {
         });
 
         peer.on("signal", signal => {
-            socketRef.current.emit("sendSignal", { userToSignal, callerID, signal })
+            socketRef.current.emit("sending signal", { userToSignal, callerID, signal })
         })
 
         return peer;
@@ -88,7 +92,7 @@ export const VideoChat = (props) => {
         })
 
         peer.on("signal", signal => {
-            socketRef.current.emit("returningSignal", { signal, callerID })
+            socketRef.current.emit("returning signal", { signal, callerID })
         })
 
         peer.signal(incomingSignal);
@@ -100,6 +104,7 @@ export const VideoChat = (props) => {
         <div className={styles.video__containers}>
             <video className={styles.video} muted ref={userVideo} autoPlay playsInline />
             {peers.map((peer, index) => {
+                console.log(peer)
                 return (
                     <Video key={index} peer={peer} />
                 );
