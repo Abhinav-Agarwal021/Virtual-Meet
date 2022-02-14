@@ -190,6 +190,7 @@
   width: 25px;
   height: 25px;
   color: rgb(215, 215, 215);
+  cursor: pointer;
 }
 
 .sett__cover {

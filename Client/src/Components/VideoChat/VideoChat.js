@@ -28,6 +28,7 @@ export const VideoChat = (props) => {
 
     const [peers, setPeers] = useState([]);
     const socketRef = useRef();
+    const connectionRef = useRef();
     const userVideo = useRef();
     const peersRef = useRef([]);
     const screenTrackRef = useRef();
@@ -92,7 +93,7 @@ export const VideoChat = (props) => {
         peer.on("signal", signal => {
             socketRef.current.emit("sending signal", { userToSignal, callerID, signal })
         })
-
+        connectionRef.current = peer;
         return peer;
     }
 
@@ -108,7 +109,7 @@ export const VideoChat = (props) => {
         })
 
         peer.signal(incomingSignal);
-
+        connectionRef.current = peer;
         return peer;
     }
 
@@ -136,53 +137,57 @@ export const VideoChat = (props) => {
         }
     }
 
-    // const sharemyScreen = () => {
+    const sharemyScreen = () => {
 
-    //     if (screenShare) {
-    //         screenTrackRef.current.onended();
-    //         setScreenShare(false);
-    //     }
+        if (screenShare) {
+            screenTrackRef.current.onended();
+            setScreenShare(false);
+        }
 
-    //     if (!screenShare) {
-    //         navigator.mediaDevices
-    //             .getDisplayMedia({ cursor: true })
-    //             .then((currentStream) => {
-    //                 const screenTrack = currentStream.getTracks()[0];
+        if (!screenShare) {
+            navigator.mediaDevices
+                .getDisplayMedia({ cursor: true })
+                .then((currentStream) => {
+                    const screenTrack = currentStream.getTracks()[0];
 
 
-    //                 // replaceTrack (oldTrack, newTrack, oldStream);
-    //                 connectionRef.current.replaceTrack(
-    //                     connectionRef.current.streams[0]
-    //                         .getTracks()
-    //                         .find((track) => track.kind === 'video'),
-    //                     screenTrack,
-    //                     stream
-    //                 );
+                    // replaceTrack (oldTrack, newTrack, oldStream);
+                    connectionRef.current.replaceTrack(
+                        connectionRef.current.streams[0]
+                            .getTracks()
+                            .find((track) => track.kind === 'video'),
+                        screenTrack,
+                        stream
+                    );
 
-    //                 // Listen click end
-    //                 screenTrack.onended = () => {
-    //                     connectionRef.current.replaceTrack(
-    //                         screenTrack,
-    //                         connectionRef.current.streams[0]
-    //                             .getTracks()
-    //                             .find((track) => track.kind === 'video'),
-    //                         stream
-    //                     );
+                    // Listen click end
+                    screenTrack.onended = () => {
+                        connectionRef.current.replaceTrack(
+                            screenTrack,
+                            connectionRef.current.streams[0]
+                                .getTracks()
+                                .find((track) => track.kind === 'video'),
+                            stream
+                        );
 
-    //                     myVideo.current.srcObject = stream;
-    //                     setScreenShare(false);
-    //                 };
+                        userVideo.current.srcObject = stream;
+                        setScreenShare(false);
+                    };
 
-    //                 myVideo.current.srcObject = currentStream;
-    //                 screenTrackRef.current = screenTrack;
-    //                 setScreenShare(true);
-    //             }).catch((error) => {
-    //                 console.log("No stream for sharing")
-    //             });
-    //     } else {
-    //         screenTrackRef.current.onended();
-    //     }
-    // };
+                    userVideo.current.srcObject = currentStream;
+                    screenTrackRef.current = screenTrack;
+                    setScreenShare(true);
+                }).catch(() => {
+                    console.log("No stream for sharing")
+                });
+        } else {
+            screenTrackRef.current.onended();
+        }
+    };
+
+    const leaveCall = () => {
+        socketRef.current.emit("call ended", { channelId });
+    }
 
     return (
         <div className={styles.video__section}>
@@ -212,12 +217,11 @@ export const VideoChat = (props) => {
                 </div>
                 <>
                     <div className={styles.sett__cover}>
-                        <MdOutlineScreenShare className={styles.set__icons} />
-                        {/* <MdOutlineScreenShare onClick={sharemyScreen} className={styles.set__icons} /> */}
+                        <MdOutlineScreenShare onClick={sharemyScreen} className={styles.set__icons} />
                     </div>
                     <div className={styles.sett__cover}>
-                        <FcEndCall className={styles.set__icons} />
-                        {/* <FcEndCall onClick={leaveCall} className={styles.set__icons} /> */}
+                        {/* <FcEndCall className={styles.set__icons} /> */}
+                        <FcEndCall onClick={leaveCall} className={styles.set__icons} />
                     </div>
                 </>
             </div>

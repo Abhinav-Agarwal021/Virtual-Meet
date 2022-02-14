@@ -89,7 +89,10 @@ io.on("connection", (socket) => {
   socket.on("returning signal", payload => {
     io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
   });
-  //till here
+
+  socket.on("call ended", roomID => {
+    peerUsers[roomID].pop(socket.id);
+  })
 
   socket.on("disconnect", () => {
     console.log("a user disconnected!");
