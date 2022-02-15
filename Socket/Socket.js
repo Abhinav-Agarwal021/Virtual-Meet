@@ -97,7 +97,6 @@ io.on("connection", (socket) => {
       room = room.filter(id => id != socket.id)
       peerUsers[roomId] = room;
     }
-    console.log(peerUsers[roomId])
     socket.broadcast.emit('user left', socket.id);
   })
 

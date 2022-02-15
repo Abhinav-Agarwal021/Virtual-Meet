@@ -75,8 +75,8 @@ export const VideoChat = (props) => {
                 })
 
                 const peerObj = {
-                    peer,
                     peerID: payload.callerID,
+                    peer,
                 }
 
                 setPeers(users => [...users, peerObj]);
@@ -88,9 +88,9 @@ export const VideoChat = (props) => {
                     peerObj.peer.destroy();
                 }
 
-                const peers = peersRef.current.filter(p => p.peerID !== id);
-                peersRef.current = peers;
-                setPeers(peers);
+                const peerr = peersRef.current.filter(p => p.peerID !== id);
+                peersRef.current = peerr;
+                setPeers(peerr);
             })
 
             socketRef.current.on("receiving returned signal", payload => {
@@ -211,8 +211,8 @@ export const VideoChat = (props) => {
         <div className={styles.video__section}>
             <div className={styles.video__containers}>
                 <video className={styles.video} muted ref={userVideo} autoPlay playsInline />
+                {console.log(peers)}
                 {peers.map((peer) => {
-                    console.log(peer)
                     return (
                         <Video key={peer.peerID} peer={peer.peer} />
                     );
@@ -238,7 +238,6 @@ export const VideoChat = (props) => {
                         <MdOutlineScreenShare onClick={sharemyScreen} className={styles.set__icons} />
                     </div>
                     <div className={styles.sett__cover}>
-                        {/* <FcEndCall className={styles.set__icons} /> */}
                         <FcEndCall onClick={leaveCall} className={styles.set__icons} />
                     </div>
                 </>
