@@ -90,8 +90,15 @@ io.on("connection", (socket) => {
     io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
   });
 
-  socket.on("call ended", roomID => {
-    peerUsers[roomID].pop(socket.id);
+  socket.on("call ended", () => {
+    const roomId = socketToRoom[socket.id];
+    let room = peerUsers[roomId];
+    if (room) {
+      room = room.filter(id => id != socket.id)
+      peerUsers[roomId] = room;
+    }
+    console.log(peerUsers[roomId])
+    socket.broadcast.emit('user left', socket.id);
   })
 
   socket.on("disconnect", () => {

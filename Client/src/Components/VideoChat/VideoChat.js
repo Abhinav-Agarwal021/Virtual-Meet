@@ -52,7 +52,6 @@ export const VideoChat = (props) => {
             userVideo.current.srcObject = stream;
             socketRef.current.emit("join room", channelId);
             socketRef.current.on("all users", users => {
-                console.log(users)
                 const peers = [];
                 users.forEach(userID => {
                     const peer = createPeer(userID, socketRef.current.id, stream);
@@ -60,10 +59,12 @@ export const VideoChat = (props) => {
                         peerID: userID,
                         peer,
                     })
-                    peers.push(peer);
+                    peers.push({
+                        peerID: userID,
+                        peer,
+                    });
                 })
                 setPeers(peers);
-                console.log(peers)
             })
 
             socketRef.current.on("user joined", payload => {
@@ -73,8 +74,24 @@ export const VideoChat = (props) => {
                     peer,
                 })
 
-                setPeers(users => [...users, peer]);
+                const peerObj = {
+                    peer,
+                    peerID: payload.callerID,
+                }
+
+                setPeers(users => [...users, peerObj]);
             });
+
+            socketRef.current.on("user left", id => {
+                const peerObj = peersRef.current.find(p => p.peerID === id);
+                if (peerObj) {
+                    peerObj.peer.destroy();
+                }
+
+                const peers = peersRef.current.filter(p => p.peerID !== id);
+                peersRef.current = peers;
+                setPeers(peers);
+            })
 
             socketRef.current.on("receiving returned signal", payload => {
                 const item = peersRef.current.find(p => p.peerID === payload.id);
@@ -186,17 +203,18 @@ export const VideoChat = (props) => {
     };
 
     const leaveCall = () => {
-        socketRef.current.emit("call ended", { channelId });
+        socketRef.current.emit("call ended");
+        window.location.reload();
     }
 
     return (
         <div className={styles.video__section}>
             <div className={styles.video__containers}>
                 <video className={styles.video} muted ref={userVideo} autoPlay playsInline />
-                {peers.map((peer, index) => {
+                {peers.map((peer) => {
                     console.log(peer)
                     return (
-                        <Video key={index} peer={peer} />
+                        <Video key={peer.peerID} peer={peer.peer} />
                     );
                 })}
             </div>
