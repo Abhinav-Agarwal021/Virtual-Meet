@@ -37,9 +37,15 @@ export const RoomCard = (props) => {
         <div className={styles.card} onClick={props.onClick}>
             <h3 className={styles.topic}>{props.room ? props.room.server : friend?.name}</h3>
             <div className={styles.peopleCount}>
-                {props.room &&
+                {props.room && !props.room.dm &&
                     <>
                         <span className={styles.people__room}>{props.room.members.length}</span>
+                        <img src="/images/user-icon.png" alt="user-icon" />
+                    </>
+                }
+                {props.room && props.room.dm &&
+                    <>
+                        <span className={styles.people__room}>{props.dmConv.length}</span>
                         <img src="/images/user-icon.png" alt="user-icon" />
                     </>
                 }

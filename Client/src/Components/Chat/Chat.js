@@ -17,6 +17,7 @@ import { AiOutlineAudio } from "react-icons/ai";
 import { AiOutlineAudioMuted } from "react-icons/ai";
 import { MdOutlineScreenShare } from "react-icons/md";
 import { FcEndCall } from "react-icons/fc";
+import { FiPaperclip } from "react-icons/fi";
 
 export const Chat = () => {
     var url = window.location.pathname;
@@ -62,7 +63,7 @@ export const Chat = () => {
             .getUserMedia({
                 audio: {
                     echoCancellation: true,
-                    noiseSuppression:true,
+                    noiseSuppression: true,
                 },
                 video: true,
             })
@@ -424,6 +425,7 @@ export const Chat = () => {
                             className={styles.emoji__selection}
                             onClick={() => setEmojisOpen(!emojisOpen)}
                         />
+                        <FiPaperclip />
                         <input
                             value={newMssg}
                             onClick={() => setEmojisOpen(false)}

@@ -20,7 +20,7 @@ const Video = (props) => {
     }, [props]);
 
     return (
-        <video className={styles.video} muted playsInline autoPlay ref={ref} />
+        <video className={styles.video} playsInline autoPlay ref={ref} />
     );
 }
 
@@ -210,7 +210,7 @@ export const VideoChat = (props) => {
     return (
         <div className={styles.video__section}>
             <div className={styles.video__containers}>
-                <video className={styles.video} muted ref={userVideo} autoPlay playsInline />
+                <video className={styles.video} ref={userVideo} autoPlay playsInline />
                 {console.log(peers)}
                 {peers.map((peer) => {
                     return (

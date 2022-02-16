@@ -107,16 +107,14 @@ export const Rooms = (props) => {
     useEffect(() => {
 
         const fetchConversations = async () => {
-            if (props.dm) {
-                setLoading(true);
-                try {
-                    const conversations = await getCs(user.id)
-                    setConversation(conversations.data)
-                } catch (error) {
-                    console.log(error)
-                } finally {
-                    setLoading(false)
-                }
+            setLoading(true);
+            try {
+                const conversations = await getCs(user.id)
+                setConversation(conversations.data)
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setLoading(false)
             }
         }
         fetchConversations();
@@ -159,7 +157,7 @@ export const Rooms = (props) => {
 
                 <div className={styles.roomList}>
                     {!props.dm && room.map((room, idx) => (
-                        <RoomCard key={idx} room={room} onClick={() => handleOpenRoom(room.id)} />
+                        <RoomCard key={idx} room={room} dmConv={conversation} onClick={() => handleOpenRoom(room.id)} />
                     ))}
                     {props.dm && conversation.map((conv, index) => (
                         <RoomCard key={index} conv={conv} onClick={() => handleOpenChat(conv._id)} />
