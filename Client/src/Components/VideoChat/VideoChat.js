@@ -40,7 +40,7 @@ export const VideoChat = (props) => {
     const [screenShare, setScreenShare] = useState(false)
 
     useEffect(() => {
-        socketRef.current = io("ws://localhost:8900");
+        socketRef.current = io("ws://virt-meet-socket.herokuapp.com");
         navigator.mediaDevices.getUserMedia({
             video: true,
             audio: {

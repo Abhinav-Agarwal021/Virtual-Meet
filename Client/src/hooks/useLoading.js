@@ -11,7 +11,7 @@ export const useLoading = () => {
         (async () => {
             try {
                 const { data } = await axios.get(
-                    `http://localhost:5000/api/refresh`,
+                    `https://virt-meet-server.herokuapp.com/api/refresh`,
                     {
                         withCredentials: true,
                     }

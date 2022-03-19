@@ -1,6 +1,8 @@
-const io = require("socket.io")(8900, {
+const PORT = 8900;
+
+const io = require("socket.io")(PORT || process.env.PORT, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://virt-meet.herokuapp.com",
   },
 });
 

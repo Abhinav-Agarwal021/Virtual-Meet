@@ -80,7 +80,7 @@ export const GrpChat = () => {
     };
 
     useEffect(() => {
-        socket.current = io("ws://localhost:8900");
+        socket.current = io("ws://virt-meet-socket.herokuapp.com");
         socket.current.on("getMessage", (data) => {
             setArrivalMessage({
                 sender: data.senderId,

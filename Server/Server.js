@@ -12,7 +12,7 @@ dbConnect()
 app.use(cookieParser())
 const corsOption = {
     credentials: true,
-    origin: 'http://localhost:3000',
+    origin: 'https://virt-meet.herokuapp.com',
 };
 
 app.use(cors(corsOption));

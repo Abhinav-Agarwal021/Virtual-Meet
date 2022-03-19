@@ -57,7 +57,7 @@ export const Chat = () => {
     const [callStarted, setCallStarted] = useState(false);
 
     useEffect(() => {
-        socket.current = io("ws://localhost:8900");
+        socket.current = io("ws://virt-meet-socket.herokuapp.com");
 
         navigator.mediaDevices
             .getUserMedia({
