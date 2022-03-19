@@ -25,7 +25,7 @@ class AuthController {
         const hash = HashService.hashOtp(hashData)
 
         try {
-            //await otpService.sendBySms(phone, Otp)
+            await otpService.sendBySms(phone, Otp)
             res.json({
                 hash: `${hash}.${expiryTime}`,
                 phone,
